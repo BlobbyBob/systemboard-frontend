@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+
+  webserver:
+    image: node:slim
+    ports:
+    - "8080:8080"
+    volumes:
+    - .:/source
+    command: "npm run serve"
+    user: node
+    working_dir: /source
+
+  build:
+    image: node:slim
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/source
+    command: "npm run build"
+    user: node
+    working_dir: /source
