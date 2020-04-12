@@ -2,6 +2,7 @@
     <div id="app">
         <div class="container">
             <Header/>
+            <hr/>
             <Menu v-bind:menu-data="[
                     {
                         id: 'elem1',
@@ -12,8 +13,23 @@
                         label: 'Punkt 2'
                     }
                 ]" v-bind:menu-click-handler="menuHandler" v-if="isLoggedIn"/>
+            <hr/>
             <Login v-bind:login-handler="loginHandler" v-if="!isLoggedIn"/>
+            <hr/>
             <Wall v-bind:images="['/dev/left.jpg', '/dev/center.jpg', '/dev/right.jpg']" v-if="isLoggedIn"/>
+            <hr/>
+            <Ranking v-bind:ranking-items="[
+                    {
+                        name: 'Mr. Doe',
+                        points: 123
+                    },
+                    {
+                        name: 'Ms. Doe',
+                        points: 45,
+                        icon: 'trophy',
+                        iconTooltip: 'Tooltip'
+                    }
+                ]"/>
         </div>
     </div>
 </template>
@@ -24,9 +40,11 @@
     import Wall from "@/components/wall/Wall.vue";
     import Login from "@/components/Login.vue";
     import Menu from "@/components/menu/Menu.vue";
+    import Ranking from "@/components/ranking/Ranking.vue";
 
     @Component({
         components: {
+            Ranking,
             Menu,
             Login,
             Header,
