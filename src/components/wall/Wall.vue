@@ -38,7 +38,14 @@
     })
     export default class Wall extends Vue {
         @Prop() readonly images!: string[];
-        @Prop() currentIndex = 0;
+        get currentIndex() {
+            return this.internalCurrentIndex;
+        }
+        set currentIndex(value: number) {
+            this.internalCurrentIndex = value;
+            this.$emit('indexchange', value);
+        }
+        private internalCurrentIndex = 0;
 
         nextSegment() {
             if (this.currentIndex + 1 < this.images.length)
