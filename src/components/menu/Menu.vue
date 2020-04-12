@@ -1,5 +1,5 @@
 <!--
-  --  systemboard
+  -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
   -- 
   -- This program is free software: you can redistribute it and/or modify
@@ -33,8 +33,8 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import MenuItem from "./MenuItem.vue";
-    import {MenuItemData} from "@/types/MenuItemData";
+    import MenuItem from './MenuItem.vue';
+    import {MenuItemData} from '@/types/MenuItemData';
 
     @Component({
         components: {

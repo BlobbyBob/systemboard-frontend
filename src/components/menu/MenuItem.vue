@@ -1,5 +1,5 @@
 <!--
-  --  systemboard
+  -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
   -- 
   -- This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@
 
     @Component({
         model: {
-            event: "action"
+            event: 'action'
         }
     })
     export default class MenuItem extends Vue {

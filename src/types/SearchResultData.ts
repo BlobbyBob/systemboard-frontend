@@ -17,9 +17,10 @@
  *
  */
 
-export class RankingItemData {
+export class SearchResultData {
     name!: string;
-    icon?: string | undefined;
-    iconTooltip?: string | undefined;
-    points!: number;
+    creator!: string;
+    grade!: string;
+    rating!: number;
+    ascents!: number;
 }

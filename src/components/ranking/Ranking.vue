@@ -1,5 +1,5 @@
 <!--
-  --  systemboard
+  -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
   -- 
   -- This program is free software: you can redistribute it and/or modify
@@ -37,8 +37,8 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import RankingItem from "./RankingItem.vue";
-    import {RankingItemData} from "@/types/RankingItemData";
+    import RankingItem from './RankingItem.vue';
+    import {RankingItemData} from '@/types/RankingItemData';
 
     @Component({
         components: {RankingItem}

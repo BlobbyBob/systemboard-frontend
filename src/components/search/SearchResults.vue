@@ -18,39 +18,23 @@
   -->
 
 <template>
-    <tr>
-        <td>{{ rank }}</td>
-        <td>
-            {{ name }}
-            <span v-if="icon !== undefined">
-                &nbsp;
-                <span v-bind:class="iconClass"></span>
-                <span v-if="iconTooltip !== undefined">&nbsp;({{ iconTooltip }})</span>
-            </span>
-        </td>
-        <td>{{ points }}</td>
-    </tr>
+    <div class="searchResults container">
+        <div class="row">
+            <SearchResult v-for="result in searchResultsData" v-bind:key="result" v-bind:data="result"/>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {SearchResultData} from '@/types/SearchResultData';
+    import SearchResult from './SearchResult.vue';
 
-    @Component
-    export default class RankingItem extends Vue {
-        @Prop() rank!: number;
-        @Prop() name!: string;
-        @Prop() icon?: string | undefined;
-        @Prop() iconTooltip?: string | undefined;
-        @Prop() points!: number;
-
-        get iconClass() {
-            if (this.icon === undefined)
-                return {};
-            // eslint-disable-next-line
-            const classes: any = {};
-            classes['icon-' + this.icon] = true;
-            return classes;
-        }
+    @Component({
+        components: {SearchResult}
+    })
+    export default class SearchResults extends Vue {
+        @Prop() readonly searchResultsData!: SearchResultData[];
     }
 </script>
 

@@ -1,5 +1,5 @@
 <!--
-  --  systemboard
+  -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
   -- 
   -- This program is free software: you can redistribute it and/or modify
@@ -23,18 +23,20 @@
     </div>
 </template>
 
-<script>
-    export default {
-        name: "Header"
+<script lang="ts">
+    import {Component, Vue} from 'vue-property-decorator';
+
+    @Component
+    export default class Header extends Vue {
     }
 </script>
 
-<style scoped>
-h1 {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-}
+<style scoped lang="scss">
+    h1 {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #2c3e50;
+        margin-top: 60px;
+    }
 </style>

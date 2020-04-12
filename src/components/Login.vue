@@ -1,5 +1,5 @@
 <!--
-  --  systemboard
+  -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
   -- 
   -- This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@
 </script>
 
 <style scoped lang="scss">
-.login {
-    text-align: center;
-}
+    .login {
+        text-align: center;
+    }
 </style>
