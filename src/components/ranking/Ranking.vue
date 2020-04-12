@@ -19,7 +19,7 @@
 
 <template>
     <div class="ranking">
-        <table>
+        <table class="table">
             <thead>
             <tr>
                 <td class="rank">#</td>

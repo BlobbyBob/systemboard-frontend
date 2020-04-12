@@ -18,7 +18,8 @@
             <hr/>
             <Wall v-bind:images="['/dev/left.jpg', '/dev/center.jpg', '/dev/right.jpg']" v-if="isLoggedIn"/>
             <hr/>
-            <Ranking v-bind:ranking-items="[
+            <div class="container col-12">
+                <Ranking v-bind:ranking-items="[
                     {
                         name: 'Mr. Doe',
                         points: 123
@@ -30,6 +31,10 @@
                         iconTooltip: 'Tooltip'
                     }
                 ]"/>
+            </div>
+            <hr/>
+            <BoulderInfo name="Corona" creator="Virus" description="Ein Boulder für die Quarantäne" grade="6c"
+                         rating="4"/>
         </div>
     </div>
 </template>
@@ -41,9 +46,11 @@
     import Login from "@/components/Login.vue";
     import Menu from "@/components/menu/Menu.vue";
     import Ranking from "@/components/ranking/Ranking.vue";
+    import BoulderInfo from "@/components/BoulderInfo.vue";
 
     @Component({
         components: {
+            BoulderInfo,
             Ranking,
             Menu,
             Login,
