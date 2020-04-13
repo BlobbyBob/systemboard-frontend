@@ -19,8 +19,13 @@
 
 <template>
     <label>
-        {{ label }}<br v-if="!nobr"/>
+        <span v-if="before">
+            {{ label }}<br v-if="!nobr"/>
+        </span>
         <slot></slot>
+        <span v-if="!before">
+            {{ label }}
+        </span>
     </label>
 </template>
 
@@ -31,6 +36,7 @@
     export default class LabelledElement extends Vue {
         @Prop() readonly label!: string;
         @Prop({default: false}) readonly nobr?: boolean;
+        @Prop({type: Boolean, default: true}) readonly before?: boolean;
     }
 </script>
 

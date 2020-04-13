@@ -27,7 +27,7 @@
                 <td class="points">Punkte</td>
             </tr>
             </thead>
-            <tbody v-for="(item, index) in rankingItems" v-bind:key="item">
+            <tbody v-for="(item, index) in rankingItems" v-bind:key="index">
             <RankingItem v-bind:rank="index + 1" v-bind:name="item.name" v-bind:icon="item.icon"
                          v-bind:icon-tooltip="item.iconTooltip" v-bind:points="item.points"/>
             </tbody>

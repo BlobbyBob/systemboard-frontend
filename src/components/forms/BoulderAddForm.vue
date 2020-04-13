@@ -50,25 +50,21 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import LabelledElement from './LabelledElement.vue';
+    import {Grades} from '@/types/grades';
 
     @Component({
         components: {LabelledElement}
     })
     export default class BoulderAddForm extends Vue {
-        readonly grades = [
-            '4', '4+',
-            '5', '5+',
-            '6a', '6a+', '6b', '6b+', '6c', '6c+',
-            '7a', '7a+', '7b', '7b+', '7c', '7c+',
-            '8a', '8a+'
-        ];
+        private readonly grades = Grades;
+
         @Prop() readonly submitHandler!: (e: Event) => void;
         @Prop() readonly cancelHandler!: (e: Event) => void;
     }
 </script>
 
 <style scoped lang="scss">
-.boulderAddForm {
-    text-align: center;
-}
+    .boulderAddForm {
+        text-align: center;
+    }
 </style>

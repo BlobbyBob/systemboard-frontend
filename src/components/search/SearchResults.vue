@@ -20,7 +20,7 @@
 <template>
     <div class="searchResults container">
         <div class="row">
-            <SearchResult v-for="result in searchResultsData" v-bind:key="result" v-bind:data="result"/>
+            <SearchResult v-for="(result, index) in searchResultsData" v-bind:key="index" v-bind:data="result"/>
         </div>
     </div>
 </template>

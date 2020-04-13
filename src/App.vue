@@ -73,6 +73,8 @@
                 ]"/>
             <hr/>
             <BoulderAddForm v-bind:submit-handler="submitHandler" v-bind:cancel-handler="cancelHandler"/>
+            <hr/>
+            <SearchForm v-bind:submit-handler="submitHandler" v-bind:cancel-handler="cancelHandler"/>
         </div>
     </div>
 </template>
@@ -87,9 +89,11 @@
     import BoulderInfo from '@/components/BoulderInfo.vue';
     import SearchResults from '@/components/search/SearchResults.vue';
     import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
+    import SearchForm from '@/components/forms/SearchForm.vue';
 
     @Component({
         components: {
+            SearchForm,
             BoulderAddForm,
             SearchResults,
             BoulderInfo,
