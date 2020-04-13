@@ -71,6 +71,8 @@
                         ascents: 1
                     },
                 ]"/>
+            <hr/>
+            <BoulderAddForm v-bind:submit-handler="submitHandler" v-bind:cancel-handler="cancelHandler"/>
         </div>
     </div>
 </template>
@@ -84,9 +86,11 @@
     import Ranking from '@/components/ranking/Ranking.vue';
     import BoulderInfo from '@/components/BoulderInfo.vue';
     import SearchResults from '@/components/search/SearchResults.vue';
+    import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
 
     @Component({
         components: {
+            BoulderAddForm,
             SearchResults,
             BoulderInfo,
             Ranking,
@@ -107,6 +111,16 @@
 
         menuHandler(id: string) {
             console.log('Menu entry with id ' + id + ' clicked');
+        }
+
+        submitHandler(e: Event) {
+            console.log('Submit Handler executed');
+            console.log('Submit event: ', e);
+        }
+
+        cancelHandler(e: Event) {
+            console.log('Cancel Handler executed');
+            console.log('Cancel event: ', e);
         }
     }
 </script>
