@@ -90,6 +90,8 @@
     import SearchResults from '@/components/search/SearchResults.vue';
     import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
     import SearchForm from '@/components/forms/SearchForm.vue';
+    import {loginPassword} from '@/api/interface';
+    import {ApiError} from '@/api/api';
 
     @Component({
         components: {
@@ -107,10 +109,16 @@
     export default class App extends Vue {
         private isLoggedIn = false;
 
-        loginHandler(event: Event) {
+        loginHandler(email: string, password: string) {
             this.isLoggedIn = true;
             console.log('Login Handler executed');
-            console.log('Login event: ', event);
+            console.log('Login data: ', email, password);
+            loginPassword(email, password).then(() => {
+                console.log('Successful login');
+            }).catch((error: ApiError) => {
+                console.warn('API error occurred');
+                console.warn(error);
+            });
         }
 
         menuHandler(id: string) {

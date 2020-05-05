@@ -20,12 +20,12 @@
 <template>
     <div class="login">
         <h3>Login</h3>
-        <form v-on:submit.prevent="loginHandler">
+        <form v-on:submit.prevent="loginHandlerWrapper">
             <label>
                 E-Mail Adresse:<br>
-                <input type="email"><br>
+                <input type="email" v-model="email"><br>
                 Password:<br>
-                <input type="password"><br>
+                <input type="password" v-model="password"><br>
                 <button type="submit" class="btn btn-success">Anmelden</button>
             </label>
         </form>
@@ -37,7 +37,13 @@
 
     @Component
     export default class Login extends Vue {
-        @Prop() loginHandler!: (event: Event) => void;
+        @Prop() loginHandler!: (email: string, password: string) => void;
+        @Prop() email!: string;
+        @Prop() password!: string;
+
+        loginHandlerWrapper () {
+            this.loginHandler(this.email, this.password);
+        }
     }
 </script>
 

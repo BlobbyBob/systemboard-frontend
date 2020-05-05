@@ -19,7 +19,7 @@
 
 <template>
     <div class="menu">
-        <ul v-for="menuItemData in menuData" v-bind:key="menuItemData">
+        <ul v-for="(menuItemData, index) in menuData" v-bind:key="index">
             <MenuItem v-if="menuItemData.icon !== undefined" v-bind:id="menuItemData.id" v-bind:icon="menuItemData.icon"
                       v-on:action="menuClickHandler">
                 {{ menuItemData.label }}
