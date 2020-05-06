@@ -107,7 +107,7 @@
         },
     })
     export default class App extends Vue {
-        private isLoggedIn = false;
+        private isLoggedIn: boolean = (window.sessionStorage.getItem('auth') != null);
 
         loginHandler(email: string, password: string) {
             this.isLoggedIn = true;

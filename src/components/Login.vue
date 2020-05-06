@@ -38,8 +38,8 @@
     @Component
     export default class Login extends Vue {
         @Prop() loginHandler!: (email: string, password: string) => void;
-        @Prop() email!: string;
-        @Prop() password!: string;
+        private email = "";
+        private password = "";
 
         loginHandlerWrapper () {
             this.loginHandler(this.email, this.password);

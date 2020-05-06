@@ -17,14 +17,17 @@
  *
  */
 
-import {apiCall} from './api';
+import {apiCall, setAuthentication} from './api';
 import {Token} from './types';
 
 export async function loginPassword(email: string, password: string) {
     const qs = new URLSearchParams({
         'auth': password
-    })
+    });
+    setAuthentication('Login');
     const apiToken: Token = await apiCall('GET', '/login/password/' + encodeURIComponent(email) + '?' + qs.toString());
+    console.log('API Call response:', apiToken);
     console.log('Saving session token:', apiToken.token);
+    setAuthentication('Bearer ' + apiToken.token);
 }
 

@@ -18,7 +18,7 @@
  */
 
 const baseUrl = 'http://api.systemboard.local';
-let auth: string | undefined = undefined;
+const sessionStorage = window.sessionStorage;
 
 export interface ApiError {
     successfulTransmission: boolean;
@@ -26,23 +26,29 @@ export interface ApiError {
     statusText?: string;
 }
 
-export function setAuthentication(autentication: string) {
-    auth = autentication;
+export function setAuthentication(authentication: string) {
+    sessionStorage.setItem('auth', authentication);
 }
 
 export function unsetAuthentication() {
-    auth = undefined;
+    sessionStorage.removeItem('auth');
 }
 
 export async function apiCall(method: string, endpoint: string, data?: any): Promise<any> {
     return new Promise<any>(((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open(method, baseUrl + endpoint);
-        if (auth != undefined) {
+        const auth = sessionStorage.getItem('auth');
+        if (auth != null) {
             xhr.setRequestHeader('Authorization', auth);
         }
         xhr.onreadystatechange = () => {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
+                const contentType = xhr.getResponseHeader('Content-Type');
+                if (contentType != null && contentType.indexOf('application/json') != -1) {
+                    xhr.responseType = 'json';
+                }
+            } else if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status >= 200 && xhr.status < 400) {
                     resolve(xhr.response);
                 } else {
