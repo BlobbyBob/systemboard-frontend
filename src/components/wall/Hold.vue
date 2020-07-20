@@ -135,6 +135,8 @@
 </script>
 
 <style scoped lang="scss">
+    @import 'src/style/custom';
+
     circle, ellipse, polygon {
         stroke-width: 2px;
         fill: transparent;
@@ -145,10 +147,10 @@
     }
 
     circle[data-type="1"], ellipse[data-type="1"], polygon[data-type="1"] {
-        stroke: red;
+        stroke: $hold-color;
     }
 
     circle[data-type="2"], ellipse[data-type="2"], polygon[data-type="2"] {
-        stroke: green;
+        stroke: $hold-color-special;
     }
 </style>

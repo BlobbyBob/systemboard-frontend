@@ -39,6 +39,18 @@
             <div class="col-6 property">Bewertung:</div>
             <div class="col-6 value">{{ rating + " Sterne" }}</div>
         </div>
+        <div class="row">
+            <div class="col-6 property">Bereits geklettert?</div>
+            <div class="col-6 value"><i>Todo</i></div>
+        </div>
+        <div class="row">
+            <div class="col-6 property">Bewerten:</div>
+            <div class="col-6 value"><i>Todo</i></div>
+        </div>
+        <div class="row">
+            <div class="col-6 property">Schwierigkeit:</div>
+            <div class="col-6 value"><i>Todo</i></div>
+        </div>
     </div>
 </template>
 
