@@ -21,8 +21,10 @@
     <div class="wall row">
         <button class="btn back" v-on:click="prevSegment">Zurück</button>
         <button class="btn forward" v-on:click="nextSegment">Vor</button><br>
-        <div v-for="(image, index) in images" v-bind:key="image">
-            <WallSegment v-bind:image="image" v-bind:visible="index === currentIndex" />
+        <div v-for="(holds, index) in data" v-bind:key="index">
+            <keep-alive>
+                <WallSegment v-bind:image="'/dev/' + holds.filename" v-bind:holds="holds.holds" v-bind:visible="index === currentIndex" v-bind:types="types"/>
+            </keep-alive>
         </div>
     </div>
 </template>
@@ -30,6 +32,7 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import WallSegment from "./WallSegment.vue";
+    import {Holds} from '@/api/types';
 
     @Component({
         components: {
@@ -37,7 +40,9 @@
         }
     })
     export default class Wall extends Vue {
-        @Prop() readonly images!: string[];
+        @Prop() readonly data!: Holds[];
+        @Prop() readonly types!: {[holdId: number]: 0 | 1 | 2};
+
         get currentIndex() {
             return this.internalCurrentIndex;
         }
@@ -48,7 +53,7 @@
         private internalCurrentIndex = 0;
 
         nextSegment() {
-            if (this.currentIndex + 1 < this.images.length)
+            if (this.currentIndex + 1 < this.data.length)
                 this.currentIndex++;
         }
 
@@ -62,6 +67,5 @@
 <style scoped lang="scss">
 .wall {
     min-height: 600px;
-    height: 80vh;
 }
 </style>

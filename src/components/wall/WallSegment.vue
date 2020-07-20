@@ -21,22 +21,37 @@
     <div class="wallSegment col-12" v-bind:class="{ hidden: !visible }">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 670">
             <image x="0" y="0" width="1000px" height="670px" :xlink:href="image"></image>
+            <g class="holds">
+                <Hold v-for="(hold, index) in holdsFiltered" v-bind:key="index" v-bind:id="hold.id" v-bind:tag="hold.tag" v-bind:attr="hold.attr" v-bind:type="types[hold.id]"/>
+            </g>
         </svg>
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {Hold as HoldType} from '@/api/types';
+    import Hold from '@/components/wall/Hold.vue';
 
-    @Component
+    @Component({
+        components: {
+            Hold
+        }
+    })
     export default class WallSegment extends Vue {
         @Prop() readonly image!: string;
+        @Prop() readonly holds!: HoldType[];
+        @Prop() readonly types!: {[holdId: number]: 0 | 1 | 2};
         @Prop() visible!: boolean;
+
+        get holdsFiltered(): HoldType[] {
+            return this.holds;
+        }
     }
 </script>
 
 <style scoped lang="scss">
-.hidden {
-    display: none;
-}
+    .hidden {
+        display: none;
+    }
 </style>

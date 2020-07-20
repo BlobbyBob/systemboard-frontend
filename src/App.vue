@@ -28,14 +28,18 @@
                         label: 'Punkt 1'
                     },
                     {
-                        id: 'elem2',
-                        label: 'Punkt 2'
+                        id: 'holds',
+                        label: 'Load Holds'
+                    },
+                    {
+                        id: 'wall',
+                        label: 'Load Wall'
                     }
                 ]" v-bind:menu-click-handler="menuHandler" v-if="isLoggedIn"/>
             <hr/>
             <Login v-bind:login-handler="loginHandler" v-if="!isLoggedIn"/>
             <hr/>
-            <Wall v-bind:images="['/dev/left.jpg', '/dev/center.jpg', '/dev/right.jpg']" v-if="isLoggedIn"/>
+            <Wall v-if="isLoggedIn" v-bind:data="wallData" v-bind:types="holdTypes"/>
             <hr/>
             <div class="container col-12">
                 <Ranking v-bind:ranking-items="[
@@ -90,8 +94,9 @@
     import SearchResults from '@/components/search/SearchResults.vue';
     import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
     import SearchForm from '@/components/forms/SearchForm.vue';
-    import {loginPassword} from '@/api/interface';
-    import {ApiError} from '@/api/api';
+    import {getHolds, getWall, loginPassword} from '@/api/interface';
+    import {ApiError} from '@/api';
+    import {Holds} from '@/api/types';
 
     @Component({
         components: {
@@ -108,8 +113,27 @@
     })
     export default class App extends Vue {
         private isLoggedIn: boolean = (window.sessionStorage.getItem('auth') != null);
+        private wallLoaded = false;
+        private wallData: Holds[] = [];
+        private holdTypes: {[holdId: number]: 0 | 1 | 2} = {};
 
-        loginHandler(email: string, password: string) {
+        async loadWall() {
+            if (!this.wallLoaded) {
+                const wall = await getWall();
+                this.wallData = await getHolds(wall.id);
+
+                this.holdTypes = {};
+                for (const holds of this.wallData) {
+                    for (const hold of holds.holds) {
+                        this.holdTypes[hold.id] = 0;
+                    }
+                }
+
+                this.wallLoaded = true;
+            }
+        }
+
+        async loginHandler(email: string, password: string) {
             this.isLoggedIn = true;
             console.log('Login Handler executed');
             console.log('Login data: ', email, password);
@@ -123,6 +147,11 @@
 
         menuHandler(id: string) {
             console.log('Menu entry with id ' + id + ' clicked');
+            if (id == 'wall') {
+                this.loadWall();
+            } else if (id == 'holds') {
+                getHolds(4).then((x) => console.log(x));
+            }
         }
 
         submitHandler(e: Event) {

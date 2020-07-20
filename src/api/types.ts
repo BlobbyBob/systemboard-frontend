@@ -20,3 +20,20 @@
 export interface Token {
     token: string;
 }
+
+export interface Wall {
+    id: number;
+    name: string;
+    wallSegments: Array<{ image: string }>;
+}
+
+export interface Holds {
+    filename: string;
+    holds: Hold[];
+}
+
+export interface Hold {
+    id: number;
+    tag: string;
+    attr: string;
+}

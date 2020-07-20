@@ -17,8 +17,8 @@
  *
  */
 
-import {apiCall, setAuthentication} from './api';
-import {Token} from './types';
+import {apiCall, setAuthentication} from './index';
+import {Holds, Token, Wall} from './types';
 
 export async function loginPassword(email: string, password: string) {
     const qs = new URLSearchParams({
@@ -29,5 +29,13 @@ export async function loginPassword(email: string, password: string) {
     console.log('API Call response:', apiToken);
     console.log('Saving session token:', apiToken.token);
     setAuthentication('Bearer ' + apiToken.token);
+}
+
+export async function getWall(): Promise<Wall> {
+    return await apiCall('GET', '/wall');
+}
+
+export async function getHolds(wallid: number): Promise<Array<Holds>> {
+    return await apiCall('GET', '/holds/' + wallid);
 }
 

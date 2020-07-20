@@ -48,5 +48,7 @@
 </script>
 
 <style scoped lang="scss">
-
+li {
+    cursor: pointer;
+}
 </style>
