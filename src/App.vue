@@ -28,8 +28,8 @@
                         label: 'Punkt 1'
                     },
                     {
-                        id: 'holds',
-                        label: 'Load Holds'
+                        id: 'boulder',
+                        label: 'Load Corona Boulder'
                     },
                     {
                         id: 'wall',
@@ -94,7 +94,7 @@
     import SearchResults from '@/components/search/SearchResults.vue';
     import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
     import SearchForm from '@/components/forms/SearchForm.vue';
-    import {getHolds, getWall, loginPassword} from '@/api/interface';
+    import {getBoulder, getHolds, getWall, loginPassword} from '@/api/interface';
     import {ApiError} from '@/api';
     import {Holds} from '@/api/types';
 
@@ -115,7 +115,7 @@
         private isLoggedIn: boolean = (window.sessionStorage.getItem('auth') != null);
         private wallLoaded = false;
         private wallData: Holds[] = [];
-        private holdTypes: {[holdId: number]: 0 | 1 | 2} = {};
+        private holdTypes: { [holdId: number]: 0 | 1 | 2 } = {};
 
         async loadWall() {
             if (!this.wallLoaded) {
@@ -130,6 +130,19 @@
                 }
 
                 this.wallLoaded = true;
+            }
+        }
+
+        async loadBoulder(id: number) {
+            const boulder = await getBoulder(id);
+
+            for (const holds of this.wallData) {
+                for (const hold of holds.holds) {
+                    if (boulder.holds[hold.id] != undefined)
+                        this.holdTypes[hold.id] = boulder.holds[hold.id];
+                    else
+                        this.holdTypes[hold.id] = 0;
+                }
             }
         }
 
@@ -149,8 +162,8 @@
             console.log('Menu entry with id ' + id + ' clicked');
             if (id == 'wall') {
                 this.loadWall();
-            } else if (id == 'holds') {
-                getHolds(4).then((x) => console.log(x));
+            } else if (id == 'boulder') {
+                this.loadBoulder(171);
             }
         }
 

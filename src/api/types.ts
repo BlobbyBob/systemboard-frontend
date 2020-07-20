@@ -37,3 +37,23 @@ export interface Hold {
     tag: string;
     attr: string;
 }
+
+export interface Boulder {
+    id: number,
+    name: string,
+    description: string,
+    creator: {
+        id: number,
+        name: string
+    },
+    ascents: number,
+    climbed: boolean,
+    grade: number,
+    rating: number,
+    location: {
+        min: number,
+        main: number,
+        max: number
+    }
+    holds: { [id: number]: 1 | 2 }
+}
