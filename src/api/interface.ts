@@ -42,3 +42,7 @@ export async function getHolds(wallid: number): Promise<Holds[]> {
 export async function getBoulder(id: number): Promise<Boulder> {
     return await apiCall('GET', '/boulder/' + id);
 }
+
+export async function searchBoulder(): Promise<Boulder[]> {
+    return await apiCall('POST', '/search', {});
+}

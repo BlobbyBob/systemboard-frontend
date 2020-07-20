@@ -50,10 +50,10 @@ export interface Boulder {
     climbed: boolean,
     grade: number,
     rating: number,
-    location: {
+    location?: {
         min: number,
         main: number,
         max: number
     }
-    holds: { [id: number]: 1 | 2 }
+    holds?: { [id: number]: 1 | 2 }
 }

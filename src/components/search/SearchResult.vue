@@ -18,9 +18,9 @@
   -->
 
 <template>
-    <div class="searchResult col-12 col-md-6 col-lg-4 col-xl-3">
-        <span class="name">{{ data.name }}</span> <small>von {{ data.creator }}</small><br>
-        Schwierigkeit: {{ data.grade }}<br>
+    <div class="searchResult col-12 col-md-6 col-lg-4 col-xl-3" v-on:click="$emit('action', data.id)">
+        <span class="name">{{ data.name }}</span> <small>von {{ data.creator.name }}</small><br>
+        Schwierigkeit: {{ gradeItoa(data.grade) }}<br>
         {{ data.rating }} Sterne<br>
         {{ data.ascents }}x geklettert
     </div>
@@ -28,11 +28,19 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {SearchResultData} from '@/types/SearchResultData';
+    import {Boulder} from '@/api/types';
 
-    @Component
+    @Component({
+        model: {
+            event: 'action'
+        }
+    })
     export default class SearchResult extends Vue {
-        @Prop() readonly data!: SearchResultData;
+        @Prop() readonly data!: Boulder;
+
+        gradeItoa(grade: number): string {
+            return ['4', '4+', '5', '5+', '6A', '6A+', '6B', '6B+', '6C', '6C+', '7A', '7A+', '7B', '7B+', '7C', '7C+', '8A', '8A+', '8B', '8B+', '8C', '8C+'][grade - 8];
+        }
     }
 </script>
 

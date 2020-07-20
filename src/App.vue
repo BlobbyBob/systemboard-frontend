@@ -34,6 +34,10 @@
                     {
                         id: 'wall',
                         label: 'Load Wall'
+                    },
+                    {
+                        id: 'search',
+                        label: 'Search Boulders'
                     }
                 ]" v-bind:menu-click-handler="menuHandler" v-if="isLoggedIn"/>
             <hr/>
@@ -59,22 +63,7 @@
             <BoulderInfo name="Corona" creator="Virus" description="Ein Boulder für die Quarantäne" grade="6c"
                          rating="4"/>
             <hr/>
-            <SearchResults v-bind:search-results-data="[
-                    {
-                        name: 'Corona',
-                        creator: 'Virus',
-                        grade: '6c',
-                        rating: 4,
-                        ascents: 3
-                    },
-                    {
-                        name: 'Covid-19',
-                        creator: 'Disease',
-                        grade: '6b',
-                        rating: 2,
-                        ascents: 1
-                    },
-                ]"/>
+            <SearchResults v-bind:search-results-data="searchResults" v-bind:click-handler="loadBoulder"/>
             <hr/>
             <BoulderAddForm v-bind:submit-handler="submitHandler" v-bind:cancel-handler="cancelHandler"/>
             <hr/>
@@ -94,9 +83,9 @@
     import SearchResults from '@/components/search/SearchResults.vue';
     import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
     import SearchForm from '@/components/forms/SearchForm.vue';
-    import {getBoulder, getHolds, getWall, loginPassword} from '@/api/interface';
+    import {getBoulder, getHolds, getWall, loginPassword, searchBoulder} from '@/api/interface';
     import {ApiError} from '@/api';
-    import {Holds} from '@/api/types';
+    import {Boulder, Holds} from '@/api/types';
 
     @Component({
         components: {
@@ -116,6 +105,7 @@
         private wallLoaded = false;
         private wallData: Holds[] = [];
         private holdTypes: { [holdId: number]: 0 | 1 | 2 } = {};
+        private searchResults: Boulder[] = [];
 
         async loadWall() {
             if (!this.wallLoaded) {
@@ -135,6 +125,10 @@
 
         async loadBoulder(id: number) {
             const boulder = await getBoulder(id);
+            if (!boulder.holds) {
+                console.warn('Loaded boulder is missing the holds list', boulder);
+                return;
+            }
 
             for (const holds of this.wallData) {
                 for (const hold of holds.holds) {
@@ -144,6 +138,10 @@
                         this.holdTypes[hold.id] = 0;
                 }
             }
+        }
+
+        async search() {
+            this.searchResults = await searchBoulder();
         }
 
         async loginHandler(email: string, password: string) {
@@ -160,10 +158,16 @@
 
         menuHandler(id: string) {
             console.log('Menu entry with id ' + id + ' clicked');
-            if (id == 'wall') {
-                this.loadWall();
-            } else if (id == 'boulder') {
-                this.loadBoulder(171);
+            switch (id) {
+                case 'wall':
+                    this.loadWall();
+                    break;
+                case 'boulder':
+                    this.loadBoulder(171);
+                    break;
+                case 'search':
+                    this.search();
+                    break;
             }
         }
 

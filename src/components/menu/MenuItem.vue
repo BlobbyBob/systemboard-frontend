@@ -39,8 +39,7 @@
         get iconClass() {
             if (this.icon === undefined)
                 return {};
-            // eslint-disable-next-line
-            const classes: any = {};
+            const classes: { [clazz: string]: boolean } = {};
             classes['icon-' + this.icon] = true;
             return classes;
         }
@@ -48,7 +47,7 @@
 </script>
 
 <style scoped lang="scss">
-li {
-    cursor: pointer;
-}
+    li {
+        cursor: pointer;
+    }
 </style>

@@ -20,21 +20,22 @@
 <template>
     <div class="searchResults container">
         <div class="row">
-            <SearchResult v-for="(result, index) in searchResultsData" v-bind:key="index" v-bind:data="result"/>
+            <SearchResult v-for="(result, index) in searchResultsData" v-bind:key="index" v-bind:data="result" v-on:action="clickHandler"/>
         </div>
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {SearchResultData} from '@/types/SearchResultData';
     import SearchResult from './SearchResult.vue';
+    import {Boulder} from '@/api/types';
 
     @Component({
         components: {SearchResult}
     })
     export default class SearchResults extends Vue {
-        @Prop() readonly searchResultsData!: SearchResultData[];
+        @Prop() readonly searchResultsData!: Boulder[];
+        @Prop() readonly clickHandler!: (id: number) => void;
     }
 </script>
 
