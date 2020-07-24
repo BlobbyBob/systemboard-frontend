@@ -43,7 +43,7 @@
             <hr/>
             <Login v-bind:login-handler="loginHandler" v-if="!isLoggedIn"/>
             <hr/>
-            <Wall v-if="isLoggedIn" v-bind:data="wallData" v-bind:types="holdTypes"/>
+            <Wall v-if="isLoggedIn" v-bind:data="wallData" v-bind:types="holdTypes" v-bind:hold-click-handler="holdClickHandler"/>
             <hr/>
             <div class="container col-12">
                 <Ranking v-bind:ranking-items="[
@@ -103,6 +103,7 @@
     })
     export default class App extends Vue {
         private isLoggedIn: boolean = (window.sessionStorage.getItem('auth') != null);
+        private isSelectionMode = true;
         private wallLoaded = false;
         private wallData: Holds[] = [];
         private holdTypes: { [holdId: number]: 0 | 1 | 2 } = {};
@@ -181,6 +182,17 @@
         cancelHandler(e: Event) {
             console.log('Cancel Handler executed');
             console.log('Cancel event: ', e);
+        }
+
+        holdClickHandler(id: number, e: Event) {
+            e.stopPropagation();
+            const holdTypes = this.holdTypes;
+            if (this.isSelectionMode) {
+                if (holdTypes[id] == 2) holdTypes[id] = 0;
+                else holdTypes[id] += 1;
+
+                this.holdTypes = holdTypes;
+            }
         }
 
         gItoa(grade: number): string {

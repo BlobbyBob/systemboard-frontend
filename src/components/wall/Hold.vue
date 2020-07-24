@@ -18,8 +18,8 @@
   -->
 
 <template>
-    <polygon v-if="tag === 'polygon'" :points="points" v-bind:data-type="type"></polygon>
-    <ellipse v-else-if="tag === 'ellipse'" :rx="rx" :ry="ry" :cx="cx" :cy="cy" v-bind:data-type="type"></ellipse>
+    <polygon v-if="tag === 'polygon'" :points="points" v-bind:data-type="type" v-on:click="e => $emit('click', e)"></polygon>
+    <ellipse v-else-if="tag === 'ellipse'" :rx="rx" :ry="ry" :cx="cx" :cy="cy" v-bind:data-type="type" v-on:click="e => $emit('click', e)"></ellipse>
 </template>
 
 <script lang="ts">
@@ -143,7 +143,7 @@
     }
 
     circle[data-type="0"], ellipse[data-type="0"], polygon[data-type="0"] {
-        visibility: hidden;
+        stroke-width: 0;
     }
 
     circle[data-type="1"], ellipse[data-type="1"], polygon[data-type="1"] {
