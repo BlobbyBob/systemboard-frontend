@@ -18,7 +18,7 @@
  */
 
 import {apiCall, setAuthentication} from './index';
-import {Boulder, BoulderSearch, Holds, Token, Wall} from './types';
+import {Boulder, BoulderNew, BoulderSearch, Holds, Token, Wall} from './types';
 
 export async function loginPassword(email: string, password: string) {
     const qs = new URLSearchParams({
@@ -45,4 +45,9 @@ export async function getBoulder(id: number): Promise<Boulder> {
 
 export async function searchBoulder(data: BoulderSearch): Promise<Boulder[]> {
     return await apiCall('POST', '/search', data);
+}
+
+export async function newBoulder(data: BoulderNew): Promise<{ id: number }> {
+    return await apiCall('POST', '/boulder', data);
+
 }

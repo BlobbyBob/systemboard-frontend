@@ -58,6 +58,17 @@ export interface Boulder {
     holds?: { [id: number]: 1 | 2 }
 }
 
+export interface BoulderNew {
+    name: string,
+    grade: number,
+    stars: number,
+    holds: {
+        id: number,
+        type: number
+    }[],
+    description?: string
+}
+
 export interface BoulderSearch {
     name?: string;
     creator?: string;

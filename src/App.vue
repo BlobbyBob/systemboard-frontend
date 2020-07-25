@@ -24,10 +24,6 @@
             <hr/>
             <Menu v-bind:menu-data="[
                     {
-                        id: 'elem1',
-                        label: 'Punkt 1'
-                    },
-                    {
                         id: 'boulder',
                         label: 'Load Corona Boulder'
                     },
@@ -36,8 +32,12 @@
                         label: 'Load Wall'
                     },
                     {
-                        id: 'search',
-                        label: 'Search Boulders'
+                        id: 'selmode',
+                        label: 'Toggle Selection Mode'
+                    },
+                    {
+                        id: 'clear',
+                        label: 'Clear Wall'
                     }
                 ]" v-bind:menu-click-handler="menuHandler" v-if="isLoggedIn"/>
             <hr/>
@@ -65,9 +65,9 @@
             <hr/>
             <SearchResults v-bind:search-results-data="searchResults" v-bind:click-handler="loadBoulder"/>
             <hr/>
-            <BoulderAddForm v-bind:submit-handler="submitHandler" v-bind:cancel-handler="cancelHandler"/>
+            <BoulderAddForm v-bind:submit-handler="addBoulder" v-bind:cancel-handler="cancelHandler"/>
             <hr/>
-            <SearchForm v-bind:submit-handler="search" v-bind:cancel-handler="cancelHandler"/>
+            <SearchForm v-bind:submit-handler="searchBoulder" v-bind:cancel-handler="cancelHandler"/>
         </div>
     </div>
 </template>
@@ -84,8 +84,8 @@
     import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
     import SearchForm from '@/components/forms/SearchForm.vue';
     import {ApiError} from '@/api';
-    import {Boulder, BoulderSearch, Holds} from '@/api/types';
-    import {getBoulder, getHolds, getWall, loginPassword, searchBoulder} from '@/api/interface';
+    import {Boulder, BoulderNew, BoulderSearch, Holds} from '@/api/types';
+    import {getBoulder, getHolds, getWall, loginPassword, newBoulder, searchBoulder} from '@/api/interface';
     import {gradeItoa} from '@/types/grades';
 
     @Component({
@@ -103,7 +103,7 @@
     })
     export default class App extends Vue {
         private isLoggedIn: boolean = (window.sessionStorage.getItem('auth') != null);
-        private isSelectionMode = true;
+        private isSelectionMode = false;
         private wallLoaded = false;
         private wallData: Holds[] = [];
         private holdTypes: { [holdId: number]: 0 | 1 | 2 } = {};
@@ -116,11 +116,7 @@
                 this.wallData = await getHolds(wall.id);
 
                 this.holdTypes = {};
-                for (const holds of this.wallData) {
-                    for (const hold of holds.holds) {
-                        this.holdTypes[hold.id] = 0;
-                    }
-                }
+                this.clearWall();
 
                 this.wallLoaded = true;
             }
@@ -133,17 +129,28 @@
                 return;
             }
 
-            for (const holds of this.wallData) {
-                for (const hold of holds.holds) {
-                    if (this.boulder.holds[hold.id] != undefined)
-                        this.holdTypes[hold.id] = this.boulder.holds[hold.id];
-                    else
-                        this.holdTypes[hold.id] = 0;
-                }
+            this.clearWall();
+            for (const id in this.boulder.holds) {
+                this.holdTypes[id] = this.boulder.holds[id];
             }
         }
 
-        async search(data: BoulderSearch) {
+        async addBoulder(data: BoulderNew) {
+            for (const id in this.holdTypes) {
+                if (this.holdTypes[id] > 0) {
+                    data.holds.push({
+                        id: +id,
+                        type: this.holdTypes[id]
+                    });
+                }
+            }
+            console.log(data);
+            // const response = await newBoulder(data);
+            // await this.loadBoulder(response.id);
+            this.isSelectionMode = false;
+        }
+
+        async searchBoulder(data: BoulderSearch) {
             this.searchResults = await searchBoulder(data);
         }
 
@@ -168,15 +175,21 @@
                 case 'boulder':
                     this.loadBoulder(171);
                     break;
-                case 'search':
-                    this.search({});
+                case 'selmode':
+                    this.isSelectionMode = !this.isSelectionMode;
+                    break;
+                case 'clear':
+                    this.clearWall();
                     break;
             }
         }
 
-        submitHandler(e: Event) {
-            console.log('Submit Handler executed');
-            console.log('Submit event: ', e);
+        clearWall() {
+            for (const holds of this.wallData) {
+                for (const hold of holds.holds) {
+                    this.holdTypes[hold.id] = 0;
+                }
+            }
         }
 
         cancelHandler(e: Event) {
