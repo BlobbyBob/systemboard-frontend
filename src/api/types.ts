@@ -57,3 +57,13 @@ export interface Boulder {
     }
     holds?: { [id: number]: 1 | 2 }
 }
+
+export interface BoulderSearch {
+    name?: string;
+    creator?: string;
+    creatorId?: number;
+    minGrade?: number;
+    maxGrade?: number;
+    minRating?: number;
+    maxRating?: number;
+}

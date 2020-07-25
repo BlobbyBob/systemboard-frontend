@@ -67,7 +67,7 @@
             <hr/>
             <BoulderAddForm v-bind:submit-handler="submitHandler" v-bind:cancel-handler="cancelHandler"/>
             <hr/>
-            <SearchForm v-bind:submit-handler="submitHandler" v-bind:cancel-handler="cancelHandler"/>
+            <SearchForm v-bind:submit-handler="search" v-bind:cancel-handler="cancelHandler"/>
         </div>
     </div>
 </template>
@@ -84,7 +84,7 @@
     import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
     import SearchForm from '@/components/forms/SearchForm.vue';
     import {ApiError} from '@/api';
-    import {Boulder, Holds} from '@/api/types';
+    import {Boulder, BoulderSearch, Holds} from '@/api/types';
     import {getBoulder, getHolds, getWall, loginPassword, searchBoulder} from '@/api/interface';
     import {gradeItoa} from '@/types/grades';
 
@@ -143,8 +143,8 @@
             }
         }
 
-        async search() {
-            this.searchResults = await searchBoulder();
+        async search(data: BoulderSearch) {
+            this.searchResults = await searchBoulder(data);
         }
 
         async loginHandler(email: string, password: string) {
@@ -169,7 +169,7 @@
                     this.loadBoulder(171);
                     break;
                 case 'search':
-                    this.search();
+                    this.search({});
                     break;
             }
         }

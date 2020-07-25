@@ -20,13 +20,13 @@
 <template>
     <div class="searchForm">
         <h3>Boulder suchen</h3>
-        <form v-on:submit.prevent="submitHandler">
+        <form v-on:submit.prevent="submitHandlerWrapper">
             <LabelledElement label="Name:">
-                <input type="text" name="name"/>
+                <input type="text" name="name" v-model="name"/>
             </LabelledElement>
             <br/>
             <LabelledElement label="Ersteller:">
-                <input type="text" name="creator"/>
+                <input type="text" name="creator" v-model="creator"/>
             </LabelledElement>
             <br/>
             <fieldset>
@@ -39,11 +39,11 @@
                 </LabelledElement>
                 <div v-show="ratingSelection === 'limited'">
                     <LabelledElement label="Zwischen:">
-                        <input type="number" name="minRating" value="1" min="1" max="5" step="1"/>
+                        <input type="number" name="minRating" value="1" min="1" max="5" step="1" v-model="minRating"/>
                     </LabelledElement>
                     <br/>
                     <LabelledElement label="Und:">
-                        <input type="number" name="maxRating" value="5" min="1" max="5" step="1"/>
+                        <input type="number" name="maxRating" value="5" min="1" max="5" step="1" v-model="maxRating"/>
                     </LabelledElement>
                 </div>
             </fieldset>
@@ -51,14 +51,14 @@
             <fieldset>
                 <legend>Schwierigkeit</legend>
                 <LabelledElement label="Alle" v-bind:before="false">
-                    <input type="radio" name="rating" value="all" checked v-model="gradeSelection"/>
+                    <input type="radio" name="grade" value="all" checked v-model="gradeSelection"/>
                 </LabelledElement>
                 <LabelledElement label="Eingeschränkt" v-bind:before="false">
-                    <input type="radio" name="rating" value="limited" v-model="gradeSelection"/>
+                    <input type="radio" name="grade" value="limited" v-model="gradeSelection"/>
                 </LabelledElement>
                 <div v-show="gradeSelection === 'limited'">
                     <LabelledElement label="Zwischen:">
-                        <select name="minGrade">
+                        <select name="minGrade" v-model="minGrade">
                             <option v-for="grade in grades" v-bind:key="grade" v-bind:value="grade"
                                     v-bind:selected="grade === defaultMinGrade">
                                 {{ grade }}
@@ -67,7 +67,7 @@
                     </LabelledElement>
                     <br/>
                     <LabelledElement label="Und:">
-                        <select name="maxGrade">
+                        <select name="maxGrade" v-model="maxGrade">
                             <option v-for="grade in grades" v-bind:key="grade" v-bind:value="grade"
                                     v-bind:selected="grade === defaultMaxGrade">
                                 {{ grade }}
@@ -80,7 +80,7 @@
                     </LabelledElement>
                 </div>
             </fieldset>
-            <button type="submit">Hinzufügen</button>
+            <button type="submit">Suchen</button>
             <button type="button" v-on:click="cancelHandler">Abbrechen</button>
         </form>
     </div>
@@ -89,20 +89,42 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import LabelledElement from './LabelledElement.vue';
-    import {Grades} from '@/types/grades';
+    import {gradeAtoi, gradeItoa, Grades} from '@/types/grades';
+    import {BoulderSearch} from '@/api/types';
 
     @Component({
         components: {LabelledElement}
     })
     export default class SearchForm extends Vue {
+        private name = '';
+        private creator = '';
+        private minRating = 1;
+        private maxRating = 5;
+        private minGrade = '4';
+        private maxGrade = '8a+';
         private ratingSelection = 'all';
         private gradeSelection = 'all';
         private readonly defaultMinGrade = '5';
         private readonly defaultMaxGrade = '6a';
         private readonly grades = Grades;
 
-        @Prop() readonly submitHandler!: (e: Event) => void;
+        @Prop() readonly submitHandler!: (data: BoulderSearch) => void;
         @Prop() readonly cancelHandler!: (e: Event) => void;
+
+        submitHandlerWrapper() {
+            const data: BoulderSearch = {};
+            if (this.name) data.name = this.name;
+            if (this.creator) data.creator = this.creator;
+            if (this.gradeSelection == 'limited') {
+                data.minGrade = gradeAtoi(this.minGrade);
+                data.maxGrade = gradeAtoi(this.maxGrade);
+            }
+            if (this.ratingSelection == 'limited') {
+                data.minRating = +this.minRating;
+                data.maxRating = +this.maxRating;
+            }
+            this.submitHandler(data);
+        }
     }
 </script>
 

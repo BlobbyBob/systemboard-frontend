@@ -28,3 +28,7 @@ export const Grades = [
 export function gradeItoa(grade: number): string {
     return Grades[grade - 8];
 }
+
+export function gradeAtoi(grade: string): number {
+    return Grades.indexOf(grade) + 8;
+}
