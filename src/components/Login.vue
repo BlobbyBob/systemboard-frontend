@@ -18,15 +18,23 @@
   -->
 
 <template>
-    <div class="login">
-        <h3>Login</h3>
-        <form v-on:submit.prevent="loginHandlerWrapper">
+    <div class="text-center">
+        <h1 class="display-3">Digitales<br>Bouldersystem</h1>
+
+        <form @submit.prevent="loginHandlerWrapper" class="pt-lg-3 pb-lg-3 pl-lg-5 pr-lg-5">
             <label>
-                E-Mail Adresse:<br>
-                <input type="email" v-model="email"><br>
-                Password:<br>
-                <input type="password" v-model="password"><br>
-                <button type="submit" class="btn btn-success">Anmelden</button>
+                <div class="text-left">
+                    E-Mail Adresse:<br>
+                    <input type="email" class="form-control" v-model="email"><br>
+                    Passwort:<br>
+                    <input type="password" class="form-control" v-model="password"><br>
+                </div>
+                <div class="btn-group btn-block">
+                    <button type="submit" class="btn btn-primary">Anmelden</button>
+                    <button type="submit" class="btn btn-success">Registrieren</button>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-block btn-secondary">Als Gast anmelden</button>
             </label>
         </form>
     </div>
@@ -38,17 +46,18 @@
     @Component
     export default class Login extends Vue {
         @Prop() loginHandler!: (email: string, password: string) => void;
-        private email = "";
-        private password = "";
+        private email = '';
+        private password = '';
 
-        loginHandlerWrapper () {
+        loginHandlerWrapper() {
             this.loginHandler(this.email, this.password);
         }
     }
 </script>
 
 <style scoped lang="scss">
-    .login {
-        text-align: center;
+    button {
+        padding: 5px;
+        margin-top: 10px;
     }
 </style>

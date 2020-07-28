@@ -19,13 +19,12 @@
 
 <template>
     <div class="wall row">
-        <button class="btn back" v-on:click="prevSegment">Zurück</button>
-        <button class="btn forward" v-on:click="nextSegment">Vor</button>
+        <button class="btn back" @click="prevSegment">Zurück</button>
+        <button class="btn forward" @click="nextSegment">Vor</button>
         <br>
-        <div v-for="(holds, index) in data" v-bind:key="index">
+        <div v-for="(holds, index) in data" :key="index">
             <keep-alive>
-                <WallSegment v-bind:image="'/dev/' + holds.filename" v-bind:holds="holds.holds" v-bind:visible="index === currentIndex" v-bind:types="types"
-                             v-on:action="holdClickHandlerWrapper"/>
+                <WallSegment :image="'/dev/' + holds.filename" :holds="holds.holds" :visible="index === currentIndex" :types="types" @action="holdClickHandlerWrapper"/>
             </keep-alive>
         </div>
     </div>
@@ -48,6 +47,10 @@
 
         holdClickHandlerWrapper(id: number, e: Event) {
             this.holdClickHandler(id, e);
+            this.refresh();
+        }
+
+        public refresh() {
             this.$children.forEach(v => v.$forceUpdate());
         }
 

@@ -18,9 +18,12 @@
   -->
 
 <template>
-    <li v-on:click="$emit('action', id)">
-        <span v-if="icon !== undefined" v-bind:class="iconClass"></span>
-        <slot></slot>
+    <li class="nav-item text-center">
+        <a class="nav-link text-reset" @click.prevent="$emit('action', id)" href="#">
+            <span v-if="icon !== undefined" :class="iconClass"></span>
+            <br>
+            <slot></slot>
+        </a>
     </li>
 </template>
 
@@ -40,14 +43,22 @@
             if (this.icon === undefined)
                 return {};
             const classes: { [clazz: string]: boolean } = {};
-            classes['icon-' + this.icon] = true;
+            classes['fas'] = true;
+            classes['fa-lg'] = true;
+            classes['fa-' + this.icon] = true;
             return classes;
         }
     }
 </script>
 
 <style scoped lang="scss">
+    @import 'src/style/custom';
+
     li {
         cursor: pointer;
+        color: white;
+        :hover {
+            background-color: $topbar-bg-hover;
+        }
     }
 </style>

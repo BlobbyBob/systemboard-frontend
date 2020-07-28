@@ -18,16 +18,21 @@
   -->
 
 <template>
-    <div class="menu">
-        <ul v-for="(menuItemData, index) in menuData" v-bind:key="index">
-            <MenuItem v-if="menuItemData.icon !== undefined" v-bind:id="menuItemData.id" v-bind:icon="menuItemData.icon" v-on:action="menuClickHandler">
-                {{ menuItemData.label }}
-            </MenuItem>
-            <MenuItem v-else v-bind:id="menuItemData.id" v-on:action="menuClickHandler">
-                {{ menuItemData.label }}
-            </MenuItem>
-        </ul>
-    </div>
+    <nav class="navbar navbar-dark navbar-expand-lg sticky-top">
+        <div class="container">
+            <ul class="nav">
+                <li class="navbar-brand"><img src="/dev/favicon.png" alt="DBS"/></li>
+            </ul>
+            <ul v-for="(menuItemData, index) in menuData" :key="index" class="nav">
+                <MenuItem v-if="menuItemData.icon !== undefined" :id="menuItemData.id" :icon="menuItemData.icon" @action="menuClickHandler">
+                    {{ menuItemData.label }}
+                </MenuItem>
+                <MenuItem v-else :id="menuItemData.id" @action="menuClickHandler">
+                    {{ menuItemData.label }}
+                </MenuItem>
+            </ul>
+        </div>
+    </nav>
 </template>
 
 <script lang="ts">
@@ -47,5 +52,13 @@
 </script>
 
 <style scoped lang="scss">
+    @import 'src/style/custom';
 
+    nav {
+        background-color: $topbar-bg;
+        .navbar-brand img {
+            width: 3rem;
+            height: 3rem;
+        }
+    }
 </style>
