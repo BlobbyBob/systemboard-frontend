@@ -20,15 +20,19 @@
 <template>
     <div class="wall row">
         <div class="w-100 d-flex align-items-stretch">
-            <div class="pl-2 pr-2 wall-nav d-flex align-items-center"><span class="fas fa-3x fa-angle-double-left" @click="prevSegment"></span></div>
-            <div class="flex-grow-1">
-            <div v-for="(holds, index) in data" :key="holds.filename">
-                <keep-alive>
-                    <WallSegment :image="'/dev/' + holds.filename" :holds="holds.holds" :visible="index === currentIndex" :types="types" @action="holdClickHandlerWrapper"/>
-                </keep-alive>
+            <div class="pl-2 pr-2 wall-nav d-flex align-items-center" :class="leftBlink">
+                <span class="fas fa-3x fa-arrow-alt-circle-left" @click="prevSegment"></span>
             </div>
+            <div class="wall-segments flex-grow-1">
+                <div v-for="(holds, index) in data" :key="holds.filename">
+                    <keep-alive>
+                        <WallSegment :image="'/dev/' + holds.filename" :holds="holds.holds" :visible="index === currentIndex" :types="types" @action="holdClickHandlerWrapper"/>
+                    </keep-alive>
+                </div>
             </div>
-            <div class="pl-2 pr-2 wall-nav d-flex align-items-center"><span class="fas fa-3x fa-angle-double-right" @click="nextSegment"></span></div>
+            <div class="pl-2 pr-2 wall-nav d-flex align-items-center" :class="rightBlink">
+                <span class="fas fa-3x fa-arrow-alt-circle-right" @click="nextSegment"></span>
+            </div>
         </div>
     </div>
 </template>
@@ -66,6 +70,14 @@ export default class Wall extends Vue {
         this.$emit('indexchange', value);
     }
 
+    get leftBlink() {
+        return {blink: true};
+    }
+
+    get rightBlink() {
+        return {blink: true};
+    }
+
     private internalCurrentIndex = 0;
 
     nextSegment() {
@@ -90,4 +102,18 @@ export default class Wall extends Vue {
 .wall-nav {
     cursor: pointer;
 }
+
+.blink {
+    animation: blink-animation 1.8s infinite ease-in-out;
+}
+
+@keyframes blink-animation {
+    0%, 100% {
+        color: inherit;
+    }
+    50% {
+        color: #F3652C;
+    }
+}
+
 </style>
