@@ -39,7 +39,8 @@
                     {
                         id: 'search',
                         icon: 'search',
-                        label: 'Suche'
+                        label: 'Suche',
+                        modal: 'searchModal'
                     },
                     {
                         id: 'add',
@@ -63,33 +64,30 @@
                     }
                 ]" :menu-click-handler="menuHandler" v-if="isLoggedIn"/>
             <div class="container">
-                <hr/>
                 <Wall v-if="isLoggedIn" :data="wallData" :types="holdTypes" :hold-click-handler="holdClickHandler"/>
-                <hr/>
-                <div class="container col-12">
-                    <Ranking v-bind:ranking-items="[
-                    {
-                        name: 'Mr. Doe',
-                        points: 123
-                    },
-                    {
-                        name: 'Ms. Doe',
-                        points: 45,
-                        icon: 'trophy',
-                        iconTooltip: 'Tooltip'
-                    }
-                ]"/>
-                </div>
-                <hr/>
-                <BoulderInfo v-if="boulder != null" v-bind:name="boulder.name" v-bind:creator="boulder.creator.name" v-bind:description="boulder.description"
-                             v-bind:grade="gItoa(boulder.grade)" v-bind:rating="boulder.rating"/>
-                <hr/>
-                <SearchResults v-bind:search-results-data="searchResults" v-bind:click-handler="loadBoulder"/>
-                <hr/>
-                <BoulderAddForm v-bind:submit-handler="addBoulder" v-bind:cancel-handler="cancelHandler"/>
-                <hr/>
-                <SearchForm v-bind:submit-handler="searchBoulder" v-bind:cancel-handler="cancelHandler"/>
+                <BoulderInfo v-if="boulder != null" :name="boulder.name" :creator="boulder.creator.name" :description="boulder.description" :grade="gItoa(boulder.grade)"
+                             :rating="boulder.rating"/>
+                <SearchResults v-if="showSearchResults" :search-results-data="searchResults" :click-handler="loadBoulder"/>
+                <!--                <div class="container col-12">-->
+                <!--                    <Ranking v-bind:ranking-items="[-->
+                <!--                    {-->
+                <!--                        name: 'Mr. Doe',-->
+                <!--                        points: 123-->
+                <!--                    },-->
+                <!--                    {-->
+                <!--                        name: 'Ms. Doe',-->
+                <!--                        points: 45,-->
+                <!--                        icon: 'trophy',-->
+                <!--                        iconTooltip: 'Tooltip'-->
+                <!--                    }-->
+                <!--                ]"/>-->
+                <!--                </div>-->
+                <!--                <BoulderAddForm v-bind:submit-handler="addBoulder" v-bind:cancel-handler="cancelHandler"/>-->
+                <!--                <hr/>-->
             </div>
+            <b-modal id="searchModal">
+                <SearchForm :submit-handler="searchBoulder" :cancel-handler="cancelHandler"/>
+            </b-modal>
         </div>
     </div>
 </template>
@@ -126,14 +124,23 @@
         },
     })
     export default class App extends Vue {
-        private isLoggedIn: boolean = (window.sessionStorage.getItem('auth') != null);
+        private isLoggedIn = (window.sessionStorage.getItem('auth') != null);
         private isSelectionMode = false;
         private wall?: Wall;
         private wallLoaded = false;
         private wallData: Holds[] = [];
         private holdTypes: { [holdId: number]: 0 | 1 | 2 } = {};
         private searchResults: Boulder[] = [];
+        private showSearchResults = false;
         private boulder: Boulder | null = null;
+
+        constructor() {
+            super();
+            // If reloaded and session still valid, reload wall
+            if (window.sessionStorage.getItem('auth') != null) {
+                this.loadWall();
+            }
+        }
 
         async loadWall() {
             if (!this.wallLoaded) {
@@ -177,6 +184,7 @@
         }
 
         async searchBoulder(data: BoulderSearch) {
+            this.showSearchResults = true;
             this.searchResults = await searchBoulder(data);
         }
 
@@ -189,6 +197,8 @@
             }).catch((error: ApiError) => {
                 console.warn('API error occurred');
                 console.warn(error);
+            }).finally(() => {
+                this.loadWall();
             });
         }
 
@@ -211,6 +221,7 @@
         }
 
         clearWall() {
+            this.boulder = null;
             for (const holds of this.wallData) {
                 for (const hold of holds.holds) {
                     this.holdTypes[hold.id] = 0;
@@ -260,6 +271,7 @@
         min-width: 100vw;
         z-index: -1;
     }
+
     #login-form {
         margin-top: auto;
         margin-bottom: auto;
@@ -267,6 +279,7 @@
         padding: 2em;
         border-radius: 4px;
     }
+
     #login > div > div {
         min-height: 80vh;
     }

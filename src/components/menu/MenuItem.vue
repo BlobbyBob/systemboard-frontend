@@ -18,13 +18,13 @@
   -->
 
 <template>
-    <li class="nav-item text-center">
+    <b-nav-item class="text-center">
         <a class="nav-link text-reset" @click.prevent="$emit('action', id)" href="#">
             <span v-if="icon !== undefined" :class="iconClass"></span>
             <br>
             <slot></slot>
         </a>
-    </li>
+    </b-nav-item>
 </template>
 
 <script lang="ts">

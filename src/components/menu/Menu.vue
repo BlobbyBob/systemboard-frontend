@@ -60,5 +60,9 @@
             width: 3rem;
             height: 3rem;
         }
+
+      .nav-link {
+
+      }
     }
 </style>
