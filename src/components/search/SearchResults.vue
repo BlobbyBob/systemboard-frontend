@@ -26,17 +26,17 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
-    import SearchResult from './SearchResult.vue';
-    import {Boulder} from '@/api/types';
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import SearchResult from './SearchResult.vue';
+import {Boulder} from '@/api/types';
 
-    @Component({
-        components: {SearchResult}
-    })
-    export default class SearchResults extends Vue {
-        @Prop() readonly searchResultsData!: Boulder[];
-        @Prop() readonly clickHandler!: (id: number) => void;
-    }
+@Component({
+    components: {SearchResult}
+})
+export default class SearchResults extends Vue {
+    @Prop() readonly searchResultsData!: Boulder[];
+    @Prop() readonly clickHandler!: (id: number) => void;
+}
 </script>
 
 <style scoped lang="scss">

@@ -87,49 +87,49 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
-    import LabelledElement from './LabelledElement.vue';
-    import {gradeAtoi, gradeItoa, Grades} from '@/types/grades';
-    import {BoulderSearch} from '@/api/types';
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import LabelledElement from './LabelledElement.vue';
+import {gradeAtoi, gradeItoa, Grades} from '@/types/grades';
+import {BoulderSearch} from '@/api/types';
 
-    @Component({
-        components: {LabelledElement}
-    })
-    export default class SearchForm extends Vue {
-        private name = '';
-        private creator = '';
-        private minRating = 1;
-        private maxRating = 5;
-        private minGrade = '4';
-        private maxGrade = '8a+';
-        private ratingSelection = 'all';
-        private gradeSelection = 'all';
-        private readonly defaultMinGrade = '5';
-        private readonly defaultMaxGrade = '6a';
-        private readonly grades = Grades;
+@Component({
+    components: {LabelledElement}
+})
+export default class SearchForm extends Vue {
+    private name = '';
+    private creator = '';
+    private minRating = 1;
+    private maxRating = 5;
+    private minGrade = '4';
+    private maxGrade = '8a+';
+    private ratingSelection = 'all';
+    private gradeSelection = 'all';
+    private readonly defaultMinGrade = '5';
+    private readonly defaultMaxGrade = '6a';
+    private readonly grades = Grades;
 
-        @Prop() readonly submitHandler!: (data: BoulderSearch) => void;
-        @Prop() readonly cancelHandler!: (e: Event) => void;
+    @Prop() readonly submitHandler!: (data: BoulderSearch) => void;
+    @Prop() readonly cancelHandler!: (e: Event) => void;
 
-        submitHandlerWrapper() {
-            const data: BoulderSearch = {};
-            if (this.name) data.name = this.name;
-            if (this.creator) data.creator = this.creator;
-            if (this.gradeSelection == 'limited') {
-                data.minGrade = gradeAtoi(this.minGrade);
-                data.maxGrade = gradeAtoi(this.maxGrade);
-            }
-            if (this.ratingSelection == 'limited') {
-                data.minRating = +this.minRating;
-                data.maxRating = +this.maxRating;
-            }
-            this.submitHandler(data);
+    submitHandlerWrapper() {
+        const data: BoulderSearch = {};
+        if (this.name) data.name = this.name;
+        if (this.creator) data.creator = this.creator;
+        if (this.gradeSelection == 'limited') {
+            data.minGrade = gradeAtoi(this.minGrade);
+            data.maxGrade = gradeAtoi(this.maxGrade);
         }
+        if (this.ratingSelection == 'limited') {
+            data.minRating = +this.minRating;
+            data.maxRating = +this.maxRating;
+        }
+        this.submitHandler(data);
     }
+}
 </script>
 
 <style scoped lang="scss">
-    .searchForm {
-        text-align: center;
-    }
+.searchForm {
+    text-align: center;
+}
 </style>

@@ -93,194 +93,194 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import Header from '@/components/Header.vue';
-    import Wall from '@/components/wall/Wall.vue';
-    import Login from '@/components/Login.vue';
-    import Menu from '@/components/menu/Menu.vue';
-    import Ranking from '@/components/ranking/Ranking.vue';
-    import BoulderInfo from '@/components/BoulderInfo.vue';
-    import SearchResults from '@/components/search/SearchResults.vue';
-    import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
-    import SearchForm from '@/components/forms/SearchForm.vue';
-    import {ApiError} from '@/api';
-    import {Boulder, BoulderNew, BoulderSearch, Holds} from '@/api/types';
-    import {getBoulder, getHolds, getWall, loginPassword, newBoulder, searchBoulder} from '@/api/interface';
-    import {gradeItoa} from '@/types/grades';
-    import '@fortawesome/fontawesome-svg-core';
-    import '@fortawesome/free-solid-svg-icons';
+import {Component, Vue} from 'vue-property-decorator';
+import Header from '@/components/Header.vue';
+import Wall from '@/components/wall/Wall.vue';
+import Login from '@/components/Login.vue';
+import Menu from '@/components/menu/Menu.vue';
+import Ranking from '@/components/ranking/Ranking.vue';
+import BoulderInfo from '@/components/BoulderInfo.vue';
+import SearchResults from '@/components/search/SearchResults.vue';
+import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
+import SearchForm from '@/components/forms/SearchForm.vue';
+import {ApiError} from '@/api';
+import {Boulder, BoulderNew, BoulderSearch, Holds} from '@/api/types';
+import {getBoulder, getHolds, getWall, loginPassword, newBoulder, searchBoulder} from '@/api/interface';
+import {gradeItoa} from '@/types/grades';
+import '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/free-solid-svg-icons';
 
-    @Component({
-        components: {
-            SearchForm,
-            BoulderAddForm,
-            SearchResults,
-            BoulderInfo,
-            Ranking,
-            Menu,
-            Login,
-            Header,
-            Wall
-        },
-    })
-    export default class App extends Vue {
-        private isLoggedIn = (window.sessionStorage.getItem('auth') != null);
-        private isSelectionMode = false;
-        private wall?: Wall;
-        private wallLoaded = false;
-        private wallData: Holds[] = [];
-        private holdTypes: { [holdId: number]: 0 | 1 | 2 } = {};
-        private searchResults: Boulder[] = [];
-        private showSearchResults = false;
-        private boulder: Boulder | null = null;
+@Component({
+    components: {
+        SearchForm,
+        BoulderAddForm,
+        SearchResults,
+        BoulderInfo,
+        Ranking,
+        Menu,
+        Login,
+        Header,
+        Wall
+    },
+})
+export default class App extends Vue {
+    private isLoggedIn = (window.sessionStorage.getItem('auth') != null);
+    private isSelectionMode = false;
+    private wall?: Wall;
+    private wallLoaded = false;
+    private wallData: Holds[] = [];
+    private holdTypes: { [holdId: number]: 0 | 1 | 2 } = {};
+    private searchResults: Boulder[] = [];
+    private showSearchResults = false;
+    private boulder: Boulder | null = null;
 
-        constructor() {
-            super();
-            // If reloaded and session still valid, reload wall
-            if (window.sessionStorage.getItem('auth') != null) {
-                this.loadWall();
-            }
-        }
-
-        async loadWall() {
-            if (!this.wallLoaded) {
-                const wall = await getWall();
-                this.wallData = await getHolds(wall.id);
-
-                this.holdTypes = {};
-                this.clearWall();
-
-                this.wallLoaded = true;
-            }
-        }
-
-        async loadBoulder(id: number) {
-            this.boulder = await getBoulder(id);
-            if (!this.boulder.holds) {
-                console.warn('Loaded boulder is missing the holds list', this.boulder);
-                return;
-            }
-
-            this.clearWall();
-            for (const id in this.boulder.holds) {
-                this.holdTypes[id] = this.boulder.holds[id];
-            }
-            this.refreshWall();
-        }
-
-        async addBoulder(data: BoulderNew) {
-            for (const id in this.holdTypes) {
-                if (this.holdTypes[id] > 0) {
-                    data.holds.push({
-                        id: +id,
-                        type: this.holdTypes[id]
-                    });
-                }
-            }
-            console.log(data);
-            // const response = await newBoulder(data);
-            // await this.loadBoulder(response.id);
-            this.isSelectionMode = false;
-        }
-
-        async searchBoulder(data: BoulderSearch) {
-            this.showSearchResults = true;
-            this.searchResults = await searchBoulder(data);
-        }
-
-        async loginHandler(email: string, password: string) {
-            this.isLoggedIn = true;
-            console.log('Login Handler executed');
-            console.log('Login data: ', email, password);
-            loginPassword(email, password).then(() => {
-                console.log('Successful login');
-            }).catch((error: ApiError) => {
-                console.warn('API error occurred');
-                console.warn(error);
-            }).finally(() => {
-                this.loadWall();
-            });
-        }
-
-        menuHandler(id: string) {
-            console.log('Menu entry with id ' + id + ' clicked');
-            switch (id) {
-                case 'wall':
-                    this.loadWall();
-                    break;
-                case 'boulder':
-                    this.loadBoulder(171);
-                    break;
-                case 'selmode':
-                    this.isSelectionMode = !this.isSelectionMode;
-                    break;
-                case 'clear':
-                    this.clearWall();
-                    break;
-            }
-        }
-
-        clearWall() {
-            this.boulder = null;
-            for (const holds of this.wallData) {
-                for (const hold of holds.holds) {
-                    this.holdTypes[hold.id] = 0;
-                }
-            }
-        }
-
-        refreshWall() {
-            if (!this.wall) {
-                for (const child of this.$children) {
-                    if (child.$options.name == 'Wall' && child instanceof Wall)
-                        this.wall = child;
-                }
-            }
-            this.wall?.refresh();
-        }
-
-        cancelHandler(e: Event) {
-            console.log('Cancel Handler executed');
-            console.log('Cancel event: ', e);
-        }
-
-        holdClickHandler(id: number, e: Event) {
-            e.stopPropagation();
-            const holdTypes = this.holdTypes;
-            if (this.isSelectionMode) {
-                if (holdTypes[id] == 2) holdTypes[id] = 0;
-                else holdTypes[id] += 1;
-
-                this.holdTypes = holdTypes;
-            }
-        }
-
-        gItoa(grade: number): string {
-            return gradeItoa(grade);
+    constructor() {
+        super();
+        // If reloaded and session still valid, reload wall
+        if (window.sessionStorage.getItem('auth') != null) {
+            this.loadWall();
         }
     }
+
+    async loadWall() {
+        if (!this.wallLoaded) {
+            const wall = await getWall();
+            this.wallData = await getHolds(wall.id);
+
+            this.holdTypes = {};
+            this.clearWall();
+
+            this.wallLoaded = true;
+        }
+    }
+
+    async loadBoulder(id: number) {
+        this.boulder = await getBoulder(id);
+        if (!this.boulder.holds) {
+            console.warn('Loaded boulder is missing the holds list', this.boulder);
+            return;
+        }
+
+        this.clearWall();
+        for (const id in this.boulder.holds) {
+            this.holdTypes[id] = this.boulder.holds[id];
+        }
+        this.refreshWall();
+    }
+
+    async addBoulder(data: BoulderNew) {
+        for (const id in this.holdTypes) {
+            if (this.holdTypes[id] > 0) {
+                data.holds.push({
+                    id: +id,
+                    type: this.holdTypes[id]
+                });
+            }
+        }
+        console.log(data);
+        // const response = await newBoulder(data);
+        // await this.loadBoulder(response.id);
+        this.isSelectionMode = false;
+    }
+
+    async searchBoulder(data: BoulderSearch) {
+        this.showSearchResults = true;
+        this.searchResults = await searchBoulder(data);
+    }
+
+    async loginHandler(email: string, password: string) {
+        this.isLoggedIn = true;
+        console.log('Login Handler executed');
+        console.log('Login data: ', email, password);
+        loginPassword(email, password).then(() => {
+            console.log('Successful login');
+        }).catch((error: ApiError) => {
+            console.warn('API error occurred');
+            console.warn(error);
+        }).finally(() => {
+            this.loadWall();
+        });
+    }
+
+    menuHandler(id: string) {
+        console.log('Menu entry with id ' + id + ' clicked');
+        switch (id) {
+            case 'wall':
+                this.loadWall();
+                break;
+            case 'boulder':
+                this.loadBoulder(171);
+                break;
+            case 'selmode':
+                this.isSelectionMode = !this.isSelectionMode;
+                break;
+            case 'clear':
+                this.clearWall();
+                break;
+        }
+    }
+
+    clearWall() {
+        this.boulder = null;
+        for (const holds of this.wallData) {
+            for (const hold of holds.holds) {
+                this.holdTypes[hold.id] = 0;
+            }
+        }
+    }
+
+    refreshWall() {
+        if (!this.wall) {
+            for (const child of this.$children) {
+                if (child.$options.name == 'Wall' && child instanceof Wall)
+                    this.wall = child;
+            }
+        }
+        this.wall?.refresh();
+    }
+
+    cancelHandler(e: Event) {
+        console.log('Cancel Handler executed');
+        console.log('Cancel event: ', e);
+    }
+
+    holdClickHandler(id: number, e: Event) {
+        e.stopPropagation();
+        const holdTypes = this.holdTypes;
+        if (this.isSelectionMode) {
+            if (holdTypes[id] == 2) holdTypes[id] = 0;
+            else holdTypes[id] += 1;
+
+            this.holdTypes = holdTypes;
+        }
+    }
+
+    gItoa(grade: number): string {
+        return gradeItoa(grade);
+    }
+}
 </script>
 
 <style lang="scss">
-    #login-bg {
-        position: absolute;
-        background-image: url("../public/dev/bg_uni.jpg");
-        background-size: cover;
-        filter: blur(5px);
-        min-height: 100vh;
-        min-width: 100vw;
-        z-index: -1;
-    }
+#login-bg {
+    position: absolute;
+    background-image: url("../public/dev/bg_uni.jpg");
+    background-size: cover;
+    filter: blur(5px);
+    min-height: 100vh;
+    min-width: 100vw;
+    z-index: -1;
+}
 
-    #login-form {
-        margin-top: auto;
-        margin-bottom: auto;
-        background-color: rgba(240, 240, 240, 0.85);
-        padding: 2em;
-        border-radius: 4px;
-    }
+#login-form {
+    margin-top: auto;
+    margin-bottom: auto;
+    background-color: rgba(240, 240, 240, 0.85);
+    padding: 2em;
+    border-radius: 4px;
+}
 
-    #login > div > div {
-        min-height: 80vh;
-    }
+#login > div > div {
+    min-height: 80vh;
+}
 </style>

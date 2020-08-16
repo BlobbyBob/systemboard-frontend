@@ -28,37 +28,38 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
+import {Component, Prop, Vue} from 'vue-property-decorator';
 
-    @Component({
-        model: {
-            event: 'action'
-        }
-    })
-    export default class MenuItem extends Vue {
-        @Prop() readonly id!: string;
-        @Prop({default: undefined}) readonly icon?: string | undefined;
-
-        get iconClass() {
-            if (this.icon === undefined)
-                return {};
-            const classes: { [clazz: string]: boolean } = {};
-            classes['fas'] = true;
-            classes['fa-lg'] = true;
-            classes['fa-' + this.icon] = true;
-            return classes;
-        }
+@Component({
+    model: {
+        event: 'action'
     }
+})
+export default class MenuItem extends Vue {
+    @Prop() readonly id!: string;
+    @Prop({default: undefined}) readonly icon?: string | undefined;
+
+    get iconClass() {
+        if (this.icon === undefined)
+            return {};
+        const classes: { [clazz: string]: boolean } = {};
+        classes['fas'] = true;
+        classes['fa-lg'] = true;
+        classes['fa-' + this.icon] = true;
+        return classes;
+    }
+}
 </script>
 
 <style scoped lang="scss">
-    @import 'src/style/custom';
+@import 'src/style/custom';
 
-    li {
-        cursor: pointer;
-        color: white;
-        :hover {
-            background-color: $topbar-bg-hover;
-        }
+li {
+    cursor: pointer;
+    color: white;
+
+    :hover {
+        background-color: $topbar-bg-hover;
     }
+}
 </style>

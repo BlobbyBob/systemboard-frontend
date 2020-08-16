@@ -31,54 +31,54 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
-    import WallSegment from './WallSegment.vue';
-    import {Holds} from '@/api/types';
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import WallSegment from './WallSegment.vue';
+import {Holds} from '@/api/types';
 
-    @Component({
-        components: {
-            WallSegment
-        }
-    })
-    export default class Wall extends Vue {
-        @Prop() readonly data!: Holds[];
-        @Prop() readonly types!: { [holdId: number]: 0 | 1 | 2 };
-        @Prop() readonly holdClickHandler!: (id: number, e: Event) => void;
-
-        holdClickHandlerWrapper(id: number, e: Event) {
-            this.holdClickHandler(id, e);
-            this.refresh();
-        }
-
-        public refresh() {
-            this.$children.forEach(v => v.$forceUpdate());
-        }
-
-        get currentIndex() {
-            return this.internalCurrentIndex;
-        }
-
-        set currentIndex(value: number) {
-            this.internalCurrentIndex = value;
-            this.$emit('indexchange', value);
-        }
-
-        private internalCurrentIndex = 0;
-
-        nextSegment() {
-            if (this.currentIndex + 1 < this.data.length)
-                this.currentIndex++;
-        }
-
-        prevSegment() {
-            if (this.currentIndex - 1 >= 0)
-                this.currentIndex--;
-        }
+@Component({
+    components: {
+        WallSegment
     }
+})
+export default class Wall extends Vue {
+    @Prop() readonly data!: Holds[];
+    @Prop() readonly types!: { [holdId: number]: 0 | 1 | 2 };
+    @Prop() readonly holdClickHandler!: (id: number, e: Event) => void;
+
+    holdClickHandlerWrapper(id: number, e: Event) {
+        this.holdClickHandler(id, e);
+        this.refresh();
+    }
+
+    public refresh() {
+        this.$children.forEach(v => v.$forceUpdate());
+    }
+
+    get currentIndex() {
+        return this.internalCurrentIndex;
+    }
+
+    set currentIndex(value: number) {
+        this.internalCurrentIndex = value;
+        this.$emit('indexchange', value);
+    }
+
+    private internalCurrentIndex = 0;
+
+    nextSegment() {
+        if (this.currentIndex + 1 < this.data.length)
+            this.currentIndex++;
+    }
+
+    prevSegment() {
+        if (this.currentIndex - 1 >= 0)
+            this.currentIndex--;
+    }
+}
 </script>
 
 <style scoped lang="scss">
-    .wall {
-        min-height: 600px;
-    }
+.wall {
+    min-height: 600px;
+}
 </style>

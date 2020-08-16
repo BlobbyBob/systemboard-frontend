@@ -27,22 +27,22 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {Boulder} from '@/api/types';
-    import {gradeItoa} from '@/types/grades';
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import {Boulder} from '@/api/types';
+import {gradeItoa} from '@/types/grades';
 
-    @Component({
-        model: {
-            event: 'action'
-        }
-    })
-    export default class SearchResult extends Vue {
-        @Prop() readonly data!: Boulder;
-
-        gItoa(grade: number): string {
-            return gradeItoa(grade);
-        }
+@Component({
+    model: {
+        event: 'action'
     }
+})
+export default class SearchResult extends Vue {
+    @Prop() readonly data!: Boulder;
+
+    gItoa(grade: number): string {
+        return gradeItoa(grade);
+    }
+}
 </script>
 
 <style scoped lang="scss">

@@ -48,39 +48,39 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
-    import LabelledElement from './LabelledElement.vue';
-    import {gradeAtoi, Grades} from '@/types/grades';
-    import {BoulderNew} from '@/api/types';
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import LabelledElement from './LabelledElement.vue';
+import {gradeAtoi, Grades} from '@/types/grades';
+import {BoulderNew} from '@/api/types';
 
-    @Component({
-        components: {LabelledElement}
-    })
-    export default class BoulderAddForm extends Vue {
-        private name = '';
-        private description = '';
-        private grade = '';
-        private rating = 1;
-        private readonly grades = Grades;
-        private readonly defaultGrade = '5';
+@Component({
+    components: {LabelledElement}
+})
+export default class BoulderAddForm extends Vue {
+    private name = '';
+    private description = '';
+    private grade = '';
+    private rating = 1;
+    private readonly grades = Grades;
+    private readonly defaultGrade = '5';
 
-        @Prop() readonly submitHandler!: (data: BoulderNew) => void;
-        @Prop() readonly cancelHandler!: (e: Event) => void;
+    @Prop() readonly submitHandler!: (data: BoulderNew) => void;
+    @Prop() readonly cancelHandler!: (e: Event) => void;
 
-        submitHandlerWrapper() {
-            const data: BoulderNew = {
-                name: this.name,
-                grade: gradeAtoi(this.grade),
-                stars: +this.rating,
-                holds: []
-            };
-            this.submitHandler(data);
-        }
+    submitHandlerWrapper() {
+        const data: BoulderNew = {
+            name: this.name,
+            grade: gradeAtoi(this.grade),
+            stars: +this.rating,
+            holds: []
+        };
+        this.submitHandler(data);
     }
+}
 </script>
 
 <style scoped lang="scss">
-    .boulderAddForm {
-        text-align: center;
-    }
+.boulderAddForm {
+    text-align: center;
+}
 </style>

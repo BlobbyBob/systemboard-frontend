@@ -36,26 +36,26 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
-    import RankingItem from './RankingItem.vue';
-    import {RankingItemData} from '@/types/RankingItemData';
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import RankingItem from './RankingItem.vue';
+import {RankingItemData} from '@/types/RankingItemData';
 
-    @Component({
-        components: {RankingItem}
-    })
-    export default class Ranking extends Vue {
-        @Prop() readonly rankingItems!: RankingItemData[];
-    }
+@Component({
+    components: {RankingItem}
+})
+export default class Ranking extends Vue {
+    @Prop() readonly rankingItems!: RankingItemData[];
+}
 </script>
 
 <style scoped lang="scss">
-    .ranking {
-        .rank {
-            width: 50px;
-        }
-
-        .points {
-            width: 100px;
-        }
+.ranking {
+    .rank {
+        width: 50px;
     }
+
+    .points {
+        width: 100px;
+    }
+}
 </style>

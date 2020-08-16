@@ -30,14 +30,14 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
+import {Component, Prop, Vue} from 'vue-property-decorator';
 
-    @Component
-    export default class LabelledElement extends Vue {
-        @Prop() readonly label!: string;
-        @Prop({default: false}) readonly nobr?: boolean;
-        @Prop({type: Boolean, default: true}) readonly before?: boolean;
-    }
+@Component
+export default class LabelledElement extends Vue {
+    @Prop() readonly label!: string;
+    @Prop({default: false}) readonly nobr?: boolean;
+    @Prop({type: Boolean, default: true}) readonly before?: boolean;
+}
 </script>
 
 <style scoped lang="scss">

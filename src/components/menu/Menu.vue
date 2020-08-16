@@ -36,33 +36,34 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
-    import MenuItem from './MenuItem.vue';
-    import {MenuItemData} from '@/types/MenuItemData';
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import MenuItem from './MenuItem.vue';
+import {MenuItemData} from '@/types/MenuItemData';
 
-    @Component({
-        components: {
-            MenuItem
-        }
-    })
-    export default class Menu extends Vue {
-        @Prop() readonly menuData!: MenuItemData[];
-        @Prop() readonly menuClickHandler!: (id: string) => void;
+@Component({
+    components: {
+        MenuItem
     }
+})
+export default class Menu extends Vue {
+    @Prop() readonly menuData!: MenuItemData[];
+    @Prop() readonly menuClickHandler!: (id: string) => void;
+}
 </script>
 
 <style scoped lang="scss">
-    @import 'src/style/custom';
+@import 'src/style/custom';
 
-    nav {
-        background-color: $topbar-bg;
-        .navbar-brand img {
-            width: 3rem;
-            height: 3rem;
-        }
+nav {
+    background-color: $topbar-bg;
 
-      .nav-link {
-
-      }
+    .navbar-brand img {
+        width: 3rem;
+        height: 3rem;
     }
+
+    .nav-link {
+
+    }
+}
 </style>

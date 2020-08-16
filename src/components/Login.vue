@@ -41,23 +41,23 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
+import {Component, Prop, Vue} from 'vue-property-decorator';
 
-    @Component
-    export default class Login extends Vue {
-        @Prop() loginHandler!: (email: string, password: string) => void;
-        private email = '';
-        private password = '';
+@Component
+export default class Login extends Vue {
+    @Prop() loginHandler!: (email: string, password: string) => void;
+    private email = '';
+    private password = '';
 
-        loginHandlerWrapper() {
-            this.loginHandler(this.email, this.password);
-        }
+    loginHandlerWrapper() {
+        this.loginHandler(this.email, this.password);
     }
+}
 </script>
 
 <style scoped lang="scss">
-    button {
-        padding: 5px;
-        margin-top: 10px;
-    }
+button {
+    padding: 5px;
+    margin-top: 10px;
+}
 </style>

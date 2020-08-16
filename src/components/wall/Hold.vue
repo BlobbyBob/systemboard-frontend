@@ -23,134 +23,134 @@
 </template>
 
 <script lang="ts">
-    import {Prop, Component, Vue, Watch} from 'vue-property-decorator';
+import {Prop, Component, Vue, Watch} from 'vue-property-decorator';
 
-    @Component
-    export default class Hold extends Vue {
-        @Prop() readonly id!: number;
-        @Prop() readonly tag!: string;
-        @Prop() readonly attr!: string;
-        @Prop() readonly type!: 0 | 1 | 2;
-        private parsedAttr!: { [attr: string]: string };
-        private parsedAttrInit = false; // Lazy init
+@Component
+export default class Hold extends Vue {
+    @Prop() readonly id!: number;
+    @Prop() readonly tag!: string;
+    @Prop() readonly attr!: string;
+    @Prop() readonly type!: 0 | 1 | 2;
+    private parsedAttr!: { [attr: string]: string };
+    private parsedAttrInit = false; // Lazy init
 
-        @Watch('attr')
-        onAttrChange() {
-            this.parsedAttrInit = false;
-        }
+    @Watch('attr')
+    onAttrChange() {
+        this.parsedAttrInit = false;
+    }
 
-        get points(): string {
-            this.lazyParse();
-            return this.parsedAttr.points;
-        }
+    get points(): string {
+        this.lazyParse();
+        return this.parsedAttr.points;
+    }
 
-        get rx(): string {
-            this.lazyParse();
-            return this.parsedAttr.rx;
-        }
+    get rx(): string {
+        this.lazyParse();
+        return this.parsedAttr.rx;
+    }
 
-        get ry(): string {
-            this.lazyParse();
-            return this.parsedAttr.ry;
-        }
+    get ry(): string {
+        this.lazyParse();
+        return this.parsedAttr.ry;
+    }
 
-        get cx(): string {
-            this.lazyParse();
-            return this.parsedAttr.cx;
-        }
+    get cx(): string {
+        this.lazyParse();
+        return this.parsedAttr.cx;
+    }
 
-        get cy(): string {
-            this.lazyParse();
-            return this.parsedAttr.cy;
-        }
+    get cy(): string {
+        this.lazyParse();
+        return this.parsedAttr.cy;
+    }
 
-        lazyParse() {
-            if (!this.parsedAttrInit) {
-                this.parseAttr();
-                this.parsedAttrInit = true;
-            }
-        }
-
-        parseAttr() {
-            const attr: { [attr: string]: string } = {};
-            let state = 0;
-            let token = '';
-            let currentAttr = '';
-
-            for (let i = 0; i < this.attr.length; i++) {
-                const char = this.attr.charAt(i);
-                const charCode = char.charCodeAt(0);
-                switch (state) {
-                    case 0: // Outside
-                        if (charCode == 0x2d || (charCode > 0x40 && charCode <= 0x5a) || (charCode > 0x60 && charCode <= 0x7a)) {
-                            state = 1;
-                            token = char;
-                        }
-                        break;
-                    case 1: // Attr name
-                        if (charCode == 0x2d || (charCode > 0x40 && charCode <= 0x5a) || (charCode > 0x60 && charCode <= 0x7a)) {
-                            token += char;
-                        }
-                        if (charCode == 0x3d) {
-                            state = 2;
-                            currentAttr = token;
-                            token = '';
-                        }
-                        break;
-                    case 2: // Waiting for quotes
-                        if (charCode == 0x22) {
-                            state = 3;
-                        } else if (charCode == 0x27) {
-                            state = 4;
-                        }
-                        break;
-                    case 3: // Double quotes
-                        if (charCode != 0x22) {
-                            token += char;
-                        } else {
-                            state = 0;
-                            attr[currentAttr] = token;
-                            token = '';
-                        }
-                        break;
-                    case 4: // Single quotes
-                        if (charCode != 0x27) {
-                            token += char;
-                        } else {
-                            state = 0;
-                            attr[currentAttr] = token;
-                            token = '';
-                        }
-                        break;
-                }
-            }
-
-            if (state != 0) {
-                console.warn(`Parser failure for "${this.attr}"`);
-            }
-
-            this.parsedAttr = attr;
+    lazyParse() {
+        if (!this.parsedAttrInit) {
+            this.parseAttr();
+            this.parsedAttrInit = true;
         }
     }
+
+    parseAttr() {
+        const attr: { [attr: string]: string } = {};
+        let state = 0;
+        let token = '';
+        let currentAttr = '';
+
+        for (let i = 0; i < this.attr.length; i++) {
+            const char = this.attr.charAt(i);
+            const charCode = char.charCodeAt(0);
+            switch (state) {
+                case 0: // Outside
+                    if (charCode == 0x2d || (charCode > 0x40 && charCode <= 0x5a) || (charCode > 0x60 && charCode <= 0x7a)) {
+                        state = 1;
+                        token = char;
+                    }
+                    break;
+                case 1: // Attr name
+                    if (charCode == 0x2d || (charCode > 0x40 && charCode <= 0x5a) || (charCode > 0x60 && charCode <= 0x7a)) {
+                        token += char;
+                    }
+                    if (charCode == 0x3d) {
+                        state = 2;
+                        currentAttr = token;
+                        token = '';
+                    }
+                    break;
+                case 2: // Waiting for quotes
+                    if (charCode == 0x22) {
+                        state = 3;
+                    } else if (charCode == 0x27) {
+                        state = 4;
+                    }
+                    break;
+                case 3: // Double quotes
+                    if (charCode != 0x22) {
+                        token += char;
+                    } else {
+                        state = 0;
+                        attr[currentAttr] = token;
+                        token = '';
+                    }
+                    break;
+                case 4: // Single quotes
+                    if (charCode != 0x27) {
+                        token += char;
+                    } else {
+                        state = 0;
+                        attr[currentAttr] = token;
+                        token = '';
+                    }
+                    break;
+            }
+        }
+
+        if (state != 0) {
+            console.warn(`Parser failure for "${this.attr}"`);
+        }
+
+        this.parsedAttr = attr;
+    }
+}
 </script>
 
 <style scoped lang="scss">
-    @import 'src/style/custom';
+@import 'src/style/custom';
 
-    circle, ellipse, polygon {
-        stroke-width: 2px;
-        fill: transparent;
-    }
+circle, ellipse, polygon {
+    stroke-width: 2px;
+    fill: transparent;
+}
 
-    circle[data-type="0"], ellipse[data-type="0"], polygon[data-type="0"] {
-        stroke-width: 0;
-    }
+circle[data-type="0"], ellipse[data-type="0"], polygon[data-type="0"] {
+    stroke-width: 0;
+}
 
-    circle[data-type="1"], ellipse[data-type="1"], polygon[data-type="1"] {
-        stroke: $hold-color;
-    }
+circle[data-type="1"], ellipse[data-type="1"], polygon[data-type="1"] {
+    stroke: $hold-color;
+}
 
-    circle[data-type="2"], ellipse[data-type="2"], polygon[data-type="2"] {
-        stroke: $hold-color-special;
-    }
+circle[data-type="2"], ellipse[data-type="2"], polygon[data-type="2"] {
+    stroke: $hold-color-special;
+}
 </style>

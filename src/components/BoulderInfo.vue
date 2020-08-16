@@ -55,22 +55,22 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
+import {Component, Prop, Vue} from 'vue-property-decorator';
 
-    @Component
-    export default class BoulderInfo extends Vue {
-        @Prop() name!: string;
-        @Prop() description!: string;
-        @Prop() creator!: string;
-        @Prop() grade!: string;
-        @Prop() rating!: number;
-    }
+@Component
+export default class BoulderInfo extends Vue {
+    @Prop() name!: string;
+    @Prop() description!: string;
+    @Prop() creator!: string;
+    @Prop() grade!: string;
+    @Prop() rating!: number;
+}
 </script>
 
 <style scoped lang="scss">
-    .boulderInfo {
-        .property {
-            text-align: right;
-        }
+.boulderInfo {
+    .property {
+        text-align: right;
     }
+}
 </style>

@@ -33,25 +33,25 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
+import {Component, Prop, Vue} from 'vue-property-decorator';
 
-    @Component
-    export default class RankingItem extends Vue {
-        @Prop() rank!: number;
-        @Prop() name!: string;
-        @Prop() icon?: string | undefined;
-        @Prop() iconTooltip?: string | undefined;
-        @Prop() points!: number;
+@Component
+export default class RankingItem extends Vue {
+    @Prop() rank!: number;
+    @Prop() name!: string;
+    @Prop() icon?: string | undefined;
+    @Prop() iconTooltip?: string | undefined;
+    @Prop() points!: number;
 
-        get iconClass() {
-            if (this.icon === undefined)
-                return {};
-            // eslint-disable-next-line
-            const classes: any = {};
-            classes['icon-' + this.icon] = true;
-            return classes;
-        }
+    get iconClass() {
+        if (this.icon === undefined)
+            return {};
+        // eslint-disable-next-line
+        const classes: any = {};
+        classes['icon-' + this.icon] = true;
+        return classes;
     }
+}
 </script>
 
 <style scoped lang="scss">

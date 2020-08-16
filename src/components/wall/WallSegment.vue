@@ -30,32 +30,32 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {Hold as HoldType} from '@/api/types';
-    import Hold from '@/components/wall/Hold.vue';
+import {Component, Prop, Vue} from 'vue-property-decorator';
+import {Hold as HoldType} from '@/api/types';
+import Hold from '@/components/wall/Hold.vue';
 
-    @Component({
-        components: {
-            Hold
-        },
-        model: {
-            event: 'action'
-        }
-    })
-    export default class WallSegment extends Vue {
-        @Prop() readonly image!: string;
-        @Prop() readonly holds!: HoldType[];
-        @Prop() readonly types!: {[holdId: number]: 0 | 1 | 2};
-        @Prop() visible!: boolean;
-
-        get holdsFiltered(): HoldType[] {
-            return this.holds;
-        }
+@Component({
+    components: {
+        Hold
+    },
+    model: {
+        event: 'action'
     }
+})
+export default class WallSegment extends Vue {
+    @Prop() readonly image!: string;
+    @Prop() readonly holds!: HoldType[];
+    @Prop() readonly types!: { [holdId: number]: 0 | 1 | 2 };
+    @Prop() visible!: boolean;
+
+    get holdsFiltered(): HoldType[] {
+        return this.holds;
+    }
+}
 </script>
 
 <style scoped lang="scss">
-    .hidden {
-        display: none;
-    }
+.hidden {
+    display: none;
+}
 </style>
