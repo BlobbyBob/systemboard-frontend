@@ -19,13 +19,16 @@
 
 <template>
     <div class="wall row">
-        <button class="btn back" @click="prevSegment">Zurück</button>
-        <button class="btn forward" @click="nextSegment">Vor</button>
-        <br>
-        <div v-for="(holds, index) in data" :key="index">
-            <keep-alive>
-                <WallSegment :image="'/dev/' + holds.filename" :holds="holds.holds" :visible="index === currentIndex" :types="types" @action="holdClickHandlerWrapper"/>
-            </keep-alive>
+        <div class="w-100 d-flex align-items-stretch">
+            <div class="pl-2 pr-2 wall-nav d-flex align-items-center"><span class="fas fa-3x fa-angle-double-left" @click="prevSegment"></span></div>
+            <div class="flex-grow-1">
+            <div v-for="(holds, index) in data" :key="holds.filename">
+                <keep-alive>
+                    <WallSegment :image="'/dev/' + holds.filename" :holds="holds.holds" :visible="index === currentIndex" :types="types" @action="holdClickHandlerWrapper"/>
+                </keep-alive>
+            </div>
+            </div>
+            <div class="pl-2 pr-2 wall-nav d-flex align-items-center"><span class="fas fa-3x fa-angle-double-right" @click="nextSegment"></span></div>
         </div>
     </div>
 </template>
@@ -80,5 +83,11 @@ export default class Wall extends Vue {
 <style scoped lang="scss">
 .wall {
     min-height: 600px;
+    min-width: 1000px;
+    width: 100%;
+}
+
+.wall-nav {
+    cursor: pointer;
 }
 </style>

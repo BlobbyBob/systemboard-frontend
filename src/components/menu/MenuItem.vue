@@ -54,12 +54,13 @@ export default class MenuItem extends Vue {
 <style scoped lang="scss">
 @import 'src/style/custom';
 
-li {
+*, a {
     cursor: pointer;
     color: white;
 
     :hover {
         background-color: $topbar-bg-hover;
+        color: white !important;
     }
 }
 </style>

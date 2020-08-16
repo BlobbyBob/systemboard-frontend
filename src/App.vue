@@ -137,7 +137,7 @@ export default class App extends Vue {
     constructor() {
         super();
         // If reloaded and session still valid, reload wall
-        if (window.sessionStorage.getItem('auth') != null) {
+        if (this.isLoggedIn) {
             this.loadWall();
         }
     }

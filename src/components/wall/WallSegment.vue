@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="wallSegment col-12" v-bind:class="{ hidden: !visible }">
+    <div class="wallSegment w-100" v-bind:class="{ hidden: !visible }">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 670">
             <image x="0" y="0" width="1000px" height="670px" :xlink:href="image"></image>
             <g class="holds">
@@ -55,6 +55,9 @@ export default class WallSegment extends Vue {
 </script>
 
 <style scoped lang="scss">
+svg {
+    width: 100%;
+}
 .hidden {
     display: none;
 }
