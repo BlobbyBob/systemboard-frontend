@@ -20,7 +20,7 @@
 <template>
     <div class="searchResults container">
         <div class="row">
-            <SearchResult v-for="(result, index) in searchResultsData" v-bind:key="index" v-bind:data="result" v-on:action="clickHandler"/>
+            <SearchResult v-for="(result, index) in searchResultsData" :key="index" :data="result" @action="clickHandler"/>
         </div>
     </div>
 </template>

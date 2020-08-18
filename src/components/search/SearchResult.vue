@@ -18,11 +18,16 @@
   -->
 
 <template>
-    <div class="searchResult col-12 col-md-6 col-lg-4 col-xl-3" v-on:click="$emit('action', data.id)">
-        <span class="name">{{ data.name }}</span> <small>von {{ data.creator.name }}</small><br>
-        Schwierigkeit: {{ gItoa(data.grade) }}<br>
-        {{ data.rating }} Sterne<br>
-        {{ data.ascents }}x geklettert
+    <div class="searchResult col-12 col-md-6 col-lg-4 col-xl-3 m-2" @click="$emit('action', data.id)">
+        <div class="searchResultHead pl-2 pr-2">
+            <span class="name">{{ data.name }}</span> <small>von {{ data.creator.name }}</small>
+        </div>
+        <hr>
+        <div class="pl-2 pr-2">
+            Schwierigkeit: {{ gItoa(data.grade) }}<br>
+            {{ data.rating }} Sterne<br>
+            {{ data.ascents }}x geklettert
+        </div>
     </div>
 </template>
 
@@ -46,5 +51,22 @@ export default class SearchResult extends Vue {
 </script>
 
 <style scoped lang="scss">
+.searchResult {
+    border: 1px solid black;
+    cursor: pointer;
+    padding: 0;
+}
 
+.searchResult:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.searchResultHead {
+    font-size: 1.3em;
+}
+
+hr {
+    margin: 0;
+    border-color: black;
+}
 </style>

@@ -64,9 +64,12 @@
                     }
                 ]" :menu-click-handler="menuHandler" v-if="isLoggedIn"/>
             <div class="container">
-                <Wall v-if="isLoggedIn" :data="wallData" :types="holdTypes" :hold-click-handler="holdClickHandler"/>
+                <div class="mt-3"></div>
+                <Wall v-if="isLoggedIn" :data="wallData" :types="holdTypes" :hold-click-handler="holdClickHandler" :refresh-arrows="refreshArrows"/>
+                <div class="mt-3"></div>
                 <BoulderInfo v-if="boulder != null" :name="boulder.name" :creator="boulder.creator.name" :description="boulder.description" :grade="gItoa(boulder.grade)"
                              :rating="boulder.rating"/>
+                <div class="mt-3"></div>
                 <SearchResults v-if="showSearchResults" :search-results-data="searchResults" :click-handler="loadBoulder"/>
                 <!--                <div class="container col-12">-->
                 <!--                    <Ranking v-bind:ranking-items="[-->
@@ -133,6 +136,7 @@ export default class App extends Vue {
     private searchResults: Boulder[] = [];
     private showSearchResults = false;
     private boulder: Boulder | null = null;
+    private refreshArrows = false;
 
     constructor() {
         super();
@@ -155,13 +159,13 @@ export default class App extends Vue {
     }
 
     async loadBoulder(id: number) {
+        this.clearWall();
         this.boulder = await getBoulder(id);
         if (!this.boulder.holds) {
             console.warn('Loaded boulder is missing the holds list', this.boulder);
             return;
-        }
 
-        this.clearWall();
+        }
         for (const id in this.boulder.holds) {
             this.holdTypes[id] = this.boulder.holds[id];
         }
@@ -205,6 +209,9 @@ export default class App extends Vue {
     menuHandler(id: string) {
         console.log('Menu entry with id ' + id + ' clicked');
         switch (id) {
+            case 'latest':
+                this.searchBoulder({});
+                break;
             case 'wall':
                 this.loadWall();
                 break;
@@ -237,6 +244,7 @@ export default class App extends Vue {
             }
         }
         this.wall?.refresh();
+        this.refreshArrows = !this.refreshArrows;
     }
 
     cancelHandler(e: Event) {

@@ -51,6 +51,7 @@ export default class Wall extends Vue {
     @Prop() readonly data!: Holds[];
     @Prop() readonly types!: { [holdId: number]: 0 | 1 | 2 };
     @Prop() readonly holdClickHandler!: (id: number, e: Event) => void;
+    @Prop() readonly refreshArrows = false;
 
     private internalCurrentIndex = 0;
 
@@ -73,6 +74,7 @@ export default class Wall extends Vue {
     }
 
     get leftArrowClass() {
+        if (this.refreshArrows) true;
         let blink = false;
         for (let i = this.internalCurrentIndex - 1; i >= 0; i--) {
             for (const hold of this.data[i].holds) {
@@ -90,6 +92,7 @@ export default class Wall extends Vue {
     }
 
     get rightArrowClass() {
+        if (this.refreshArrows) true;
         let blink = false;
         for (let i = this.internalCurrentIndex + 1; i < this.data.length; i++) {
             for (const hold of this.data[i].holds) {
