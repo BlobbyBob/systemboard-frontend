@@ -20,8 +20,8 @@
 <template>
     <div class="wall row">
         <div class="w-100 d-flex align-items-stretch">
-            <div class="pl-2 pr-2 wall-nav d-flex align-items-center" :class="leftBlink">
-                <span class="fas fa-3x fa-arrow-alt-circle-left" @click="prevSegment"></span>
+            <div class="pl-2 pr-2 wall-nav d-flex align-items-center" :class="leftArrowClass" @click="prevSegment">
+                <span class="fas fa-3x fa-arrow-alt-circle-left"></span>
             </div>
             <div class="wall-segments flex-grow-1">
                 <div v-for="(holds, index) in data" :key="holds.filename">
@@ -30,8 +30,8 @@
                     </keep-alive>
                 </div>
             </div>
-            <div class="pl-2 pr-2 wall-nav d-flex align-items-center" :class="rightBlink">
-                <span class="fas fa-3x fa-arrow-alt-circle-right" @click="nextSegment"></span>
+            <div class="pl-2 pr-2 wall-nav d-flex align-items-center" :class="rightArrowClass" @click="nextSegment">
+                <span class="fas fa-3x fa-arrow-alt-circle-right"></span>
             </div>
         </div>
     </div>
@@ -52,6 +52,8 @@ export default class Wall extends Vue {
     @Prop() readonly types!: { [holdId: number]: 0 | 1 | 2 };
     @Prop() readonly holdClickHandler!: (id: number, e: Event) => void;
 
+    private internalCurrentIndex = 0;
+
     holdClickHandlerWrapper(id: number, e: Event) {
         this.holdClickHandler(id, e);
         this.refresh();
@@ -70,15 +72,39 @@ export default class Wall extends Vue {
         this.$emit('indexchange', value);
     }
 
-    get leftBlink() {
-        return {blink: true};
+    get leftArrowClass() {
+        let blink = false;
+        for (let i = this.internalCurrentIndex - 1; i >= 0; i--) {
+            for (const hold of this.data[i].holds) {
+                if (this.types[hold.id] != 0) {
+                    blink = true;
+                    break;
+                }
+            }
+            if (blink) break;
+        }
+        return {
+            blink: blink,
+            'text-muted': this.internalCurrentIndex == 0
+        };
     }
 
-    get rightBlink() {
-        return {blink: true};
+    get rightArrowClass() {
+        let blink = false;
+        for (let i = this.internalCurrentIndex + 1; i < this.data.length; i++) {
+            for (const hold of this.data[i].holds) {
+                if (this.types[hold.id] != 0) {
+                    blink = true;
+                    break;
+                }
+            }
+            if (blink) break;
+        }
+        return {
+            blink: blink,
+            'text-muted': this.internalCurrentIndex == this.data.length - 1
+        };
     }
-
-    private internalCurrentIndex = 0;
 
     nextSegment() {
         if (this.currentIndex + 1 < this.data.length)
@@ -101,6 +127,9 @@ export default class Wall extends Vue {
 
 .wall-nav {
     cursor: pointer;
+}
+.wall-nav.text-muted {
+    cursor: not-allowed;
 }
 
 .blink {
