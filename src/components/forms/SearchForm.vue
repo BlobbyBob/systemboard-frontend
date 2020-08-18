@@ -19,7 +19,6 @@
 
 <template>
     <div class="searchForm">
-        <h3>Boulder suchen</h3>
         <form v-on:submit.prevent="submitHandlerWrapper">
             <LabelledElement label="Name:">
                 <input type="text" name="name" v-model="name"/>

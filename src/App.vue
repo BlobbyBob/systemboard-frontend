@@ -67,6 +67,7 @@
                 <div class="mt-3"></div>
                 <Wall v-if="isLoggedIn" :data="wallData" :types="holdTypes" :hold-click-handler="holdClickHandler" :refresh-arrows="refreshArrows"/>
                 <div class="mt-3"></div>
+                <BoulderAddForm v-if="isSelectionMode" :submit-handler="addBoulder" :cancel-handler="cancelSelectionMode"/>
                 <BoulderInfo v-if="boulder != null" :name="boulder.name" :creator="boulder.creator.name" :description="boulder.description" :grade="gItoa(boulder.grade)"
                              :rating="boulder.rating"/>
                 <div class="mt-3"></div>
@@ -88,7 +89,7 @@
                 <!--                <BoulderAddForm v-bind:submit-handler="addBoulder" v-bind:cancel-handler="cancelHandler"/>-->
                 <!--                <hr/>-->
             </div>
-            <b-modal id="searchModal">
+            <b-modal id="searchModal" title="Boulder Suchen" cancel-title="Abbrechen" ok-title="Suchen">
                 <SearchForm :submit-handler="searchBoulder" :cancel-handler="cancelHandler"/>
             </b-modal>
         </div>
@@ -212,14 +213,12 @@ export default class App extends Vue {
             case 'latest':
                 this.searchBoulder({});
                 break;
-            case 'wall':
-                this.loadWall();
+            case 'search':
+                this.$bvModal.show('searchModal');
                 break;
-            case 'boulder':
-                this.loadBoulder(171);
-                break;
-            case 'selmode':
-                this.isSelectionMode = !this.isSelectionMode;
+            case 'add':
+                this.boulder = null;
+                this.isSelectionMode = true;
                 break;
             case 'clear':
                 this.clearWall();
@@ -250,6 +249,11 @@ export default class App extends Vue {
     cancelHandler(e: Event) {
         console.log('Cancel Handler executed');
         console.log('Cancel event: ', e);
+    }
+
+    cancelSelectionMode() {
+        this.isSelectionMode = false;
+        this.clearWall();
     }
 
     holdClickHandler(id: number, e: Event) {

@@ -20,6 +20,11 @@
 <template>
     <div class="boulderInfo container">
         <div class="row">
+            <div class="col-12 text-center">
+            <h3>Boulder Info</h3>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-6 property">Name:</div>
             <div class="col-6 value">{{ name }}</div>
         </div>
