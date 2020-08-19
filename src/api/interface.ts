@@ -19,6 +19,7 @@
 
 import {apiCall, setAuthentication} from './index';
 import {Boulder, BoulderNew, BoulderSearch, Holds, Token, Wall} from './types';
+import {RankingItemData} from '@/types/RankingItemData';
 
 export async function loginPassword(email: string, password: string) {
     const qs = new URLSearchParams({
@@ -43,11 +44,27 @@ export async function getBoulder(id: number): Promise<Boulder> {
     return await apiCall('GET', '/boulder/' + id);
 }
 
+export async function getBoulderOfTheDay(): Promise<Boulder> {
+    return await apiCall('GET', '/boulderoftheday');
+}
+
 export async function searchBoulder(data: BoulderSearch): Promise<Boulder[]> {
     return await apiCall('POST', '/search', data);
 }
 
 export async function newBoulder(data: BoulderNew): Promise<{ id: number }> {
     return await apiCall('POST', '/boulder', data);
+}
 
+export async function getRanking(): Promise<RankingItemData[]> {
+    return new Promise<RankingItemData[]>((resolve) => resolve([{
+        name: 'Mr. Doe',
+        points: 123
+    },
+        {
+            name: 'Ms. Doe',
+            points: 45,
+            icon: 'trophy',
+            iconTooltip: 'Tooltip'
+        }]));
 }

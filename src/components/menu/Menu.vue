@@ -18,36 +18,43 @@
   -->
 
 <template>
-    <nav class="navbar navbar-dark navbar-expand-lg sticky-top">
-        <div class="container">
-            <ul class="nav">
-                <li class="navbar-brand"><img src="/dev/favicon.png" alt="DBS"/></li>
-            </ul>
-            <ul v-for="(menuItemData, index) in menuData" :key="index" class="nav">
-                <MenuItem v-if="menuItemData.icon !== undefined" :id="menuItemData.id" :icon="menuItemData.icon" @action="menuClickHandler">
-                    {{ menuItemData.label }}
-                </MenuItem>
-                <MenuItem v-else :id="menuItemData.id" @action="menuClickHandler">
-                    {{ menuItemData.label }}
-                </MenuItem>
-            </ul>
-        </div>
-    </nav>
+    <div class="sticky-top">
+        <nav class="navbar navbar-dark navbar-expand-lg">
+            <div class="container">
+                <ul class="nav">
+                    <li class="navbar-brand"><img src="/dev/favicon.png" alt="DBS"/></li>
+                </ul>
+                <ul v-for="(menuItemData, index) in menuData" :key="index" class="nav">
+                    <MenuItem v-if="menuItemData.icon !== undefined" :id="menuItemData.id" :icon="menuItemData.icon" @action="menuClickHandler">
+                        {{ menuItemData.label }}
+                    </MenuItem>
+                    <MenuItem v-else :id="menuItemData.id" @action="menuClickHandler">
+                        {{ menuItemData.label }}
+                    </MenuItem>
+                </ul>
+            </div>
+        </nav>
+        <SubMenu :show="showSubMenu" :sub-menu-data="subMenuData" :menu-click-handler="menuClickHandler"/>
+    </div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import MenuItem from './MenuItem.vue';
 import {MenuItemData} from '@/types/MenuItemData';
+import SubMenu from '@/components/menu/SubMenu.vue';
 
 @Component({
     components: {
+        SubMenu,
         MenuItem
     }
 })
 export default class Menu extends Vue {
     @Prop() readonly menuData!: MenuItemData[];
     @Prop() readonly menuClickHandler!: (id: string) => void;
+    @Prop() readonly showSubMenu!: boolean;
+    @Prop() readonly subMenuData!: MenuItemData[];
 }
 </script>
 

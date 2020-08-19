@@ -21,7 +21,7 @@
     <div id="app">
         <div v-if="!isLoggedIn" id="login-bg"></div>
         <div v-if="!isLoggedIn" id="login">
-            <div class="container">
+            <div class="container loginContainer">
                 <div class="row justify-content-center align-items-center">
                     <div id="login-form" class="col-auto">
                         <Login :login-handler="loginHandler" v-if="!isLoggedIn"/>
@@ -62,9 +62,17 @@
                         icon: 'ellipsis-h',
                         label: 'Sonstiges'
                     }
-                ]" :menu-click-handler="menuHandler" v-if="isLoggedIn"/>
-            <div class="container">
-                <div class="mt-3"></div>
+                ]" :sub-menu-data="[
+                    {
+                        id: 'impressum',
+                        label: 'Impressum'
+                    },
+                    {
+                        id: 'privacy',
+                        label: 'Datenschutz'
+                    },
+                ]" :menu-click-handler="menuHandler" :show-sub-menu="showSubMenu" v-if="isLoggedIn"/>
+            <div class="container bg-white pt-4">
                 <Wall v-if="isLoggedIn" :data="wallData" :types="holdTypes" :hold-click-handler="holdClickHandler" :refresh-arrows="refreshArrows"/>
                 <div class="mt-3"></div>
                 <BoulderAddForm v-if="isSelectionMode" :submit-handler="addBoulder" :cancel-handler="cancelSelectionMode"/>
@@ -72,25 +80,12 @@
                              :rating="boulder.rating"/>
                 <div class="mt-3"></div>
                 <SearchResults v-if="showSearchResults" :search-results-data="searchResults" :click-handler="loadBoulder"/>
-                <!--                <div class="container col-12">-->
-                <!--                    <Ranking v-bind:ranking-items="[-->
-                <!--                    {-->
-                <!--                        name: 'Mr. Doe',-->
-                <!--                        points: 123-->
-                <!--                    },-->
-                <!--                    {-->
-                <!--                        name: 'Ms. Doe',-->
-                <!--                        points: 45,-->
-                <!--                        icon: 'trophy',-->
-                <!--                        iconTooltip: 'Tooltip'-->
-                <!--                    }-->
-                <!--                ]"/>-->
-                <!--                </div>-->
-                <!--                <BoulderAddForm v-bind:submit-handler="addBoulder" v-bind:cancel-handler="cancelHandler"/>-->
-                <!--                <hr/>-->
             </div>
             <b-modal id="searchModal" title="Boulder Suchen" cancel-title="Abbrechen" ok-title="Suchen">
                 <SearchForm :submit-handler="searchBoulder" :cancel-handler="cancelHandler"/>
+            </b-modal>
+            <b-modal id="rankingModal" title="Rangliste" ok-only ok-title="Schließen">
+                <Ranking :ranking-items="ranking"/>
             </b-modal>
         </div>
     </div>
@@ -109,7 +104,7 @@ import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
 import SearchForm from '@/components/forms/SearchForm.vue';
 import {ApiError} from '@/api';
 import {Boulder, BoulderNew, BoulderSearch, Holds} from '@/api/types';
-import {getBoulder, getHolds, getWall, loginPassword, newBoulder, searchBoulder} from '@/api/interface';
+import {getBoulder, getBoulderOfTheDay, getHolds, getRanking, getWall, loginPassword, newBoulder, searchBoulder} from '@/api/interface';
 import {gradeItoa} from '@/types/grades';
 import '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/free-solid-svg-icons';
@@ -137,7 +132,9 @@ export default class App extends Vue {
     private searchResults: Boulder[] = [];
     private showSearchResults = false;
     private boulder: Boulder | null = null;
+    private ranking = {};
     private refreshArrows = false;
+    private showSubMenu = false;
 
     constructor() {
         super();
@@ -159,18 +156,29 @@ export default class App extends Vue {
         }
     }
 
+    async loadBoulderOfTheDay() {
+        this.clearWall();
+        this.boulder = await getBoulderOfTheDay();
+        this.showBoulder();
+    }
+
     async loadBoulder(id: number) {
         this.clearWall();
         this.boulder = await getBoulder(id);
-        if (!this.boulder.holds) {
-            console.warn('Loaded boulder is missing the holds list', this.boulder);
-            return;
+        this.showBoulder();
+    }
 
+    showBoulder() {
+        if (this.boulder) {
+            if (!this.boulder.holds) {
+                console.warn('Loaded boulder is missing the holds list', this.boulder);
+                return;
+            }
+            for (const id in this.boulder.holds) {
+                this.holdTypes[id] = this.boulder.holds[id];
+            }
+            this.refreshWall(true);
         }
-        for (const id in this.boulder.holds) {
-            this.holdTypes[id] = this.boulder.holds[id];
-        }
-        this.refreshWall();
     }
 
     async addBoulder(data: BoulderNew) {
@@ -207,8 +215,12 @@ export default class App extends Vue {
         });
     }
 
+    async showRanking() {
+        this.ranking = await getRanking();
+        this.$bvModal.show('rankingModal');
+    }
+
     menuHandler(id: string) {
-        console.log('Menu entry with id ' + id + ' clicked');
         switch (id) {
             case 'latest':
                 this.searchBoulder({});
@@ -220,9 +232,17 @@ export default class App extends Vue {
                 this.boulder = null;
                 this.isSelectionMode = true;
                 break;
-            case 'clear':
-                this.clearWall();
+            case 'botd':
+                this.loadBoulderOfTheDay();
                 break;
+            case 'ranking':
+                this.showRanking();
+                break;
+            case 'other':
+                this.showSubMenu = !this.showSubMenu;
+                break;
+            default:
+                console.warn(`No menu handler for menu id ${id}`);
         }
     }
 
@@ -235,14 +255,14 @@ export default class App extends Vue {
         }
     }
 
-    refreshWall() {
+    refreshWall(jumpToMainWall = false) {
         if (!this.wall) {
             for (const child of this.$children) {
                 if (child.$options.name == 'Wall' && child instanceof Wall)
                     this.wall = child;
             }
         }
-        this.wall?.refresh();
+        this.wall?.refresh(jumpToMainWall ? this.boulder?.location?.main : undefined);
         this.refreshArrows = !this.refreshArrows;
     }
 
@@ -274,6 +294,15 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
+body {
+    background-image: url("../public/bg.png");
+    background-repeat: repeat;
+}
+
+.bg-white {
+    background-color: white;
+}
+
 #login-bg {
     position: absolute;
     background-image: url("../public/dev/bg_uni.jpg");

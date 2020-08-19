@@ -24,8 +24,10 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
 @import '~@fortawesome/fontawesome-free/scss/solid';
 
+$secondary: #4c7df5;
+
 $hold-color: green;
 $hold-color-special: red;
 
 $topbar-bg: black;
-$topbar-bg-hover: #262626;
+$topbar-bg-hover: rgba(255, 255, 255, 0.2);

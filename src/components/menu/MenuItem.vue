@@ -21,7 +21,7 @@
     <b-nav-item class="text-center">
         <a class="nav-link text-reset" @click.prevent="$emit('action', id)" href="#">
             <span v-if="icon !== undefined" :class="iconClass"></span>
-            <br>
+            <br v-if="icon !== undefined">
             <slot></slot>
         </a>
     </b-nav-item>
@@ -54,13 +54,15 @@ export default class MenuItem extends Vue {
 <style scoped lang="scss">
 @import 'src/style/custom';
 
-*, a {
+li {
     cursor: pointer;
-    color: white;
 
-    :hover {
-        background-color: $topbar-bg-hover;
-        color: white !important;
+    a, a:hover {
+        color: white;
     }
+}
+li:hover {
+    background-color: $topbar-bg-hover;
+    color: white !important;
 }
 </style>

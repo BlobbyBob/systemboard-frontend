@@ -60,7 +60,10 @@ export default class Wall extends Vue {
         this.refresh();
     }
 
-    public refresh() {
+    public refresh(mainwall: number | undefined = undefined) {
+        if (mainwall !== undefined) {
+            this.internalCurrentIndex = mainwall;
+        }
         this.$children.forEach(v => v.$forceUpdate());
     }
 
