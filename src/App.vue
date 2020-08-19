@@ -295,7 +295,7 @@ export default class App extends Vue {
 
 <style lang="scss">
 body {
-    background-image: url("../public/bg.png");
+    background-image: url("../public/dev/bg.png");
     background-repeat: repeat;
 }
 
