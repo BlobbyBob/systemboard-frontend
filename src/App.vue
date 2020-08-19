@@ -64,13 +64,25 @@
                     }
                 ]" :sub-menu-data="[
                     {
+                        id: 'report',
+                        label: 'Problem melden'
+                    },
+                    {
+                        id: 'faq',
+                        label: 'FAQ'
+                    },
+                    {
+                        id: 'about',
+                        label: 'Über DBS'
+                    },
+                    {
                         id: 'impressum',
                         label: 'Impressum'
                     },
                     {
                         id: 'privacy',
-                        label: 'Datenschutz'
-                    },
+                        label: 'Datenschutzerklärung'
+                    }
                 ]" :menu-click-handler="menuHandler" :show-sub-menu="showSubMenu" v-if="isLoggedIn"/>
             <div class="container bg-white pt-4">
                 <Wall v-if="isLoggedIn" :data="wallData" :types="holdTypes" :hold-click-handler="holdClickHandler" :refresh-arrows="refreshArrows"/>
@@ -86,6 +98,12 @@
             </b-modal>
             <b-modal id="rankingModal" title="Rangliste" ok-only ok-title="Schließen">
                 <Ranking :ranking-items="ranking"/>
+            </b-modal>
+            <b-modal id="faqModal" title="FAQ" ok-only ok-title="Schließen">
+                <p class="question">
+                    <strong>Wie komme ich auf Platz 1 der Rangliste?</strong><br>
+                    <i>Spenden können gerne in der Unihalle hinterlegt werden.</i>
+                </p>
             </b-modal>
         </div>
     </div>
@@ -135,6 +153,7 @@ export default class App extends Vue {
     private ranking = {};
     private refreshArrows = false;
     private showSubMenu = false;
+    private mail = '';
 
     constructor() {
         super();
@@ -142,6 +161,9 @@ export default class App extends Vue {
         if (this.isLoggedIn) {
             this.loadWall();
         }
+        setTimeout(() => {
+            this.mail = decodeURIComponent("%6d%61%69lto%3A%73y%73te%6dbo%61rd%40d%69g%69t%61lbre%61d.de");
+        }, 1500);
     }
 
     async loadWall() {
@@ -241,6 +263,26 @@ export default class App extends Vue {
             case 'other':
                 this.showSubMenu = !this.showSubMenu;
                 break;
+            case 'report':
+                this.showSubMenu = false;
+                window.open(this.mail);
+                break;
+            case 'faq':
+                this.showSubMenu = false;
+                this.$bvModal.show('faqModal');
+                break;
+            case 'about':
+                this.showSubMenu = false;
+                // todo
+                break;
+            case 'impressum':
+                this.showSubMenu = false;
+                window.open('impressum.html');
+                break;
+            case 'privacy':
+                this.showSubMenu = false;
+                window.open('privacy.html');
+                break;
             default:
                 console.warn(`No menu handler for menu id ${id}`);
         }
@@ -289,6 +331,10 @@ export default class App extends Vue {
 
     gItoa(grade: number): string {
         return gradeItoa(grade);
+    }
+
+    openExternal(url: string) {
+        window.open(url, '_blank');
     }
 }
 </script>

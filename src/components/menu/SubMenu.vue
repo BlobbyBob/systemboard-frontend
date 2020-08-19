@@ -19,7 +19,7 @@
 
 <template>
     <nav class="navbar submenu navbar-secondary" :class="navClasses">
-        <div class="container justify-content-end">
+        <div class="container">
             <ul v-for="(data, index) in subMenuData" :key="index" class="nav">
                 <MenuItem :id="data.id" @action="menuClickHandler">
                     {{ data.label }}
