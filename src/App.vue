@@ -93,7 +93,7 @@
                 <div class="mt-3"></div>
                 <SearchResults v-if="showSearchResults" :search-results-data="searchResults" :click-handler="loadBoulder"/>
             </div>
-            <b-modal id="searchModal" title="Boulder Suchen" cancel-title="Abbrechen" ok-title="Suchen">
+            <b-modal id="searchModal" title="Boulder Suchen" hide-footer>
                 <SearchForm :submit-handler="searchBoulder" :cancel-handler="cancelHandler"/>
             </b-modal>
             <b-modal id="rankingModal" title="Rangliste" ok-only ok-title="Schließen">
@@ -212,9 +212,8 @@ export default class App extends Vue {
                 });
             }
         }
-        console.log(data);
-        // const response = await newBoulder(data);
-        // await this.loadBoulder(response.id);
+        const response = await newBoulder(data);
+        await this.loadBoulder(response.id);
         this.isSelectionMode = false;
     }
 

@@ -34,7 +34,9 @@ export function unsetAuthentication() {
     sessionStorage.removeItem('auth');
 }
 
+// eslint-disable-next-line
 export async function apiCall(method: string, endpoint: string, data?: any): Promise<any> {
+    // eslint-disable-next-line
     return new Promise<any>(((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open(method, baseUrl + endpoint);

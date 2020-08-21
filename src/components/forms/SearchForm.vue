@@ -19,47 +19,36 @@
 
 <template>
     <div class="searchForm">
-        <form v-on:submit.prevent="submitHandlerWrapper">
-            <LabelledElement label="Name:">
-                <input type="text" name="name" v-model="name"/>
-            </LabelledElement>
+        <form @submit.prevent="submitHandlerWrapper">
+            <label for="searchName">Name:</label>
+            <b-form-input id="searchName" v-model="name" type="text"/>
             <br/>
-            <LabelledElement label="Ersteller:">
-                <input type="text" name="creator" v-model="creator"/>
-            </LabelledElement>
+            <label for="searchCreator">Ersteller:</label>
+            <b-form-input id="searchCreator" v-model="creator" type="text"/>
             <br/>
             <fieldset>
                 <legend>Bewertung</legend>
-                <LabelledElement label="Alle" v-bind:before="false">
-                    <input type="radio" name="rating" value="all" checked v-model="ratingSelection"/>
-                </LabelledElement>
-                <LabelledElement label="Eingeschränkt" v-bind:before="false">
-                    <input type="radio" name="rating" value="limited" v-model="ratingSelection"/>
-                </LabelledElement>
+                <b-form-radio name="rating" v-model="ratingSelection" value="all">Alle</b-form-radio>
+                <b-form-radio name="rating" v-model="ratingSelection" value="limited">Eingeschränkt</b-form-radio>
                 <div v-show="ratingSelection === 'limited'">
-                    <LabelledElement label="Zwischen:">
-                        <input type="number" name="minRating" value="1" min="1" max="5" step="1" v-model="minRating"/>
-                    </LabelledElement>
-                    <br/>
-                    <LabelledElement label="Und:">
-                        <input type="number" name="maxRating" value="5" min="1" max="5" step="1" v-model="maxRating"/>
-                    </LabelledElement>
+                    <Stars count="5" initial-value="1" dynamic="true" v-model="minRating"/>
+                    <br>
+                    <Stars count="5" initial-value="5" dynamic="true" v-model="maxRating"/>
                 </div>
             </fieldset>
             <br/>
             <fieldset>
                 <legend>Schwierigkeit</legend>
-                <LabelledElement label="Alle" v-bind:before="false">
+                <LabelledElement label="Alle" :before="false">
                     <input type="radio" name="grade" value="all" checked v-model="gradeSelection"/>
                 </LabelledElement>
-                <LabelledElement label="Eingeschränkt" v-bind:before="false">
+                <LabelledElement label="Eingeschränkt" :before="false">
                     <input type="radio" name="grade" value="limited" v-model="gradeSelection"/>
                 </LabelledElement>
                 <div v-show="gradeSelection === 'limited'">
                     <LabelledElement label="Zwischen:">
                         <select name="minGrade" v-model="minGrade">
-                            <option v-for="grade in grades" v-bind:key="grade" v-bind:value="grade"
-                                    v-bind:selected="grade === defaultMinGrade">
+                            <option v-for="grade in grades" :key="grade" :value="grade" :selected="grade === defaultMinGrade">
                                 {{ grade }}
                             </option>
                         </select>
@@ -67,8 +56,7 @@
                     <br/>
                     <LabelledElement label="Und:">
                         <select name="maxGrade" v-model="maxGrade">
-                            <option v-for="grade in grades" v-bind:key="grade" v-bind:value="grade"
-                                    v-bind:selected="grade === defaultMaxGrade">
+                            <option v-for="grade in grades" :key="grade" :value="grade" :selected="grade === defaultMaxGrade">
                                 {{ grade }}
                             </option>
                         </select>
@@ -79,8 +67,8 @@
                     </LabelledElement>
                 </div>
             </fieldset>
-            <button type="submit">Suchen</button>
-            <button type="button" v-on:click="cancelHandler">Abbrechen</button>
+            <button type="submit" class="btn btn-primary m-2">Suchen</button>
+            <button type="button" class="btn btn-secondary m-2" @click="cancelHandler">Abbrechen</button>
         </form>
     </div>
 </template>
@@ -90,9 +78,10 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 import LabelledElement from './LabelledElement.vue';
 import {gradeAtoi, gradeItoa, Grades} from '@/types/grades';
 import {BoulderSearch} from '@/api/types';
+import Stars from '@/components/Stars.vue';
 
 @Component({
-    components: {LabelledElement}
+    components: {Stars, LabelledElement}
 })
 export default class SearchForm extends Vue {
     private name = '';

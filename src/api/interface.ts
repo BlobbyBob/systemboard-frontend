@@ -60,11 +60,10 @@ export async function getRanking(): Promise<RankingItemData[]> {
     return new Promise<RankingItemData[]>((resolve) => resolve([{
         name: 'Mr. Doe',
         points: 123
-    },
-        {
-            name: 'Ms. Doe',
-            points: 45,
-            icon: 'trophy',
-            iconTooltip: 'Tooltip'
-        }]));
+    }, {
+        name: 'Ms. Doe',
+        points: 45,
+        icon: 'trophy',
+        iconTooltip: 'Tooltip'
+    }]));
 }

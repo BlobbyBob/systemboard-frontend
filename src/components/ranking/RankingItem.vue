@@ -22,10 +22,9 @@
         <td>{{ rank }}</td>
         <td>
             {{ name }}
-            <span v-if="icon !== undefined">
-                &nbsp;
-                <span v-bind:class="iconClass"></span>
-                <span v-if="iconTooltip !== undefined">&nbsp;({{ iconTooltip }})</span>
+            <span v-if="icon !== undefined" class="pl-2">
+                <span v-if="iconTooltip !== undefined" :class="iconClass" :data-tooltip="iconTooltip"></span>
+                <span v-else :class="iconClass"></span>
             </span>
         </td>
         <td>{{ points }}</td>
@@ -46,9 +45,9 @@ export default class RankingItem extends Vue {
     get iconClass() {
         if (this.icon === undefined)
             return {};
-        // eslint-disable-next-line
-        const classes: any = {};
-        classes['icon-' + this.icon] = true;
+        const classes: { [clazz: string]: boolean } = {};
+        classes['fas'] = true;
+        classes['fa-' + this.icon] = true;
         return classes;
     }
 }
