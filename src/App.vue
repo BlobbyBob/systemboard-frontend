@@ -84,7 +84,7 @@
                         label: 'Datenschutzerklärung'
                     }
                 ]" :menu-click-handler="menuHandler" :show-sub-menu="showSubMenu" v-if="isLoggedIn"/>
-            <div class="container bg-white pt-4">
+            <div class="container bg-white pt-4 pb-5">
                 <Wall v-if="isLoggedIn" :data="wallData" :types="holdTypes" :hold-click-handler="holdClickHandler" :refresh-arrows="refreshArrows"/>
                 <div class="mt-3"></div>
                 <BoulderAddForm v-if="isSelectionMode" :submit-handler="addBoulder" :cancel-handler="cancelSelectionMode"/>

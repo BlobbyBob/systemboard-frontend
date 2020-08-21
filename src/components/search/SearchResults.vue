@@ -20,7 +20,12 @@
 <template>
     <div class="searchResults container">
         <div class="row">
-            <SearchResult v-for="(result, index) in searchResultsData" :key="index" :data="result" @action="clickHandler"/>
+            <h3 class="col-12 text-center">Suchergebnisse</h3>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4" v-for="(result, index) in searchResultsData" :key="index" >
+                <SearchResult :data="result" @action="clickHandler"/>
+            </div>
         </div>
     </div>
 </template>

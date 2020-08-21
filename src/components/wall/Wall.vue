@@ -128,7 +128,6 @@ export default class Wall extends Vue {
 .wall {
     min-height: 600px;
     min-width: 1000px;
-    width: 100%;
 }
 
 .wall-nav {

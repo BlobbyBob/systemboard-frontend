@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="boulderInfo container">
+    <div class="boulderInfo container mb-4">
         <div class="row">
             <div class="col-12 text-center">
             <h3>Boulder Info</h3>
@@ -42,33 +42,88 @@
         </div>
         <div class="row">
             <div class="col-6 property">Bewertung:</div>
-            <div class="col-6 value">{{ rating + " Sterne" }}</div>
+            <div class="col-6 value">
+                <Stars count="5" :dynamic="false" :initial-value="rating"/>
+            </div>
         </div>
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-6 property">Bereits geklettert?</div>
-            <div class="col-6 value"><i>Todo</i></div>
+            <div class="col-6 value">
+                <ToggleMark v-model="climbed"/>
+            </div>
         </div>
         <div class="row">
             <div class="col-6 property">Bewerten:</div>
-            <div class="col-6 value"><i>Todo</i></div>
+            <div class="col-6 value">
+                <Stars count="5" :dynamic="true" :initial-value="0" v-model="ratingVote"/>
+            </div>
         </div>
         <div class="row">
             <div class="col-6 property">Schwierigkeit:</div>
-            <div class="col-6 value"><i>Todo</i></div>
+            <div class="col-6 value">
+                <b-form-select v-model="gradeVote" :options="gradeOptions"></b-form-select>
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator';
+import Stars from '@/components/Stars.vue';
+import {gradeAtoi, Grades} from '@/types/grades';
+import ToggleMark from '@/components/ToggleMark.vue';
 
-@Component
+@Component({
+    components: {ToggleMark, Stars}
+})
 export default class BoulderInfo extends Vue {
     @Prop() name!: string;
     @Prop() description!: string;
     @Prop() creator!: string;
     @Prop() grade!: string;
     @Prop() rating!: number;
+
+    private internalGradeVote = this.grade;
+    private internalRatingVote = this.rating;
+    private internalClimbed = false; // todo
+
+    get climbed() {
+        return this.internalClimbed;
+    }
+
+    set climbed(climbed: boolean) {
+        // todo make api call
+        this.internalClimbed = climbed;
+    }
+
+    get gradeVote() {
+        return this.internalGradeVote;
+    }
+
+    set gradeVote(grade: string) {
+        // todo make api call
+        this.internalGradeVote = grade;
+    }
+
+    get ratingVote() {
+        return this.internalRatingVote;
+    }
+
+    set ratingVote(rating: number) {
+        // todo make api call
+        this.internalRatingVote = rating;
+    }
+
+    get gradeOptions() {
+        const options = [];
+        for (const grade of Grades) {
+            options.push({
+                text: grade,
+                value: gradeAtoi(grade)
+            });
+        }
+        return options;
+    }
 }
 </script>
 
@@ -76,6 +131,9 @@ export default class BoulderInfo extends Vue {
 .boulderInfo {
     .property {
         text-align: right;
+    }
+    > div {
+        margin-bottom: 0.5rem;
     }
 }
 </style>

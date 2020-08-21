@@ -18,14 +18,14 @@
   -->
 
 <template>
-    <div class="searchResult col-12 col-md-6 col-lg-4 col-xl-3 m-2" @click="$emit('action', data.id)">
+    <div @click="$emit('action', data.id)" class="m-2 searchResult">
         <div class="searchResultHead pl-2 pr-2">
             <span class="name">{{ data.name }}</span> <small>von {{ data.creator.name }}</small>
         </div>
         <hr>
         <div class="pl-2 pr-2">
-            Schwierigkeit: {{ gItoa(data.grade) }}<br>
-            {{ data.rating }} Sterne<br>
+            Schwierigkeit: {{ gItoa(data.grade) }}
+            <Stars :dynamic="false" count="5" :initial-value="data.rating"/>
             {{ data.ascents }}x geklettert
         </div>
     </div>
@@ -35,8 +35,10 @@
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import {Boulder} from '@/api/types';
 import {gradeItoa} from '@/types/grades';
+import Stars from '@/components/Stars.vue';
 
 @Component({
+    components: {Stars},
     model: {
         event: 'action'
     }
