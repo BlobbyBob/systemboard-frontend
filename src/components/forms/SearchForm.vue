@@ -28,47 +28,31 @@
             <br/>
             <fieldset>
                 <legend>Bewertung</legend>
-                <b-form-radio name="rating" v-model="ratingSelection" value="all">Alle</b-form-radio>
-                <b-form-radio name="rating" v-model="ratingSelection" value="limited">Eingeschränkt</b-form-radio>
-                <div v-show="ratingSelection === 'limited'">
+                <b-form-radio-group v-model="ratingSelection" name="rating">
+                    <b-form-radio value="all">Alle</b-form-radio>
+                    <b-form-radio value="limited">Eingeschränkt</b-form-radio>
+                </b-form-radio-group>
+                <div v-if="ratingSelection === 'limited'" class="d-flex justify-content-center align-items-center">
                     <Stars count="5" initial-value="1" dynamic="true" v-model="minRating"/>
-                    <br>
+                    <span class="p-3">bis</span>
                     <Stars count="5" initial-value="5" dynamic="true" v-model="maxRating"/>
                 </div>
             </fieldset>
             <br/>
             <fieldset>
                 <legend>Schwierigkeit</legend>
-                <LabelledElement label="Alle" :before="false">
-                    <input type="radio" name="grade" value="all" checked v-model="gradeSelection"/>
-                </LabelledElement>
-                <LabelledElement label="Eingeschränkt" :before="false">
-                    <input type="radio" name="grade" value="limited" v-model="gradeSelection"/>
-                </LabelledElement>
-                <div v-show="gradeSelection === 'limited'">
-                    <LabelledElement label="Zwischen:">
-                        <select name="minGrade" v-model="minGrade">
-                            <option v-for="grade in grades" :key="grade" :value="grade" :selected="grade === defaultMinGrade">
-                                {{ grade }}
-                            </option>
-                        </select>
-                    </LabelledElement>
-                    <br/>
-                    <LabelledElement label="Und:">
-                        <select name="maxGrade" v-model="maxGrade">
-                            <option v-for="grade in grades" :key="grade" :value="grade" :selected="grade === defaultMaxGrade">
-                                {{ grade }}
-                            </option>
-                        </select>
-                    </LabelledElement>
-                    <br/>
-                    <LabelledElement label="Und:">
-                        <input type="number" name="maxRating" value="5" min="1" max="5" step="1"/>
-                    </LabelledElement>
+                <b-form-radio-group v-model="gradeSelection" name="grade">
+                    <b-form-radio value="all">Alle</b-form-radio>
+                    <b-form-radio value="limited">Eingeschränkt</b-form-radio>
+                </b-form-radio-group>
+                <div v-if="gradeSelection === 'limited'" class="d-flex justify-content-center align-items-center">
+                    <b-form-select v-model="minGrade" :options="gradeOptions"></b-form-select>
+                    <span class="p-3">bis</span>
+                    <b-form-select v-model="maxGrade" :options="gradeOptions"></b-form-select>
                 </div>
             </fieldset>
+            <!--Todo: Ordering-->
             <button type="submit" class="btn btn-primary m-2">Suchen</button>
-            <button type="button" class="btn btn-secondary m-2" @click="cancelHandler">Abbrechen</button>
         </form>
     </div>
 </template>
@@ -76,7 +60,7 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import LabelledElement from './LabelledElement.vue';
-import {gradeAtoi, gradeItoa, Grades} from '@/types/grades';
+import {gradeAtoi, Grades} from '@/types/grades';
 import {BoulderSearch} from '@/api/types';
 import Stars from '@/components/Stars.vue';
 
@@ -88,16 +72,29 @@ export default class SearchForm extends Vue {
     private creator = '';
     private minRating = 1;
     private maxRating = 5;
-    private minGrade = '4';
-    private maxGrade = '8a+';
     private ratingSelection = 'all';
     private gradeSelection = 'all';
-    private readonly defaultMinGrade = '5';
-    private readonly defaultMaxGrade = '6a';
-    private readonly grades = Grades;
+    private minGrade: string;
+    private maxGrade: string;
 
     @Prop() readonly submitHandler!: (data: BoulderSearch) => void;
-    @Prop() readonly cancelHandler!: (e: Event) => void;
+
+    constructor() {
+        super();
+        this.minGrade = '5a';
+        this.maxGrade = '6a+';
+    }
+
+    get gradeOptions() {
+        const options = [];
+        for (const grade of Grades) {
+            options.push({
+                text: grade,
+                value: gradeAtoi(grade)
+            });
+        }
+        return options;
+    }
 
     submitHandlerWrapper() {
         const data: BoulderSearch = {};

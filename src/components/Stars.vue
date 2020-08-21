@@ -20,7 +20,7 @@
 <template>
     <div class="stars" :class="{'dynamic': dynamic}">
         <span v-for="star in starArray" :key="star.id" :class="'star-'+star.id" @click="clickHandler(star.id)" @mouseenter="mouseenterHandler(star.id)"
-              @mouseleave="mouseleaveHandler(star.id)">
+              @mouseleave="mouseleaveHandler()">
             <i class="positive fas fa-star" v-show="star.selected"></i>
             <i class="negative far fa-star" v-show="!star.selected"></i>
         </span>
@@ -80,7 +80,7 @@ export default class Stars extends Vue {
         this.hoverValue = id + 1;
     }
 
-    mouseleaveHandler(id: number) {
+    mouseleaveHandler() {
         this.hoverValue = -1;
     }
 }
