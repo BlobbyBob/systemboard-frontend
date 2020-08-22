@@ -87,7 +87,11 @@
             <div class="container bg-white pt-4 pb-5">
                 <Wall v-if="isLoggedIn" :data="wallData" :types="holdTypes" :hold-click-handler="holdClickHandler" :refresh-arrows="refreshArrows"/>
                 <div class="mt-3"></div>
-                <BoulderAddForm v-if="isSelectionMode" :submit-handler="addBoulder" :cancel-handler="cancelSelectionMode"/>
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 col-lg-6 col-xl4">
+                        <BoulderAddForm v-if="isSelectionMode" :submit-handler="addBoulder" :cancel-handler="cancelSelectionMode"/>
+                    </div>
+                </div>
                 <BoulderInfo v-if="boulder != null" :name="boulder.name" :creator="boulder.creator.name" :description="boulder.description" :grade="gItoa(boulder.grade)"
                              :rating="boulder.rating"/>
                 <div class="mt-3"></div>
@@ -315,6 +319,7 @@ export default class App extends Vue {
     cancelSelectionMode() {
         this.isSelectionMode = false;
         this.clearWall();
+        this.refreshWall();
     }
 
     holdClickHandler(id: number, e: Event) {

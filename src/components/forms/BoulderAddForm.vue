@@ -19,30 +19,36 @@
 
 <template>
     <div class="boulderAddForm">
-        <h3>Boulder hinzufügen</h3>
-        <form v-on:submit.prevent="submitHandlerWrapper">
-            <LabelledElement label="Name:">
-                <input type="text" name="name" maxlength="50" v-model="name"/>
-            </LabelledElement>
-            <br/>
-            <LabelledElement label="Beschreibung:">
-                <textarea name="description" v-model="description"></textarea>
-            </LabelledElement>
-            <br/>
-            <LabelledElement label="Schwierigkeit:">
-                <select name="grade" v-model="grade">
-                    <option v-for="grade in grades" v-bind:key="grade" v-bind:value="grade" v-bind:selected="grade === defaultGrade">
-                        {{ grade }}
-                    </option>
-                </select>
-            </LabelledElement>
-            <br/>
-            <LabelledElement label="Bewertung">
-                <input type="number" name="rating" min="1" max="5" step="1" v-model="rating"/>
-            </LabelledElement>
-            <br/>
-            <button type="submit">Hinzufügen</button>
-            <button type="button" v-on:click="cancelHandler">Abbrechen</button>
+        <h3 class="text-center mb-4">Boulder hinzufügen</h3>
+        <form @submit.prevent="submitHandlerWrapper">
+            <div class="row align-items-center mb-3">
+                <div class="col-12 col-md-3">Name</div>
+                <div class="col-12 col-md-9">
+                    <b-form-input type="text" maxlength="50" v-model="name" required/>
+                </div>
+            </div>
+            <div class="row align-items-center mb-3">
+                <div class="col-12 col-md-3">Beschreibung</div>
+                <div class="col-12 col-md-9">
+                    <b-form-textarea v-model="description" placeholder="optional"/>
+                </div>
+            </div>
+            <div class="row align-items-center mb-3">
+                <div class="col-12 col-md-3">Schwierigkeit</div>
+                <div class="col-12 col-md-9">
+                    <b-form-select v-model="grade" id="addGrade" :options="gradeOptions" required/>
+                </div>
+            </div>
+            <div class="row align-items-center mb-3">
+                <div class="col-12 col-md-3">Bewertung</div>
+                <div class="col-12 col-md-9 text-center h4">
+                    <Stars :dynamic="true" count="5" initial-value="1" v-model="rating"/>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary m-2">Hinzufügen</button>
+                <button type="button" class="btn btn-secondary m-2" @click="cancelHandler">Abbrechen</button>
+            </div>
         </form>
     </div>
 </template>
@@ -52,9 +58,10 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 import LabelledElement from './LabelledElement.vue';
 import {gradeAtoi, Grades} from '@/types/grades';
 import {BoulderNew} from '@/api/types';
+import Stars from '@/components/Stars.vue';
 
 @Component({
-    components: {LabelledElement}
+    components: {Stars, LabelledElement}
 })
 export default class BoulderAddForm extends Vue {
     private name = '';
@@ -76,11 +83,20 @@ export default class BoulderAddForm extends Vue {
         };
         this.submitHandler(data);
     }
+
+    get gradeOptions() {
+        const options = [];
+        for (const grade of Grades) {
+            options.push({
+                text: grade,
+                value: gradeAtoi(grade)
+            });
+        }
+        return options;
+    }
 }
 </script>
 
 <style scoped lang="scss">
-.boulderAddForm {
-    text-align: center;
-}
+
 </style>

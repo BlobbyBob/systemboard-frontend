@@ -46,9 +46,9 @@
                     <b-form-radio value="limited">Eingeschränkt</b-form-radio>
                 </b-form-radio-group>
                 <div v-if="gradeSelection === 'limited'" class="d-flex justify-content-center align-items-center">
-                    <b-form-select v-model="minGrade" :options="gradeOptions"></b-form-select>
+                    <b-form-select v-model="minGrade" :options="gradeOptions"/>
                     <span class="p-3">bis</span>
-                    <b-form-select v-model="maxGrade" :options="gradeOptions"></b-form-select>
+                    <b-form-select v-model="maxGrade" :options="gradeOptions"/>
                 </div>
             </fieldset>
             <!--Todo: Ordering-->
