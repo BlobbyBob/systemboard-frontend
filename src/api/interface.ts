@@ -21,42 +21,42 @@ import {apiCall, setAuthentication} from './index';
 import {Boulder, BoulderNew, BoulderSearch, Holds, Token, Wall} from './types';
 import {RankingItemData} from '@/types/RankingItemData';
 
-export async function loginPassword(email: string, password: string) {
+export async function loginPassword(email: string, password: string): Promise<boolean> {
     const qs = new URLSearchParams({
         'auth': password
     });
     setAuthentication('Login');
-    const apiToken: Token = await apiCall('GET', '/login/password/' + encodeURIComponent(email) + '?' + qs.toString());
-    console.log('API Call response:', apiToken);
-    console.log('Saving session token:', apiToken.token);
+    const apiToken: Token | undefined = await apiCall('GET', '/login/password/' + encodeURIComponent(email) + '?' + qs.toString());
+    if (!apiToken) return false;
     setAuthentication('Bearer ' + apiToken.token);
+    return true;
 }
 
-export async function getWall(): Promise<Wall> {
-    return await apiCall('GET', '/wall');
+export async function getWall(): Promise<Wall|undefined> {
+    return apiCall('GET', '/wall');
 }
 
-export async function getHolds(wallid: number): Promise<Holds[]> {
-    return await apiCall('GET', '/holds/' + wallid);
+export async function getHolds(wallid: number): Promise<Holds[]|undefined> {
+    return apiCall('GET', '/holds/' + wallid);
 }
 
-export async function getBoulder(id: number): Promise<Boulder> {
-    return await apiCall('GET', '/boulder/' + id);
+export async function getBoulder(id: number): Promise<Boulder|undefined> {
+    return apiCall('GET', '/boulder/' + id);
 }
 
-export async function getBoulderOfTheDay(): Promise<Boulder> {
-    return await apiCall('GET', '/boulderoftheday');
+export async function getBoulderOfTheDay(): Promise<Boulder|undefined> {
+    return apiCall('GET', '/boulderoftheday');
 }
 
-export async function searchBoulder(data: BoulderSearch): Promise<Boulder[]> {
-    return await apiCall('POST', '/search', data);
+export async function searchBoulder(data: BoulderSearch): Promise<Boulder[]|undefined> {
+    return apiCall('POST', '/search', data);
 }
 
-export async function newBoulder(data: BoulderNew): Promise<{ id: number }> {
-    return await apiCall('POST', '/boulder', data);
+export async function newBoulder(data: BoulderNew): Promise<{ id: number }|undefined> {
+    return apiCall('POST', '/boulder', data);
 }
 
-export async function getRanking(): Promise<RankingItemData[]> {
+export async function getRanking(): Promise<RankingItemData[]|undefined> {
     return new Promise<RankingItemData[]>((resolve) => resolve([{
         name: 'Mr. Doe',
         points: 123

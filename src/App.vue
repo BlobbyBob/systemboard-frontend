@@ -173,7 +173,8 @@ export default class App extends Vue {
     async loadWall() {
         if (!this.wallLoaded) {
             const wall = await getWall();
-            this.wallData = await getHolds(wall.id);
+            if (!wall) return;
+            this.wallData = await getHolds(wall.id) ?? [];
 
             this.holdTypes = {};
             this.clearWall();
@@ -184,13 +185,13 @@ export default class App extends Vue {
 
     async loadBoulderOfTheDay() {
         this.clearWall();
-        this.boulder = await getBoulderOfTheDay();
+        this.boulder = await getBoulderOfTheDay() ?? null;
         this.showBoulder();
     }
 
     async loadBoulder(id: number) {
         this.clearWall();
-        this.boulder = await getBoulder(id);
+        this.boulder = await getBoulder(id) ?? null;
         this.showBoulder();
     }
 
@@ -217,31 +218,25 @@ export default class App extends Vue {
             }
         }
         const response = await newBoulder(data);
+        if (!response) return;
         await this.loadBoulder(response.id);
         this.isSelectionMode = false;
     }
 
     async searchBoulder(data: BoulderSearch) {
         this.showSearchResults = true;
-        this.searchResults = await searchBoulder(data);
+        this.searchResults = await searchBoulder(data) ?? [];
     }
 
     async loginHandler(email: string, password: string) {
-        this.isLoggedIn = true;
-        console.log('Login Handler executed');
-        console.log('Login data: ', email, password);
-        loginPassword(email, password).then(() => {
-            console.log('Successful login');
-        }).catch((error: ApiError) => {
-            console.warn('API error occurred');
-            console.warn(error);
-        }).finally(() => {
-            this.loadWall();
-        });
+        const login = await loginPassword(email, password);
+        if (login) {
+            this.isLoggedIn = true;
+        }
     }
 
     async showRanking() {
-        this.ranking = await getRanking();
+        this.ranking = await getRanking() ?? [];
         this.$bvModal.show('rankingModal');
     }
 

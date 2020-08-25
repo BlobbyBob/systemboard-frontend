@@ -35,9 +35,9 @@ export function unsetAuthentication() {
 }
 
 // eslint-disable-next-line
-export async function apiCall(method: string, endpoint: string, data?: any): Promise<any> {
+export async function apiCall(method: string, endpoint: string, data?: any): Promise<any|undefined> {
     // eslint-disable-next-line
-    return new Promise<any>(((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open(method, baseUrl + endpoint);
         const auth = sessionStorage.getItem('auth');
@@ -74,5 +74,14 @@ export async function apiCall(method: string, endpoint: string, data?: any): Pro
         } else {
             xhr.send();
         }
-    }));
+    }).catch(errorHandler);
+}
+
+function errorHandler(reason: ApiError) {
+    if (reason.successfulTransmission) {
+        alert(`${reason.statusCode} ${reason.statusText}`);
+    } else {
+        alert(`No connection`);
+    }
+    return undefined;
 }
