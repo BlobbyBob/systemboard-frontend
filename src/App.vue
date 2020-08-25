@@ -82,6 +82,10 @@
                     {
                         id: 'privacy',
                         label: 'Datenschutzerklärung'
+                    },
+                    {
+                        id: 'logout',
+                        label: 'Abmelden'
                     }
                 ]" :menu-click-handler="menuHandler" :show-sub-menu="showSubMenu" v-if="isLoggedIn"/>
             <div class="container bg-white pt-4 pb-5">
@@ -124,12 +128,12 @@ import BoulderInfo from '@/components/BoulderInfo.vue';
 import SearchResults from '@/components/search/SearchResults.vue';
 import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
 import SearchForm from '@/components/forms/SearchForm.vue';
-import {ApiError} from '@/api';
 import {Boulder, BoulderNew, BoulderSearch, Holds} from '@/api/types';
-import {getBoulder, getBoulderOfTheDay, getHolds, getRanking, getWall, loginPassword, newBoulder, searchBoulder} from '@/api/interface';
+import {getBoulder, getBoulderOfTheDay, getHolds, getRanking, getWall, loginPassword, logout, newBoulder, searchBoulder} from '@/api/interface';
 import {gradeItoa} from '@/types/grades';
 import '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/free-solid-svg-icons';
+import {setAuthentication} from '@/api';
 
 @Component({
     components: {
@@ -166,7 +170,7 @@ export default class App extends Vue {
             this.loadWall();
         }
         setTimeout(() => {
-            this.mail = decodeURIComponent("%6d%61%69lto%3A%73y%73te%6dbo%61rd%40d%69g%69t%61lbre%61d.de");
+            this.mail = decodeURIComponent('%6d%61%69lto%3A%73y%73te%6dbo%61rd%40d%69g%69t%61lbre%61d.de');
         }, 1500);
     }
 
@@ -228,10 +232,23 @@ export default class App extends Vue {
         this.searchResults = await searchBoulder(data) ?? [];
     }
 
-    async loginHandler(email: string, password: string) {
-        const login = await loginPassword(email, password);
-        if (login) {
-            this.isLoggedIn = true;
+    async loginHandler(email: string, password: string, type: string) {
+        switch (type) {
+            case 'login':
+                const login = await loginPassword(email, password);
+                if (login) {
+                    this.isLoggedIn = true;
+                    await this.loadWall();
+                }
+                break;
+            case 'guestlogin':
+                setAuthentication('guest');
+                this.isLoggedIn = true;
+                await this.loadWall();
+                break;
+            case 'register':
+                // todo
+                break;
         }
     }
 
@@ -280,6 +297,11 @@ export default class App extends Vue {
             case 'privacy':
                 this.showSubMenu = false;
                 window.open('privacy.html');
+                break;
+            case 'logout':
+                logout().then(() => {
+                    this.isLoggedIn = false;
+                });
                 break;
             default:
                 console.warn(`No menu handler for menu id ${id}`);
