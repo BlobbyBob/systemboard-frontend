@@ -43,14 +43,19 @@
                         modal: 'searchModal'
                     },
                     {
-                        id: 'add',
-                        icon: 'plus-circle',
-                        label: 'Hinzufügen'
+                        id: 'notdoneyet',
+                        icon: 'list',
+                        label: 'Noch nicht gemacht'
                     },
                     {
                         id: 'botd',
                         icon: 'calendar-alt',
                         label: 'Boulder des Tages'
+                    },
+                    {
+                        id: 'add',
+                        icon: 'plus-circle',
+                        label: 'Hinzufügen'
                     },
                     {
                         id: 'ranking',
@@ -113,6 +118,9 @@
                     <i>Spenden können gerne in der Unihalle hinterlegt werden.</i>
                 </p>
             </b-modal>
+            <b-modal id="statsModal" :title="stats ? stats.version : ''" size="lg" ok-only ok-title="Schließen">
+                <Statistics :stats="stats" :refresh="statsRefresh"/>
+            </b-modal>
         </div>
     </div>
 </template>
@@ -128,15 +136,17 @@ import BoulderInfo from '@/components/BoulderInfo.vue';
 import SearchResults from '@/components/search/SearchResults.vue';
 import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
 import SearchForm from '@/components/forms/SearchForm.vue';
-import {Boulder, BoulderNew, BoulderSearch, Holds} from '@/api/types';
-import {getBoulder, getBoulderOfTheDay, getHolds, getRanking, getWall, loginPassword, logout, newBoulder, searchBoulder} from '@/api/interface';
+import {Boulder, BoulderNew, BoulderSearch, Holds, Stats} from '@/api/types';
+import {getBoulder, getBoulderOfTheDay, getHolds, getRanking, getStats, getWall, loginPassword, logout, newBoulder, searchBoulder} from '@/api/interface';
 import {gradeItoa} from '@/types/grades';
 import '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/free-solid-svg-icons';
 import {setAuthentication} from '@/api';
+import Statistics from '@/components/Statistics.vue';
 
 @Component({
     components: {
+        Statistics,
         SearchForm,
         BoulderAddForm,
         SearchResults,
@@ -162,6 +172,8 @@ export default class App extends Vue {
     private refreshArrows = false;
     private showSubMenu = false;
     private mail = '';
+    private stats: Stats | undefined;
+    private statsRefresh = false;
 
     constructor() {
         super();
@@ -235,8 +247,7 @@ export default class App extends Vue {
     async loginHandler(email: string, password: string, type: string) {
         switch (type) {
             case 'login':
-                const login = await loginPassword(email, password);
-                if (login) {
+                if (await loginPassword(email, password)) {
                     this.isLoggedIn = true;
                     await this.loadWall();
                 }
@@ -272,6 +283,11 @@ export default class App extends Vue {
             case 'botd':
                 this.loadBoulderOfTheDay();
                 break;
+            case 'notdoneyet':
+                this.searchBoulder({
+                    notDoneYet: true
+                });
+                break;
             case 'ranking':
                 this.showRanking();
                 break;
@@ -288,7 +304,11 @@ export default class App extends Vue {
                 break;
             case 'about':
                 this.showSubMenu = false;
-                // todo
+                getStats().then(stats => {
+                    this.stats = stats;
+                    this.statsRefresh = !this.statsRefresh;
+                    this.$bvModal.show('statsModal');
+                });
                 break;
             case 'impressum':
                 this.showSubMenu = false;

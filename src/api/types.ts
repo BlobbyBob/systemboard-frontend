@@ -77,4 +77,15 @@ export interface BoulderSearch {
     maxGrade?: number;
     minRating?: number;
     maxRating?: number;
+    notDoneYet?: boolean;
+}
+
+export interface Stats {
+    version: string;
+    changelog: {
+        version: string;
+        date: string;
+        description: string;
+        changes: string[];
+    }[]
 }
