@@ -316,7 +316,7 @@ export default class App extends Vue {
                 break;
             case 'privacy':
                 this.showSubMenu = false;
-                window.open('privacy.html');
+                window.open('datenschutz.html');
                 break;
             case 'logout':
                 logout().then(() => {
