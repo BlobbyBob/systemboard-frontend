@@ -24,7 +24,7 @@
             <div class="container loginContainer">
                 <div class="row justify-content-center align-items-center">
                     <div id="login-form" class="col-auto">
-                        <Login :login-handler="loginHandler" v-if="!isLoggedIn"/>
+                        <Login :login-handler="loginHandler" :register-mode="registerMode" v-if="!isLoggedIn"/>
                     </div>
                 </div>
             </div>
@@ -137,7 +137,7 @@ import SearchResults from '@/components/search/SearchResults.vue';
 import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
 import SearchForm from '@/components/forms/SearchForm.vue';
 import {Boulder, BoulderNew, BoulderSearch, Holds, Stats} from '@/api/types';
-import {getBoulder, getBoulderOfTheDay, getHolds, getRanking, getStats, getWall, loginPassword, logout, newBoulder, searchBoulder} from '@/api/interface';
+import {getBoulder, getBoulderOfTheDay, getHolds, getRanking, getStats, getWall, loginPassword, logout, newBoulder, postRegistration, searchBoulder} from '@/api/interface';
 import {gradeItoa} from '@/types/grades';
 import '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/free-solid-svg-icons';
@@ -159,7 +159,8 @@ import Statistics from '@/components/Statistics.vue';
     },
 })
 export default class App extends Vue {
-    private isLoggedIn = (window.sessionStorage.getItem('auth') != null);
+    private isLoggedIn = window.sessionStorage.getItem('auth') != null;
+    private isGuest = window.sessionStorage.getItem('auth')?.toLowerCase() == 'guest';
     private isSelectionMode = false;
     private wall?: Wall;
     private wallLoaded = false;
@@ -174,6 +175,7 @@ export default class App extends Vue {
     private mail = '';
     private stats: Stats | undefined;
     private statsRefresh = false;
+    private registerMode = false;
 
     constructor() {
         super();
@@ -244,7 +246,7 @@ export default class App extends Vue {
         this.searchResults = await searchBoulder(data) ?? [];
     }
 
-    async loginHandler(email: string, password: string, type: string) {
+    async loginHandler(email: string, password: string, name: string, type: string) {
         switch (type) {
             case 'login':
                 if (await loginPassword(email, password)) {
@@ -258,7 +260,19 @@ export default class App extends Vue {
                 await this.loadWall();
                 break;
             case 'register':
-                // todo
+                if (!this.registerMode) {
+                    this.registerMode = true;
+                } else {
+                    await postRegistration({
+                        name: name,
+                        email: email,
+                        password: password
+                    });
+                    this.registerMode = false;
+                }
+                break;
+            case 'cancel':
+                this.registerMode = false;
                 break;
         }
     }

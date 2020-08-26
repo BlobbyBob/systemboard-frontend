@@ -18,7 +18,7 @@
  */
 
 import {apiCall, setAuthentication, unsetAuthentication} from './index';
-import {Boulder, BoulderNew, BoulderSearch, Holds, Stats, Token, Wall} from './types';
+import {Boulder, BoulderNew, BoulderSearch, Holds, Registration, Stats, Token, Wall} from './types';
 import {RankingItemData} from '@/types/RankingItemData';
 
 export async function loginPassword(email: string, password: string): Promise<boolean> {
@@ -67,6 +67,10 @@ export async function searchBoulder(data: BoulderSearch): Promise<Boulder[] | un
 
 export async function newBoulder(data: BoulderNew): Promise<{ id: number } | undefined> {
     return apiCall('POST', '/boulder', data);
+}
+
+export async function postRegistration(data: Registration): Promise<void | undefined> {
+    return apiCall('POST', '/registration', data);
 }
 
 export async function getRanking(): Promise<RankingItemData[] | undefined> {

@@ -87,5 +87,11 @@ export interface Stats {
         date: string;
         description: string;
         changes: string[];
-    }[]
+    }[];
+}
+
+export interface Registration {
+    name: string;
+    email: string;
+    password: string;
 }
