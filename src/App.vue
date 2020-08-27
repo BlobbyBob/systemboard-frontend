@@ -398,6 +398,12 @@ export default class App extends Vue {
 body {
     background-image: url("../public/dev/bg.png");
     background-repeat: repeat;
+    min-width: 100%;
+    min-height: 100%;
+}
+#app {
+    min-width: 100%;
+    min-height: 100%;
 }
 
 .bg-white {
@@ -409,8 +415,8 @@ body {
     background-image: url("../public/dev/bg_uni.jpg");
     background-size: cover;
     filter: blur(5px);
-    min-height: 100vh;
-    min-width: 100vw;
+    min-height: 100%;
+    min-width: 100%;
     z-index: -1;
 }
 

@@ -19,7 +19,7 @@
 
 <template>
     <div class="text-center">
-        <h1 class="display-3">Digitales<br>Bouldersystem</h1>
+        <h3 class="loginHeading">Digitales<br>Bouldersystem</h3>
 
         <form @submit.prevent="loginHandlerWrapper" class="pt-lg-3 pb-lg-3 pl-lg-5 pr-lg-5">
             <div class="text-left">
@@ -35,9 +35,10 @@
             <div class="btn-group btn-block">
                 <button id="login" type="submit" class="btn btn-primary" :disabled="registerMode">Anmelden</button>
                 <button id="register" type="submit" class="btn btn-success">Registrieren</button>
-                <button id="cancel" type="submit" class="btn btn-dark" v-if="registerMode">Abbrechen</button>
+                <button id="cancel" type="submit" class="btn btn-dark d-none d-md-block" v-if="registerMode">Abbrechen</button>
             </div>
             <br>
+            <button id="cancel" type="submit" class="btn btn-block btn-dark d-md-none" v-if="registerMode">Abbrechen</button>
             <button id="guestlogin" type="submit" class="btn btn-block btn-secondary" :disabled="registerMode">Als Gast anmelden</button>
         </form>
     </div>
@@ -68,6 +69,20 @@ export default class Login extends Vue {
 <style scoped lang="scss">
 @import 'src/style/custom';
 
+.loginHeading {
+    font-weight: 300;
+    font-size: 1.5rem;
+}
+@include media-breakpoint-up(md) {
+    .loginHeading {
+        font-size: 2.5rem;
+    }
+}
+@include media-breakpoint-up(xl) {
+    .loginHeading {
+        font-size: 3.5rem;
+    }
+}
 button {
     padding: 5px;
     margin-top: 10px;
