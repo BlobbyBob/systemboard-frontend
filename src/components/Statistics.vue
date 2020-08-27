@@ -35,7 +35,7 @@ import {Stats} from '@/api/types';
 
 @Component
 export default class Statistics extends Vue {
-    @Prop() readonly stats!: Stats | undefined;
+    @Prop() readonly stats!: Stats | null;
     @Prop() readonly refresh!: boolean;
 
     get statsComputed(): Stats {

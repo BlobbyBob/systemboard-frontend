@@ -173,7 +173,7 @@ export default class App extends Vue {
     private refreshArrows = false;
     private showSubMenu = false;
     private mail = '';
-    private stats: Stats | undefined;
+    private stats: Stats | null = null;
     private statsRefresh = false;
     private registerMode = false;
 
@@ -319,7 +319,7 @@ export default class App extends Vue {
             case 'about':
                 this.showSubMenu = false;
                 getStats().then(stats => {
-                    this.stats = stats;
+                    this.stats = stats ?? null;
                     this.statsRefresh = !this.statsRefresh;
                     this.$bvModal.show('statsModal');
                 });
