@@ -18,9 +18,9 @@
   -->
 
 <template>
-    <div class="wall row">
-        <div class="w-100 d-flex align-items-stretch">
-            <div class="pl-2 pr-2 wall-nav d-flex align-items-center" :class="leftArrowClass" @click="prevSegment">
+    <div class="wallWrapper row">
+        <div class="wall w-100 d-flex align-items-stretch">
+            <div class="pl-2 pr-2 wall-nav d-flex align-items-center leftArrow" :class="leftArrowClass" @click="prevSegment">
                 <span class="fas fa-3x fa-arrow-alt-circle-left"></span>
             </div>
             <div class="wall-segments flex-grow-1">
@@ -30,7 +30,7 @@
                     </keep-alive>
                 </div>
             </div>
-            <div class="pl-2 pr-2 wall-nav d-flex align-items-center" :class="rightArrowClass" @click="nextSegment">
+            <div class="pl-2 pr-2 wall-nav d-flex align-items-center rightArrow" :class="rightArrowClass" @click="nextSegment">
                 <span class="fas fa-3x fa-arrow-alt-circle-right"></span>
             </div>
         </div>
@@ -125,9 +125,15 @@ export default class Wall extends Vue {
 </script>
 
 <style scoped lang="scss">
+@import 'src/style/custom';
+
 .wall {
     min-height: 600px;
     min-width: 1000px;
+}
+.wallWrapper {
+    overflow-x: auto;
+    background-color: white;
 }
 
 .wall-nav {
@@ -135,6 +141,19 @@ export default class Wall extends Vue {
 }
 .wall-nav.text-muted {
     cursor: not-allowed;
+}
+
+@include media-breakpoint-down(md) {
+    .leftArrow {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+    }
+    .rightArrow {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+    }
 }
 
 .blink {

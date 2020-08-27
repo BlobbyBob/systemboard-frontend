@@ -395,12 +395,19 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
+@import 'src/style/custom';
+
 body {
-    background-image: url("../public/dev/bg.png");
-    background-repeat: repeat;
     min-width: 100%;
     min-height: 100%;
 }
+@include media-breakpoint-up(xl) {
+    body {
+        background-image: url("../public/dev/bg.png");
+        background-repeat: repeat;
+    }
+}
+
 #app {
     min-width: 100%;
     min-height: 100%;

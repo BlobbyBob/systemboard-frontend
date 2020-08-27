@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="sticky-top">
+    <div>
         <nav class="navbar navbar-dark navbar-expand-lg">
             <div class="container">
                 <ul class="nav">
