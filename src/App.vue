@@ -92,7 +92,7 @@
                         id: 'logout',
                         label: 'Abmelden'
                     }
-                ]" :menu-click-handler="menuHandler" :show-sub-menu="showSubMenu" v-if="isLoggedIn"/>
+                ]" :menu-click-handler="menuHandler" :show-sub-menu="showSubMenu" v-if="isLoggedIn" v-model="collapseMenuVisible"/>
             <div class="container bg-white pt-4 pb-5">
                 <Wall v-if="isLoggedIn" :data="wallData" :types="holdTypes" :hold-click-handler="holdClickHandler" :refresh-arrows="refreshArrows"/>
                 <div class="mt-3"></div>
@@ -176,6 +176,7 @@ export default class App extends Vue {
     private stats: Stats | null = null;
     private statsRefresh = false;
     private registerMode = false;
+    private collapseMenuVisible = false;
 
     constructor() {
         super();
@@ -309,14 +310,17 @@ export default class App extends Vue {
                 this.showSubMenu = !this.showSubMenu;
                 break;
             case 'report':
+                this.collapseMenuVisible = false;
                 this.showSubMenu = false;
                 window.open(this.mail);
                 break;
             case 'faq':
+                this.collapseMenuVisible = false;
                 this.showSubMenu = false;
                 this.$bvModal.show('faqModal');
                 break;
             case 'about':
+                this.collapseMenuVisible = false;
                 this.showSubMenu = false;
                 getStats().then(stats => {
                     this.stats = stats ?? null;
@@ -325,14 +329,17 @@ export default class App extends Vue {
                 });
                 break;
             case 'impressum':
+                this.collapseMenuVisible = false;
                 this.showSubMenu = false;
                 window.open('impressum.html');
                 break;
             case 'privacy':
+                this.collapseMenuVisible = false;
                 this.showSubMenu = false;
                 window.open('datenschutz.html');
                 break;
             case 'logout':
+                this.collapseMenuVisible = false;
                 logout().then(() => {
                     this.isLoggedIn = false;
                 });

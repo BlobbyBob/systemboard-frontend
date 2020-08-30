@@ -19,9 +19,9 @@
 
 <template>
     <b-nav-item class="text-center">
-        <a class="nav-link text-reset" @click.prevent="$emit('action', id)" href="#">
-            <span v-if="icon !== undefined" :class="iconClass"></span>
-            <br v-if="icon !== undefined">
+        <a class="nav-link" @click.prevent="(e) => {if (id === 'other') e.stopPropagation(); $emit('action', id)}" href="#">
+            <span v-if="icon !== undefined" :class="iconClass" class="mr-3 mr-lg-0"></span>
+            <br v-if="icon !== undefined" class="d-none d-lg-block">
             <slot></slot>
         </a>
     </b-nav-item>
@@ -58,7 +58,7 @@ li {
     cursor: pointer;
 
     a, a:hover {
-        color: white;
+        color: white !important;
     }
 }
 li:hover {

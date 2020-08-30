@@ -18,15 +18,15 @@
   -->
 
 <template>
-    <nav class="navbar submenu navbar-secondary" :class="navClasses">
+    <b-navbar class="submenu navbar-secondary" :class="navClasses">
         <div class="container">
-            <ul v-for="(data, index) in subMenuData" :key="index" class="nav">
+            <b-navbar-nav v-for="(data, index) in subMenuData" :key="index">
                 <MenuItem :id="data.id" @action="menuClickHandler">
                     {{ data.label }}
                 </MenuItem>
-            </ul>
+            </b-navbar-nav>
         </div>
-    </nav>
+    </b-navbar>
 </template>
 
 <script lang="ts">
@@ -61,6 +61,10 @@ nav.submenu {
     padding-bottom: 0;
     max-height: 100px;
     transition: max-height 0.2s linear;
+
+    li {
+        flex-basis: 100%;
+    }
 }
 
 nav.submenu.hidden {

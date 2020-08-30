@@ -19,21 +19,26 @@
 
 <template>
     <div>
-        <nav class="navbar navbar-dark navbar-expand-lg">
+        <b-navbar toggleable="lg" type="dark">
             <div class="container">
-                <ul class="nav">
-                    <li class="navbar-brand"><img src="/dev/favicon.png" alt="DBS"/></li>
-                </ul>
-                <ul v-for="(menuItemData, index) in menuData" :key="index" class="nav">
-                    <MenuItem v-if="menuItemData.icon !== undefined" :id="menuItemData.id" :icon="menuItemData.icon" @action="menuClickHandler">
-                        {{ menuItemData.label }}
-                    </MenuItem>
-                    <MenuItem v-else :id="menuItemData.id" @action="menuClickHandler">
-                        {{ menuItemData.label }}
-                    </MenuItem>
-                </ul>
+                <b-navbar-brand>
+                    <img src="/dev/favicon.png" alt="DBS"/>
+                </b-navbar-brand>
+
+                <b-navbar-toggle target="nav-collapse"/>
+
+                <b-collapse id="nav-collapse" v-model="secondaryValue" is-nav>
+                    <b-navbar-nav v-for="(menuItemData, index) in menuData" :key="index">
+                        <MenuItem v-if="menuItemData.icon !== undefined" :id="menuItemData.id" :icon="menuItemData.icon" @action="menuClickHandler">
+                            {{ menuItemData.label }}
+                        </MenuItem>
+                        <MenuItem v-else :id="menuItemData.id" @action="menuClickHandler">
+                            {{ menuItemData.label }}
+                        </MenuItem>
+                    </b-navbar-nav>
+                </b-collapse>
             </div>
-        </nav>
+        </b-navbar>
         <SubMenu :show="showSubMenu" :sub-menu-data="subMenuData" :menu-click-handler="menuClickHandler"/>
     </div>
 </template>
@@ -48,6 +53,9 @@ import SubMenu from '@/components/menu/SubMenu.vue';
     components: {
         SubMenu,
         MenuItem
+    },
+    model: {
+        event: 'input'
     }
 })
 export default class Menu extends Vue {
@@ -55,6 +63,25 @@ export default class Menu extends Vue {
     @Prop() readonly menuClickHandler!: (id: string) => void;
     @Prop() readonly showSubMenu!: boolean;
     @Prop() readonly subMenuData!: MenuItemData[];
+    private internalCollapseVisible = false;
+
+    get value() {
+        return this.internalCollapseVisible;
+    }
+
+    set value(val: boolean) {
+        this.internalCollapseVisible = val;
+        this.$attrs.value = val ? 'true': '';
+    }
+
+    get secondaryValue() {
+        return this.internalCollapseVisible;
+    }
+
+    set secondaryValue(val: boolean) {
+        this.internalCollapseVisible = val;
+        this.$emit('input', val);
+    }
 }
 </script>
 
