@@ -19,8 +19,8 @@
 
 <template>
     <div class="wallWrapper row">
-        <div class="wall w-100 d-flex align-items-stretch">
-            <div class="pl-2 pr-2 wall-nav d-flex align-items-center leftArrow" :class="leftArrowClass" @click="prevSegment">
+        <div class="wall w-100 d-flex align-items-stretch position-relative">
+            <div class="pl-lg-2 pr-lg-2 wall-nav d-flex align-items-center leftArrow justify-content-center" :class="leftArrowClass" @click="prevSegment">
                 <span class="fas fa-3x fa-arrow-alt-circle-left"></span>
             </div>
             <div class="wall-segments flex-grow-1">
@@ -30,7 +30,7 @@
                     </keep-alive>
                 </div>
             </div>
-            <div class="pl-2 pr-2 wall-nav d-flex align-items-center rightArrow" :class="rightArrowClass" @click="nextSegment">
+            <div class="pl-lg-2 pr-lg-2 wall-nav d-flex align-items-center rightArrow" :class="rightArrowClass" @click="nextSegment">
                 <span class="fas fa-3x fa-arrow-alt-circle-right"></span>
             </div>
         </div>
@@ -144,14 +144,14 @@ export default class Wall extends Vue {
 }
 
 @include media-breakpoint-down(md) {
-    .leftArrow {
+    .leftArrow, .rightArrow {
         position: absolute;
         top: 50%;
+    }
+    .leftArrow {
         left: 10px;
     }
     .rightArrow {
-        position: absolute;
-        top: 50%;
         right: 10px;
     }
 }
