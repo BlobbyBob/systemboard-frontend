@@ -93,7 +93,7 @@
                         label: 'Abmelden'
                     }
                 ]" :menu-click-handler="menuHandler" :show-sub-menu="showSubMenu" v-if="isLoggedIn"/>
-            <div class="container bg-white pt-4 pb-5">
+            <div class="container bg-white pr-0 pl-0 pt-lg-4 pb-5">
                 <Wall v-if="isLoggedIn" :data="wallData" :types="holdTypes" :hold-click-handler="holdClickHandler" :refresh-arrows="refreshArrows"/>
                 <div class="mt-3"></div>
                 <div class="row justify-content-center">

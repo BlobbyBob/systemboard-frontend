@@ -25,11 +25,13 @@
                     <img src="/dev/favicon.png" alt="DBS"/>
                 </b-navbar-brand>
 
+                <div class="navbar-brand d-lg-none text-center">Digitales <br class="d-sm-none">Bouldersystem</div>
+
                 <button type="button" class="navbar-toggler d-xl-none" @click.stop.prevent="$root.$emit('bv::toggle::collapse', 'nav-collapse')">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <b-collapse id="nav-collapse" v-model="secondaryValue" is-nav>
+                <b-collapse id="nav-collapse" class="justify-content-around" v-model="secondaryValue" is-nav>
                     <b-navbar-nav v-for="(menuItemData, index) in menuData" :key="index">
                         <MenuItem v-if="menuItemData.icon !== undefined" :id="menuItemData.id" :icon="menuItemData.icon" @action="menuClickHandler">
                             {{ menuItemData.label }}

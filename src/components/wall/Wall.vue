@@ -18,20 +18,28 @@
   -->
 
 <template>
-    <div class="wallWrapper row">
-        <div class="wall w-100 d-flex align-items-stretch position-relative">
-            <div class="pl-lg-2 pr-lg-2 wall-nav d-flex align-items-center leftArrow justify-content-center" :class="leftArrowClass" @click="prevSegment">
-                <span class="fas fa-3x fa-arrow-alt-circle-left"></span>
-            </div>
-            <div class="wall-segments flex-grow-1">
-                <div v-for="(holds, index) in data" :key="holds.filename">
-                    <keep-alive>
-                        <WallSegment :image="'/dev/' + holds.filename" :holds="holds.holds" :visible="index === currentIndex" :types="types" @action="holdClickHandlerWrapper"/>
-                    </keep-alive>
+    <div class="row position-relative w-100 ml-0 mr-0">
+        <div class="pl-lg-2 pr-lg-2 wall-nav d-flex d-lg-none align-items-center leftArrow" :class="leftArrowClass" @click="prevSegment">
+            <span class="fas fa-3x fa-arrow-alt-circle-left"></span>
+        </div>
+        <div class="pl-lg-2 pr-lg-2 wall-nav d-flex d-lg-none align-items-center rightArrow" :class="rightArrowClass" @click="nextSegment">
+            <span class="fas fa-3x fa-arrow-alt-circle-right"></span>
+        </div>
+        <div class="wallWrapper w-100">
+            <div class="wall w-100 d-flex align-items-stretch">
+                <div class="pl-lg-2 pr-lg-2 wall-nav d-none d-lg-flex align-items-center leftArrow" :class="leftArrowClass" @click="prevSegment">
+                    <span class="fas fa-3x fa-arrow-alt-circle-left"></span>
                 </div>
-            </div>
-            <div class="pl-lg-2 pr-lg-2 wall-nav d-flex align-items-center rightArrow" :class="rightArrowClass" @click="nextSegment">
-                <span class="fas fa-3x fa-arrow-alt-circle-right"></span>
+                <div class="wall-segments flex-grow-1">
+                    <div v-for="(holds, index) in data" :key="holds.filename">
+                        <keep-alive>
+                            <WallSegment :image="'/dev/' + holds.filename" :holds="holds.holds" :visible="index === currentIndex" :types="types" @action="holdClickHandlerWrapper"/>
+                        </keep-alive>
+                    </div>
+                </div>
+                <div class="pl-lg-2 pr-lg-2 wall-nav d-none d-lg-flex align-items-center rightArrow" :class="rightArrowClass" @click="nextSegment">
+                    <span class="fas fa-3x fa-arrow-alt-circle-right"></span>
+                </div>
             </div>
         </div>
     </div>
@@ -131,6 +139,7 @@ export default class Wall extends Vue {
     min-height: 600px;
     min-width: 1000px;
 }
+
 .wallWrapper {
     overflow-x: auto;
     background-color: white;
@@ -139,14 +148,21 @@ export default class Wall extends Vue {
 .wall-nav {
     cursor: pointer;
 }
+
 .wall-nav.text-muted {
     cursor: not-allowed;
+}
+
+.arrows {
+    min-height: 600px;
+    width: 100vw;
 }
 
 @include media-breakpoint-down(md) {
     .leftArrow, .rightArrow {
         position: absolute;
         top: 50%;
+        z-index: 100;
     }
     .leftArrow {
         left: 10px;
