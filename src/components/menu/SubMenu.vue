@@ -70,6 +70,7 @@ nav.submenu {
 nav.submenu.hidden {
     max-height: 0;
     transition: max-height 0.35s linear;
+    z-index: -1;
 }
 
 nav.submenu > * {

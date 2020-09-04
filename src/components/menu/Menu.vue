@@ -25,7 +25,9 @@
                     <img src="/dev/favicon.png" alt="DBS"/>
                 </b-navbar-brand>
 
-                <b-navbar-toggle target="nav-collapse"/>
+                <button type="button" class="navbar-toggler d-xl-none" @click.stop.prevent="$root.$emit('bv::toggle::collapse', 'nav-collapse')">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
                 <b-collapse id="nav-collapse" v-model="secondaryValue" is-nav>
                     <b-navbar-nav v-for="(menuItemData, index) in menuData" :key="index">
