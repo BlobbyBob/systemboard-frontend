@@ -136,7 +136,7 @@ import BoulderInfo from '@/components/BoulderInfo.vue';
 import SearchResults from '@/components/search/SearchResults.vue';
 import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
 import SearchForm from '@/components/forms/SearchForm.vue';
-import {Boulder, BoulderNew, BoulderSearch, Holds, Stats} from '@/api/types';
+import {Boulder, BoulderNew, BoulderSearch, Holds, Ranking as RankingType, Stats} from '@/api/types';
 import {getBoulder, getBoulderOfTheDay, getHolds, getRanking, getStats, getWall, loginPassword, logout, newBoulder, postRegistration, searchBoulder} from '@/api/interface';
 import {gradeItoa} from '@/types/grades';
 import '@fortawesome/fontawesome-svg-core';
@@ -169,7 +169,7 @@ export default class App extends Vue {
     private searchResults: Boulder[] = [];
     private showSearchResults = false;
     private boulder: Boulder | null = null;
-    private ranking = {};
+    private ranking: RankingType[] = [];
     private refreshArrows = false;
     private showSubMenu = false;
     private mail = '';
@@ -223,6 +223,7 @@ export default class App extends Vue {
                 this.holdTypes[id] = this.boulder.holds[id];
             }
             this.refreshWall(true);
+            document.querySelector('.wallWrapper')?.scrollIntoView({behavior: 'smooth'});
         }
     }
 
@@ -244,6 +245,7 @@ export default class App extends Vue {
     async searchBoulder(data: BoulderSearch) {
         this.showSearchResults = true;
         this.searchResults = await searchBoulder(data) ?? [];
+        document.querySelector('.boulderInfo')?.scrollIntoView({behavior: 'smooth'});
     }
 
     async loginHandler(email: string, password: string, name: string, type: string) {
@@ -309,17 +311,17 @@ export default class App extends Vue {
                 this.showSubMenu = !this.showSubMenu;
                 break;
             case 'report':
-                this.$root.$emit('bv::toggle::collapse', 'nav-collapse')
+                this.$root.$emit('bv::toggle::collapse', 'nav-collapse');
                 this.showSubMenu = false;
                 window.open(this.mail);
                 break;
             case 'faq':
-                this.$root.$emit('bv::toggle::collapse', 'nav-collapse')
+                this.$root.$emit('bv::toggle::collapse', 'nav-collapse');
                 this.showSubMenu = false;
                 this.$bvModal.show('faqModal');
                 break;
             case 'about':
-                this.$root.$emit('bv::toggle::collapse', 'nav-collapse')
+                this.$root.$emit('bv::toggle::collapse', 'nav-collapse');
                 this.showSubMenu = false;
                 getStats().then(stats => {
                     this.stats = stats ?? null;
@@ -328,17 +330,17 @@ export default class App extends Vue {
                 });
                 break;
             case 'impressum':
-                this.$root.$emit('bv::toggle::collapse', 'nav-collapse')
+                this.$root.$emit('bv::toggle::collapse', 'nav-collapse');
                 this.showSubMenu = false;
                 window.open('impressum.html');
                 break;
             case 'privacy':
-                this.$root.$emit('bv::toggle::collapse', 'nav-collapse')
+                this.$root.$emit('bv::toggle::collapse', 'nav-collapse');
                 this.showSubMenu = false;
                 window.open('datenschutz.html');
                 break;
             case 'logout':
-                this.$root.$emit('bv::toggle::collapse', 'nav-collapse')
+                this.$root.$emit('bv::toggle::collapse', 'nav-collapse');
                 logout().then(() => {
                     this.isLoggedIn = false;
                 });
@@ -407,6 +409,7 @@ body {
     min-width: 100%;
     min-height: 100%;
 }
+
 @include media-breakpoint-up(xl) {
     body {
         background-image: url("../public/dev/bg.png");

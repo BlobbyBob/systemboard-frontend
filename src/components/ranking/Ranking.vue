@@ -27,9 +27,8 @@
                 <td class="points">Punkte</td>
             </tr>
             </thead>
-            <tbody v-for="(item, index) in rankingItems" v-bind:key="index">
-            <RankingItem v-bind:rank="index + 1" v-bind:name="item.name" v-bind:icon="item.icon"
-                         v-bind:icon-tooltip="item.iconTooltip" v-bind:points="item.points"/>
+            <tbody v-for="(item, index) in rankingItems" :key="index">
+            <RankingItem :rank="index + 1" :name="item.name" :badge="item.badge" :points="item.score"/>
             </tbody>
         </table>
     </div>
@@ -38,13 +37,13 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import RankingItem from './RankingItem.vue';
-import {RankingItemData} from '@/types/RankingItemData';
+import {Ranking as RankingType} from '@/api/types';
 
 @Component({
     components: {RankingItem}
 })
 export default class Ranking extends Vue {
-    @Prop() readonly rankingItems!: RankingItemData[];
+    @Prop() readonly rankingItems!: RankingType[];
 }
 </script>
 

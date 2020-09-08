@@ -95,3 +95,10 @@ export interface Registration {
     email: string;
     password: string;
 }
+
+export interface Ranking {
+    id: number;
+    name: string;
+    badge: string;
+    score: number;
+}

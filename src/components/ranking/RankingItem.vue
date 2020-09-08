@@ -22,12 +22,11 @@
         <td>{{ rank }}</td>
         <td>
             {{ name }}
-            <span v-if="icon !== undefined" class="pl-2">
-                <span v-if="iconTooltip !== undefined" :class="iconClass" :data-tooltip="iconTooltip"></span>
-                <span v-else :class="iconClass"></span>
+            <span v-if="badge.length > 0" class="pl-2 badge badge-primary">
+                {{ badge }}
             </span>
         </td>
-        <td>{{ points }}</td>
+        <td>{{ +points }}</td>
     </tr>
 </template>
 
@@ -38,18 +37,8 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 export default class RankingItem extends Vue {
     @Prop() rank!: number;
     @Prop() name!: string;
-    @Prop() icon?: string | undefined;
-    @Prop() iconTooltip?: string | undefined;
+    @Prop() badge?: string | undefined;
     @Prop() points!: number;
-
-    get iconClass() {
-        if (this.icon === undefined)
-            return {};
-        const classes: { [clazz: string]: boolean } = {};
-        classes['fas'] = true;
-        classes['fa-' + this.icon] = true;
-        return classes;
-    }
 }
 </script>
 
