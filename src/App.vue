@@ -104,7 +104,7 @@
                 <BoulderInfo v-if="boulder != null" :id="boulder.id" :name="boulder.name" :creator="boulder.creator.name" :description="boulder.description"
                              :grade="gItoa(boulder.grade)" :rating="boulder.rating" :climbed="boulder.climbed"/>
                 <div class="mt-3"></div>
-                <SearchResults v-if="showSearchResults" :search-results-data="searchResults" :click-handler="loadBoulder"/>
+                <SearchResults v-if="showSearchResults" :search-results-data="searchResults" :refresh="searchResultsRefresh" :click-handler="loadBoulder"/>
             </div>
             <b-modal id="searchModal" title="Boulder Suchen" hide-footer>
                 <SearchForm :submit-handler="searchBoulder"/>
@@ -167,6 +167,7 @@ export default class App extends Vue {
     private wallData: Holds[] = [];
     private holdTypes: { [holdId: number]: 0 | 1 | 2 } = {};
     private searchResults: Boulder[] = [];
+    private searchResultsRefresh = false;
     private showSearchResults = false;
     private boulder: Boulder | null = null;
     private ranking: RankingType[] = [];
@@ -368,6 +369,10 @@ export default class App extends Vue {
         }
         this.wall?.refresh(jumpToMainWall ? this.boulder?.location?.main : undefined);
         this.refreshArrows = !this.refreshArrows;
+    }
+
+    refreshSearchResults() {
+        this.searchResultsRefresh = !this.searchResultsRefresh;
     }
 
     cancelHandler(e: Event) {

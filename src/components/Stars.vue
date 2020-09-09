@@ -39,6 +39,7 @@ export default class Stars extends Vue {
     @Prop() readonly dynamic!: boolean;
     @Prop() readonly count!: number;
     @Prop({default: 0}) readonly initialValue!: number;
+    @Prop() readonly refresh!: boolean;
 
     private internalValue: number;
     private hoverValue = -1;
@@ -49,6 +50,7 @@ export default class Stars extends Vue {
     }
 
     get starArray(): { id: number; selected: boolean }[] {
+        if (this.updater) true;
         const stars = [];
         for (let i = 0; i < this.count; i++) {
             stars.push({
@@ -57,6 +59,12 @@ export default class Stars extends Vue {
             });
         }
         return stars;
+    }
+
+    get updater() {
+        if (this.refresh) true;
+        if (!this.dynamic) this.internalValue = this.initialValue;
+        return this.internalValue;
     }
 
     get value(): number {
@@ -71,7 +79,7 @@ export default class Stars extends Vue {
     clickHandler(id: number) {
         if (this.dynamic) {
             this.internalValue = id + 1;
-            this.$emit('input', this.value);
+            this.$emit('input', this.internalValue);
         }
     }
 

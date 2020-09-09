@@ -19,7 +19,6 @@
 
 import {apiCall, setAuthentication, unsetAuthentication} from './index';
 import {Boulder, BoulderNew, BoulderSearch, Climbed, Holds, Ranking, Registration, Stats, Token, Vote, Wall} from './types';
-import {RankingItemData} from '@/types/RankingItemData';
 
 export async function loginPassword(email: string, password: string): Promise<boolean> {
     const qs = new URLSearchParams({
