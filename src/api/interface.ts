@@ -84,6 +84,10 @@ export async function putClimbed(id: number, climbed: Climbed): Promise<void | u
     return apiCall('PUT', '/boulder/' + encodeURIComponent(id) + '/climbed', climbed);
 }
 
+export async function putBoulderOfTheDay(climbed: Climbed): Promise<void | undefined> {
+    return apiCall('PUT', '/boulderoftheday/climbed', climbed);
+}
+
 export async function putVote(id: number, vote: Vote): Promise<void | undefined> {
     return apiCall('PUT', '/boulder/' + encodeURIComponent(id) + '/vote', vote);
 }

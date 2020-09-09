@@ -102,7 +102,7 @@
                     </div>
                 </div>
                 <BoulderInfo v-if="boulder != null" :id="boulder.id" :name="boulder.name" :creator="boulder.creator.name" :description="boulder.description"
-                             :grade="gItoa(boulder.grade)" :rating="boulder.rating" :climbed="boulder.climbed"/>
+                             :grade="gItoa(boulder.grade)" :rating="boulder.rating" :climbed="boulder.climbed" :boulder-of-the-day="isBoulderOfTheDay"/>
                 <div class="mt-3"></div>
                 <SearchResults v-if="showSearchResults" :search-results-data="searchResults" :refresh="searchResultsRefresh" :click-handler="loadBoulder"/>
             </div>
@@ -162,6 +162,7 @@ export default class App extends Vue {
     private isLoggedIn = window.sessionStorage.getItem('auth') != null;
     private isGuest = window.sessionStorage.getItem('auth')?.toLowerCase() == 'guest';
     private isSelectionMode = false;
+    private isBoulderOfTheDay = false;
     private wall?: Wall;
     private wallLoaded = false;
     private wallData: Holds[] = [];
@@ -205,12 +206,14 @@ export default class App extends Vue {
     async loadBoulderOfTheDay() {
         this.clearWall();
         this.boulder = await getBoulderOfTheDay() ?? null;
+        this.isBoulderOfTheDay = true;
         this.showBoulder();
     }
 
     async loadBoulder(id: number) {
         this.clearWall();
         this.boulder = await getBoulder(id) ?? null;
+        this.isBoulderOfTheDay = false;
         this.showBoulder();
     }
 

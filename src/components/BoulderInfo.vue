@@ -46,19 +46,25 @@
                 <Stars count="5" :dynamic="false" :initial-value="rating"/>
             </div>
         </div>
-        <div class="row align-items-center">
+        <div v-if="boulderOfTheDay" class="row align-items-center">
+            <div class="col-6 property">Boulder des Tages geklettert?</div>
+            <div class="col-6 value">
+                <ToggleMark :initial-state="false" v-model="botdVote"/>
+            </div>
+        </div>
+        <div v-if="!boulderOfTheDay" class="row align-items-center">
             <div class="col-6 property">Bereits geklettert?</div>
             <div class="col-6 value">
                 <ToggleMark :initial-state="climbed" v-model="climbedVote"/>
             </div>
         </div>
-        <div class="row align-items-center">
+        <div v-if="!boulderOfTheDay" class="row align-items-center">
             <div class="col-6 property">Bewerten:</div>
             <div class="col-6 value">
                 <Stars count="5" :dynamic="true" :initial-value="0" v-model="ratingVote"/>
             </div>
         </div>
-        <div class="row align-items-center">
+        <div v-if="!boulderOfTheDay" class="row align-items-center">
             <div class="col-6 property">Schwierigkeit:</div>
             <div class="col-6 value">
                 <b-form-select v-model="gradeVote" :options="gradeOptions"></b-form-select>
@@ -72,7 +78,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 import Stars from '@/components/Stars.vue';
 import {gradeAtoi, Grades} from '@/types/grades';
 import ToggleMark from '@/components/ToggleMark.vue';
-import {putClimbed, putVote} from '@/api/interface';
+import {putBoulderOfTheDay, putClimbed, putVote} from '@/api/interface';
 
 @Component({
     components: {ToggleMark, Stars}
@@ -85,10 +91,21 @@ export default class BoulderInfo extends Vue {
     @Prop() readonly grade!: string;
     @Prop() readonly rating!: number;
     @Prop() readonly climbed!: boolean;
+    @Prop() readonly boulderOfTheDay!: boolean;
 
     private internalGradeVote = gradeAtoi(this.grade);
     private internalRatingVote = this.rating;
     private internalClimbed = this.climbed;
+    private botdClimbed = false;
+
+    get botdVote() {
+        return this.botdClimbed;
+    }
+
+    set botdVote(climbed: boolean) {
+        this.botdClimbed = climbed;
+        putBoulderOfTheDay({climbed: this.botdClimbed});
+    }
 
     get climbedVote() {
         return this.internalClimbed;
