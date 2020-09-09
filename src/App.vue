@@ -101,8 +101,8 @@
                         <BoulderAddForm v-if="isSelectionMode" :submit-handler="addBoulder" :cancel-handler="cancelSelectionMode"/>
                     </div>
                 </div>
-                <BoulderInfo v-if="boulder != null" :name="boulder.name" :creator="boulder.creator.name" :description="boulder.description" :grade="gItoa(boulder.grade)"
-                             :rating="boulder.rating"/>
+                <BoulderInfo v-if="boulder != null" :id="boulder.id" :name="boulder.name" :creator="boulder.creator.name" :description="boulder.description"
+                             :grade="gItoa(boulder.grade)" :rating="boulder.rating" :climbed="boulder.climbed"/>
                 <div class="mt-3"></div>
                 <SearchResults v-if="showSearchResults" :search-results-data="searchResults" :click-handler="loadBoulder"/>
             </div>

@@ -51,10 +51,12 @@ export default class ToggleMark extends Vue {
 
     set value(val) {
         this.state = !!val;
+        this.$emit('input', this.state);
     }
 
     clickHandler() {
         this.state = !this.state;
+        this.$emit('input', this.state);
         this.animationActive = this.state;
     }
 

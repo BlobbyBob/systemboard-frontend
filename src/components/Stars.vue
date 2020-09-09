@@ -65,14 +65,13 @@ export default class Stars extends Vue {
 
     set value(value: number) {
         this.internalValue = value;
+        this.$emit('input', this.internalValue);
     }
 
     clickHandler(id: number) {
         if (this.dynamic) {
             this.internalValue = id + 1;
-            this.$emit('input', {
-                value: this.value
-            });
+            this.$emit('input', this.value);
         }
     }
 

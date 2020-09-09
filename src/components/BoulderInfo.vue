@@ -24,23 +24,23 @@
             <h3>Boulder Info</h3>
             </div>
         </div>
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-6 property">Name:</div>
             <div class="col-6 value">{{ name }}</div>
         </div>
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-6 property">Beschreibung:</div>
             <div class="col-6 value">{{ description }}</div>
         </div>
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-6 property">Ersteller:</div>
             <div class="col-6 value">{{ creator }}</div>
         </div>
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-6 property">Schwierigkeit:</div>
             <div class="col-6 value">{{ grade }}</div>
         </div>
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-6 property">Bewertung:</div>
             <div class="col-6 value">
                 <Stars count="5" :dynamic="false" :initial-value="rating"/>
@@ -49,16 +49,16 @@
         <div class="row align-items-center">
             <div class="col-6 property">Bereits geklettert?</div>
             <div class="col-6 value">
-                <ToggleMark v-model="climbed"/>
+                <ToggleMark :initial-state="climbed" v-model="climbedVote"/>
             </div>
         </div>
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-6 property">Bewerten:</div>
             <div class="col-6 value">
                 <Stars count="5" :dynamic="true" :initial-value="0" v-model="ratingVote"/>
             </div>
         </div>
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-6 property">Schwierigkeit:</div>
             <div class="col-6 value">
                 <b-form-select v-model="gradeVote" :options="gradeOptions"></b-form-select>
@@ -72,37 +72,40 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 import Stars from '@/components/Stars.vue';
 import {gradeAtoi, Grades} from '@/types/grades';
 import ToggleMark from '@/components/ToggleMark.vue';
+import {putClimbed, putVote} from '@/api/interface';
 
 @Component({
     components: {ToggleMark, Stars}
 })
 export default class BoulderInfo extends Vue {
-    @Prop() name!: string;
-    @Prop() description!: string;
-    @Prop() creator!: string;
-    @Prop() grade!: string;
-    @Prop() rating!: number;
+    @Prop() readonly id!: number;
+    @Prop() readonly name!: string;
+    @Prop() readonly description!: string;
+    @Prop() readonly creator!: string;
+    @Prop() readonly grade!: string;
+    @Prop() readonly rating!: number;
+    @Prop() readonly climbed!: boolean;
 
-    private internalGradeVote = this.grade;
+    private internalGradeVote = gradeAtoi(this.grade);
     private internalRatingVote = this.rating;
-    private internalClimbed = false; // todo
+    private internalClimbed = this.climbed;
 
-    get climbed() {
+    get climbedVote() {
         return this.internalClimbed;
     }
 
-    set climbed(climbed: boolean) {
-        // todo make api call
+    set climbedVote(climbed: boolean) {
         this.internalClimbed = climbed;
+        putClimbed(this.id, {climbed: climbed});
     }
 
     get gradeVote() {
         return this.internalGradeVote;
     }
 
-    set gradeVote(grade: string) {
-        // todo make api call
+    set gradeVote(grade: number) {
         this.internalGradeVote = grade;
+        putVote(this.id, {grade: grade})
     }
 
     get ratingVote() {
@@ -110,8 +113,8 @@ export default class BoulderInfo extends Vue {
     }
 
     set ratingVote(rating: number) {
-        // todo make api call
         this.internalRatingVote = rating;
+        putVote(this.id, {rating: rating})
     }
 
     get gradeOptions() {

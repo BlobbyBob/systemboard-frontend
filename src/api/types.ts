@@ -102,3 +102,12 @@ export interface Ranking {
     badge: string;
     score: number;
 }
+
+export interface Climbed {
+    climbed: boolean;
+}
+
+export interface Vote {
+    rating?: number;
+    grade?: number;
+}
