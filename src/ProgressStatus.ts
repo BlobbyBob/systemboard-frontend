@@ -17,17 +17,9 @@
  *
  */
 
-import Vue from 'vue';
-import {BootstrapVue} from 'bootstrap-vue';
-import App from './App.vue';
-import './style/custom.scss';
-import {ProgressPlugin} from '@/Progress';
-
-Vue.config.productionTip = false;
-
-Vue.use(BootstrapVue);
-Vue.use(ProgressPlugin);
-
-new Vue({
-    render: h => h(App),
-}).$mount('#app');
+export enum ProgressStatus {
+    START = 'start',
+    PROGRESS = 'progress',
+    FINISH = 'finish',
+    DONE = 'done'
+}

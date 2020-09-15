@@ -19,6 +19,7 @@
 
 <template>
     <div id="app">
+        <div id="progress"></div>
         <div v-if="!isLoggedIn" id="login-bg"></div>
         <div v-if="!isLoggedIn" id="login">
             <div class="container loginContainer">
@@ -141,7 +142,7 @@ import {getBoulder, getBoulderOfTheDay, getHolds, getRanking, getStats, getWall,
 import {gradeItoa} from '@/types/grades';
 import '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/free-solid-svg-icons';
-import {setAuthentication} from '@/api';
+import {setApiVue, setAuthentication} from '@/api';
 import Statistics from '@/components/Statistics.vue';
 
 @Component({
@@ -181,6 +182,8 @@ export default class App extends Vue {
 
     constructor() {
         super();
+        // Give Vue object to API
+        setApiVue(this);
         // If reloaded and session still valid, reload wall
         if (this.isLoggedIn) {
             this.loadWall();
@@ -429,6 +432,35 @@ body {
     min-width: 100%;
     min-height: 100%;
     overflow-x: hidden;
+}
+
+#progress {
+    position: absolute;
+    background-color: $primary;
+    top: 0;
+    left: 0;
+    height: 5px;
+    z-index: 100;
+
+    .start {
+        width: 10vw !important;
+        transition: width 1s ease-out;
+    }
+
+    .progress {
+        width: 60vw !important;
+        transition: width 1s ease-out;
+    }
+
+    .finish {
+        width: 100vw !important;
+        transition: width 1s ease-out;
+    }
+
+    .done {
+        width: 0;
+        transition: width 50ms linear;
+    }
 }
 
 .bg-white {

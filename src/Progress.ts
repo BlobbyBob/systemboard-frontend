@@ -17,17 +17,17 @@
  *
  */
 
-import Vue from 'vue';
-import {BootstrapVue} from 'bootstrap-vue';
-import App from './App.vue';
-import './style/custom.scss';
-import {ProgressPlugin} from '@/Progress';
+import _Vue from 'vue';
+import {ProgressStatus} from '@/ProgressStatus';
 
-Vue.config.productionTip = false;
+const progress = function (status: ProgressStatus) {
+    const progress = document.getElementById('progress');
+    if (progress) {
+        progress.classList.remove('start', 'progress', 'finish', 'done');
+        progress.classList.add(status);
+    }
+};
 
-Vue.use(BootstrapVue);
-Vue.use(ProgressPlugin);
-
-new Vue({
-    render: h => h(App),
-}).$mount('#app');
+export function ProgressPlugin(Vue: typeof _Vue, options?: any) {
+    Vue.prototype.$progress = progress;
+}

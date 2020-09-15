@@ -17,13 +17,22 @@
  *
  */
 
+import {ProgressStatus} from '@/ProgressStatus';
+import {Vue} from 'vue/types/vue';
+
 const baseUrl = 'http://api.systemboard.local';
 const sessionStorage = window.sessionStorage;
+
+let vue: Vue;
 
 export interface ApiError {
     successfulTransmission: boolean;
     statusCode?: number;
     statusText?: string;
+}
+
+export function setApiVue(v: Vue) {
+    vue = v;
 }
 
 export function setAuthentication(authentication: string) {
@@ -44,22 +53,29 @@ function errorHandler(reason: ApiError) {
 }
 
 // eslint-disable-next-line
-export async function apiCall(method: string, endpoint: string, data?: any): Promise<any|undefined> {
+export async function apiCall(method: string, endpoint: string, data?: any): Promise<any | undefined> {
     // eslint-disable-next-line
     return new Promise<any>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open(method, baseUrl + endpoint);
+        vue.$progress(ProgressStatus.START);
         const auth = sessionStorage.getItem('auth');
         if (auth != null) {
             xhr.setRequestHeader('Authorization', auth);
         }
         xhr.onreadystatechange = () => {
             if (xhr.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
+                vue.$progress(ProgressStatus.PROGRESS);
                 const contentType = xhr.getResponseHeader('Content-Type');
                 if (contentType != null && contentType.indexOf('application/json') != -1) {
                     xhr.responseType = 'json';
                 }
             } else if (xhr.readyState === XMLHttpRequest.DONE) {
+                vue.$progress(ProgressStatus.FINISH);
+                setTimeout(() => {
+                    vue.$progress(ProgressStatus.DONE);
+                }, 200);
+
                 if (xhr.status >= 200 && xhr.status < 400) {
                     resolve(xhr.response);
                 } else {
