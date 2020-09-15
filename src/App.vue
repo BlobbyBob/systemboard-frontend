@@ -441,26 +441,23 @@ body {
     left: 0;
     height: 5px;
     z-index: 100;
-
-    .start {
-        width: 10vw !important;
-        transition: width 1s ease-out;
-    }
-
-    .progress {
-        width: 60vw !important;
-        transition: width 1s ease-out;
-    }
-
-    .finish {
-        width: 100vw !important;
-        transition: width 1s ease-out;
-    }
-
-    .done {
-        width: 0;
-        transition: width 50ms linear;
-    }
+}
+#progress.start {
+    width: 30vw !important;
+    transition: width 1s ease-out;
+}
+#progress.progress {
+    width: 60vw !important;
+    transition: width 1s ease-out;
+}
+#progress.finish {
+    width: 100vw !important;
+    transition: width 100ms ease-out;
+}
+#progress.done {
+    width: 0;
+    background-color: transparent;
+    transition: background-color 50ms linear, width 1s linear;
 }
 
 .bg-white {

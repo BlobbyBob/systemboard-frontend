@@ -22,6 +22,7 @@ import {ProgressStatus} from '@/ProgressStatus';
 
 const progress = function (status: ProgressStatus) {
     const progress = document.getElementById('progress');
+    console.log(status);
     if (progress) {
         progress.classList.remove('start', 'progress', 'finish', 'done');
         progress.classList.add(status);
