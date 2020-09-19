@@ -22,7 +22,7 @@
         <td>{{ rank }}</td>
         <td>
             {{ name }}
-            <span v-if="badge.length > 0" class="pl-2 badge badge-primary">
+            <span v-if="typeof badge == 'string' && badge.length > 0" class="pl-2 badge badge-primary">
                 {{ badge }}
             </span>
         </td>
