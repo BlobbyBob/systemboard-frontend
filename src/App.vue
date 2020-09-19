@@ -160,29 +160,29 @@ import Statistics from '@/components/Statistics.vue';
     },
 })
 export default class App extends Vue {
-    private isLoggedIn = window.sessionStorage.getItem('auth') != null;
-    private isGuest = window.sessionStorage.getItem('auth')?.toLowerCase() == 'guest';
-    private isSelectionMode = false;
-    private isBoulderOfTheDay = false;
-    private wall?: Wall;
-    private wallLoaded = false;
-    private wallData: Holds[] = [];
-    private holdTypes: { [holdId: number]: 0 | 1 | 2 } = {};
-    private searchResults: Boulder[] = [];
-    private searchResultsRefresh = false;
-    private showSearchResults = false;
-    private boulder: Boulder | null = null;
-    private ranking: RankingType[] = [];
-    private refreshArrows = false;
-    private showSubMenu = false;
-    private mail = '';
-    private stats: Stats | null = null;
-    private statsRefresh = false;
-    private registerMode = false;
+    isLoggedIn = window.sessionStorage.getItem('auth') != null;
+    isGuest = window.sessionStorage.getItem('auth')?.toLowerCase() == 'guest';
+    isSelectionMode = false;
+    isBoulderOfTheDay = false;
+    wall?: Wall;
+    wallLoaded = false;
+    wallData: Holds[] = [];
+    holdTypes: { [holdId: number]: 0 | 1 | 2 } = {};
+    searchResults: Boulder[] = [];
+    searchResultsRefresh = false;
+    showSearchResults = false;
+    boulder: Boulder | null = null;
+    ranking: RankingType[] = [];
+    refreshArrows = false;
+    showSubMenu = false;
+    mail = '';
+    stats: Stats | null = null;
+    statsRefresh = false;
+    registerMode = false;
 
     constructor() {
         super();
-        // Give Vue object to API
+        // Give App object to API
         setApiVue(this);
         // If reloaded and session still valid, reload wall
         if (this.isLoggedIn) {

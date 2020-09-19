@@ -34,7 +34,7 @@ export async function loginPassword(email: string, password: string): Promise<bo
 export async function logout(): Promise<void> {
     return new Promise<void>((resolve => {
         if (sessionStorage.getItem('auth')?.toLowerCase().startsWith('bearer')) {
-            apiCall('GET', '/logout').then(() => {
+            apiCall('GET', '/logout', 'Abgemeldet').then(() => {
                 unsetAuthentication();
                 resolve();
             });
@@ -61,15 +61,15 @@ export async function getBoulderOfTheDay(): Promise<Boulder | undefined> {
 }
 
 export async function searchBoulder(data: BoulderSearch): Promise<Boulder[] | undefined> {
-    return apiCall('POST', '/search', data);
+    return apiCall('POST', '/search', undefined, data);
 }
 
 export async function newBoulder(data: BoulderNew): Promise<{ id: number } | undefined> {
-    return apiCall('POST', '/boulder', data);
+    return apiCall('POST', '/boulder', 'Boulder gespeichert', data);
 }
 
 export async function postRegistration(data: Registration): Promise<void | undefined> {
-    return apiCall('POST', '/registration', data);
+    return apiCall('POST', '/registration', 'Eine Aktivierungsmail wurde verschickt', data);
 }
 
 export async function getRanking(): Promise<Ranking[] | undefined> {
@@ -81,13 +81,13 @@ export async function getStats(): Promise<Stats | undefined> {
 }
 
 export async function putClimbed(id: number, climbed: Climbed): Promise<void | undefined> {
-    return apiCall('PUT', '/boulder/' + encodeURIComponent(id) + '/climbed', climbed);
+    return apiCall('PUT', '/boulder/' + encodeURIComponent(id) + '/climbed', 'Gespeichert', climbed);
 }
 
 export async function putBoulderOfTheDay(climbed: Climbed): Promise<void | undefined> {
-    return apiCall('PUT', '/boulderoftheday/climbed', climbed);
+    return apiCall('PUT', '/boulderoftheday/climbed', 'Gespeichert', climbed);
 }
 
 export async function putVote(id: number, vote: Vote): Promise<void | undefined> {
-    return apiCall('PUT', '/boulder/' + encodeURIComponent(id) + '/vote', vote);
+    return apiCall('PUT', '/boulder/' + encodeURIComponent(id) + '/vote', 'Gespeichert', vote);
 }

@@ -22,13 +22,13 @@ import {ProgressStatus} from '@/ProgressStatus';
 
 const progress = function (status: ProgressStatus) {
     const progress = document.getElementById('progress');
-    console.log(status);
     if (progress) {
         progress.classList.remove('start', 'progress', 'finish', 'done');
         progress.classList.add(status);
     }
 };
 
+// eslint-disable-next-line
 export function ProgressPlugin(Vue: typeof _Vue, options?: any) {
     Vue.prototype.$progress = progress;
 }

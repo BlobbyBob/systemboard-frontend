@@ -19,6 +19,8 @@
 
 import Vue from 'vue';
 import {BootstrapVue} from 'bootstrap-vue';
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 import App from './App.vue';
 import './style/custom.scss';
 import {ProgressPlugin} from '@/Progress';
@@ -26,6 +28,23 @@ import {ProgressPlugin} from '@/Progress';
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
+Vue.use(Toast, {
+    transition: "Vue-Toastification__fade",
+    maxToasts: 5,
+    newestOnTop: true,
+    position: "top-center",
+    timeout: 2951,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: true,
+    hideProgressBar: true,
+    closeButton: false,
+    icon: true,
+    rtl: false
+});
 Vue.use(ProgressPlugin);
 
 new Vue({
