@@ -74,15 +74,13 @@ export default class SearchForm extends Vue {
     private maxRating = 5;
     private ratingSelection = 'all';
     private gradeSelection = 'all';
-    private minGrade: string;
-    private maxGrade: string;
+    minGrade!: number;
+    maxGrade!: number;
 
     @Prop() readonly submitHandler!: (data: BoulderSearch) => void;
 
     constructor() {
         super();
-        this.minGrade = '5a';
-        this.maxGrade = '6a+';
     }
 
     get gradeOptions() {
@@ -101,8 +99,8 @@ export default class SearchForm extends Vue {
         if (this.name) data.name = this.name;
         if (this.creator) data.creator = this.creator;
         if (this.gradeSelection == 'limited') {
-            data.minGrade = gradeAtoi(this.minGrade);
-            data.maxGrade = gradeAtoi(this.maxGrade);
+            data.minGrade = this.minGrade;
+            data.maxGrade = this.maxGrade;
         }
         if (this.ratingSelection == 'limited') {
             data.minRating = +this.minRating;

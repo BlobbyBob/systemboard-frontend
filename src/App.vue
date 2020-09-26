@@ -250,6 +250,7 @@ export default class App extends Vue {
     }
 
     async searchBoulder(data: BoulderSearch) {
+        this.$bvModal.hide('searchModal');
         this.showSearchResults = true;
         this.searchResults = await searchBoulder(data) ?? [];
         document.querySelector('.boulderInfo')?.scrollIntoView({behavior: 'smooth'});
