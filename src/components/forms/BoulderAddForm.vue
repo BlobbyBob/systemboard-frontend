@@ -66,10 +66,9 @@ import Stars from '@/components/Stars.vue';
 export default class BoulderAddForm extends Vue {
     private name = '';
     private description = '';
-    private grade = '';
+    private grade = 10;
     private rating = 1;
     private readonly grades = Grades;
-    private readonly defaultGrade = gradeItoa('5');
 
     @Prop() readonly submitHandler!: (data: BoulderNew) => void;
     @Prop() readonly cancelHandler!: (e: Event) => void;
