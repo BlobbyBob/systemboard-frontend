@@ -56,7 +56,7 @@
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import LabelledElement from './LabelledElement.vue';
-import {gradeAtoi, Grades} from '@/types/grades';
+import {gradeAtoi, gradeItoa, Grades} from '@/types/grades';
 import {BoulderNew} from '@/api/types';
 import Stars from '@/components/Stars.vue';
 
@@ -69,7 +69,7 @@ export default class BoulderAddForm extends Vue {
     private grade = '';
     private rating = 1;
     private readonly grades = Grades;
-    private readonly defaultGrade = '5';
+    private readonly defaultGrade = gradeItoa('5');
 
     @Prop() readonly submitHandler!: (data: BoulderNew) => void;
     @Prop() readonly cancelHandler!: (e: Event) => void;
@@ -77,7 +77,7 @@ export default class BoulderAddForm extends Vue {
     submitHandlerWrapper() {
         const data: BoulderNew = {
             name: this.name,
-            grade: gradeAtoi(this.grade),
+            grade: this.grade,
             stars: +this.rating,
             holds: []
         };
