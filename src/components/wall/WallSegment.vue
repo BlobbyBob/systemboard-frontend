@@ -46,9 +46,11 @@ export default class WallSegment extends Vue {
     @Prop() readonly image!: string;
     @Prop() readonly holds!: HoldType[];
     @Prop() readonly types!: { [holdId: number]: 0 | 1 | 2 };
+    @Prop() readonly refresh!: boolean;
     @Prop() visible!: boolean;
 
     get holdsFiltered(): HoldType[] {
+        if (this.refresh) true;
         return this.holds;
     }
 }

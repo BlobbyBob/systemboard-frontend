@@ -28,7 +28,7 @@
             <div class="col-6 property">Name:</div>
             <div class="col-6 value">{{ name }}</div>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-center" v-show="description">
             <div class="col-6 property">Beschreibung:</div>
             <div class="col-6 value">{{ description }}</div>
         </div>

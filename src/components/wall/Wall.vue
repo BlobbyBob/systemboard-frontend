@@ -33,7 +33,8 @@
                 <div class="wall-segments flex-grow-1">
                     <div v-for="(holds, index) in data" :key="holds.filename">
                         <keep-alive>
-                            <WallSegment :image="'/dev/' + holds.filename" :holds="holds.holds" :visible="index === currentIndex" :types="types" @action="holdClickHandlerWrapper"/>
+                            <WallSegment :image="'/dev/' + holds.filename" :holds="holds.holds" :visible="index === currentIndex" :types="types" :refresh="refreshSegments"
+                                         @action="holdClickHandlerWrapper"/>
                         </keep-alive>
                     </div>
                 </div>
@@ -60,6 +61,7 @@ export default class Wall extends Vue {
     @Prop() readonly types!: { [holdId: number]: 0 | 1 | 2 };
     @Prop() readonly holdClickHandler!: (id: number, e: Event) => void;
     @Prop() readonly refreshArrows = false;
+    private refreshSegments = false;
 
     private internalCurrentIndex = 0;
 
@@ -73,6 +75,7 @@ export default class Wall extends Vue {
             this.internalCurrentIndex = mainwall;
         }
         this.$children.forEach(v => v.$forceUpdate());
+        this.refreshSegments = !this.refreshSegments;
     }
 
     get currentIndex() {

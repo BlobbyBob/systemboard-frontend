@@ -222,6 +222,7 @@ export default class App extends Vue {
 
     showBoulder() {
         if (this.boulder) {
+            this.isSelectionMode = false;
             if (!this.boulder.holds) {
                 console.warn('Loaded boulder is missing the holds list', this.boulder);
                 return;
@@ -302,6 +303,8 @@ export default class App extends Vue {
                 break;
             case 'add':
                 this.boulder = null;
+                this.clearWall();
+                this.refreshWall();
                 this.isSelectionMode = true;
                 break;
             case 'botd':
