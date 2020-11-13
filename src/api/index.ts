@@ -47,13 +47,13 @@ function errorHandler(reason: ApiError) {
     if (reason.successfulTransmission) {
         if (reason.statusCode == 403) {
             if (!app.isGuest) {
-                app.$toast.error("Sitzung abgelaufen. Bitte erneut anmelden");
-                app.isLoggedIn = false;
+                app.$toast.error("Du hast keine Berechtigung diese Aktion durchzuführen.");
             } else {
                 app.$toast.info("Diese Funktion steht nur angemeldeten Nutzern zur Verfügung");
             }
         } else {
-            app.$toast.error(`${reason.statusCode} ${reason.statusText}`);
+            app.$toast.error(`Es ist ein Fehler aufgetreten.`);
+            console.error(`${reason.statusCode} ${reason.statusText}`);
         }
     } else {
         app.$toast.warning("Keine Internetverbindung");
@@ -96,6 +96,7 @@ export async function apiCall(method: string, endpoint: string, successMsg?: str
                         statusCode: xhr.status,
                         statusText: xhr.statusText
                     };
+                    if (error.statusCode == 0) error.successfulTransmission = false;
                     reject(error);
                 }
             }
@@ -111,5 +112,14 @@ export async function apiCall(method: string, endpoint: string, successMsg?: str
         } else {
             xhr.send();
         }
+    }).catch(errorHandler);
+}
+
+// eslint-disable-next-line
+export async function apiFakeCall(method: string, endpoint: string, successMsg?: string, data?: any, ret?: any): Promise<any | undefined> {
+    // eslint-disable-next-line
+    return new Promise<any>((resolve, reject) => {
+        console.log(method, endpoint, data);
+        resolve(ret);
     }).catch(errorHandler);
 }

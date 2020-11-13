@@ -21,7 +21,7 @@
     <div class="boulderInfo container mb-4">
         <div class="row">
             <div class="col-12 text-center">
-            <h3>Boulder Info</h3>
+                <h3>Boulder Info</h3>
             </div>
         </div>
         <div class="row align-items-center">
@@ -70,6 +70,9 @@
                 <b-form-select v-model="gradeVote" :options="gradeOptions"></b-form-select>
             </div>
         </div>
+        <div class="text-center">
+            <b-button v-if="deletable" variant="danger" @click="$emit('delete', id)">Boulder löschen</b-button>
+        </div>
     </div>
 </template>
 
@@ -81,13 +84,17 @@ import ToggleMark from '@/components/ToggleMark.vue';
 import {putBoulderOfTheDay, putClimbed, putVote} from '@/api/interface';
 
 @Component({
-    components: {ToggleMark, Stars}
+    components: {ToggleMark, Stars},
+    model: {
+        event: 'delete'
+    }
 })
 export default class BoulderInfo extends Vue {
     @Prop() readonly id!: number;
     @Prop() readonly name!: string;
     @Prop() readonly description!: string;
     @Prop() readonly creator!: string;
+    @Prop() readonly deletable!: boolean;
     @Prop() readonly grade!: string;
     @Prop() readonly rating!: number;
     @Prop() readonly climbed!: boolean;

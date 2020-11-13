@@ -50,6 +50,7 @@ export interface Boulder {
     climbed: boolean,
     grade: number,
     rating: number,
+    deletable: boolean,
     location?: {
         min: number,
         main: number,

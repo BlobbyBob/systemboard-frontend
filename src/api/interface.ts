@@ -68,6 +68,10 @@ export async function newBoulder(data: BoulderNew): Promise<{ id: number } | und
     return apiCall('POST', '/boulder', 'Boulder gespeichert', data);
 }
 
+export async function deleteBoulder(id: number): Promise<void | undefined> {
+    return apiCall('DELETE', '/boulder/' + encodeURIComponent(id));
+}
+
 export async function postRegistration(data: Registration): Promise<void | undefined> {
     return apiCall('POST', '/registration', 'Eine Aktivierungsmail wurde verschickt', data);
 }

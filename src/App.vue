@@ -103,7 +103,8 @@
                     </div>
                 </div>
                 <BoulderInfo v-if="boulder != null" :id="boulder.id" :name="boulder.name" :creator="boulder.creator.name" :description="boulder.description"
-                             :grade="gItoa(boulder.grade)" :rating="boulder.rating" :climbed="boulder.climbed" :boulder-of-the-day="isBoulderOfTheDay"/>
+                             :grade="gItoa(boulder.grade)" :rating="boulder.rating" :climbed="boulder.climbed" :boulder-of-the-day="isBoulderOfTheDay"
+                            :deletable="boulder.deletable" @delete="deleteBoulderHandler"/>
                 <div class="mt-3"></div>
                 <SearchResults v-if="showSearchResults" :search-results-data="searchResults" :refresh="searchResultsRefresh" :click-handler="loadBoulder"/>
             </div>
@@ -138,7 +139,20 @@ import SearchResults from '@/components/search/SearchResults.vue';
 import BoulderAddForm from '@/components/forms/BoulderAddForm.vue';
 import SearchForm from '@/components/forms/SearchForm.vue';
 import {Boulder, BoulderNew, BoulderSearch, Holds, Ranking as RankingType, Stats} from '@/api/types';
-import {getBoulder, getBoulderOfTheDay, getHolds, getRanking, getStats, getWall, loginPassword, logout, newBoulder, postRegistration, searchBoulder} from '@/api/interface';
+import {
+    deleteBoulder,
+    getBoulder,
+    getBoulderOfTheDay,
+    getHolds,
+    getRanking,
+    getStats,
+    getWall,
+    loginPassword,
+    logout,
+    newBoulder,
+    postRegistration,
+    searchBoulder
+} from '@/api/interface';
 import {gradeItoa} from '@/types/grades';
 import '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/free-solid-svg-icons';
@@ -160,7 +174,7 @@ import Statistics from '@/components/Statistics.vue';
     },
 })
 export default class App extends Vue {
-    isLoggedIn = window.sessionStorage.getItem('auth') != null;
+    isLoggedIn = window.sessionStorage.getItem('auth') != null && window.sessionStorage.getItem('auth') != 'Login';
     isGuest = window.sessionStorage.getItem('auth')?.toLowerCase() == 'guest';
     isSelectionMode = false;
     isBoulderOfTheDay = false;
@@ -255,6 +269,10 @@ export default class App extends Vue {
         this.showSearchResults = true;
         this.searchResults = await searchBoulder(data) ?? [];
         document.querySelector('.boulderInfo')?.scrollIntoView({behavior: 'smooth'});
+    }
+
+    deleteBoulderHandler(id: number) {
+        deleteBoulder(id).then(() => {this.boulder = null});
     }
 
     async loginHandler(email: string, password: string, name: string, type: string) {
