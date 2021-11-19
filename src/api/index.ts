@@ -20,7 +20,7 @@
 import {ProgressStatus} from '@/ProgressStatus';
 import App from '@/App.vue';
 
-const baseUrl = 'http://api.systemboard.local';
+const baseUrl = 'https://api.digitalbread.de';
 const sessionStorage = window.sessionStorage;
 
 let app: App;
