@@ -1,7 +1,7 @@
 <!--
   -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
-  -- 
+  --
   -- This program is free software: you can redistribute it and/or modify
   -- it under the terms of the GNU General Public License as published by
   -- the Free Software Foundation, either version 3 of the License, or
@@ -18,30 +18,39 @@
   -->
 
 <template>
-    <tr>
-        <td>{{ rank }}</td>
-        <td>
-            {{ name }}
-            <span v-if="typeof badge == 'string' && badge.length > 0" class="pl-2 badge badge-primary">
-                {{ badge }}
-            </span>
-        </td>
-        <td>{{ +points }}</td>
-    </tr>
+  <tr>
+    <td>{{ rank }}</td>
+    <td>
+      {{ name }}
+      <span v-if="typeof badge == 'string' && badge.length > 0" class="pl-2 badge badge-primary">
+        {{ badge }}
+      </span>
+    </td>
+    <td>{{ +points }}</td>
+  </tr>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
+import { defineComponent } from "vue";
 
-@Component
-export default class RankingItem extends Vue {
-    @Prop() rank!: number;
-    @Prop() name!: string;
-    @Prop() badge?: string | undefined;
-    @Prop() points!: number;
-}
+export default defineComponent({
+  name: "RankingItem",
+  props: {
+    rank: {
+      type: Number,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    badge: String,
+    points: {
+      type: Number,
+      required: true,
+    },
+  },
+});
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

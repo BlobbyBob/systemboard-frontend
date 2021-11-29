@@ -1,7 +1,7 @@
 <!--
   --  systemboard
   -- Copyright (C) 2020 Ben Swierzy
-  -- 
+  --
   -- This program is free software: you can redistribute it and/or modify
   -- it under the terms of the GNU General Public License as published by
   -- the Free Software Foundation, either version 3 of the License, or
@@ -18,49 +18,69 @@
   -->
 
 <template>
-    <div class="wallSegment w-100" v-bind:class="{ hidden: !visible }">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 670">
-            <image x="0" y="0" width="1000px" height="670px" :xlink:href="image"></image>
-            <g class="holds">
-                <Hold v-for="hold in holdsFiltered" v-bind:key="hold.id" v-bind:id="hold.id" v-bind:tag="hold.tag" v-bind:attr="hold.attr" v-bind:type="types[hold.id]"
-                      v-on:click="e => $emit('action', hold.id, e)"/>
-            </g>
-        </svg>
-    </div>
+  <div class="wallSegment w-100" v-bind:class="{ hidden: !visible }">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 670">
+      <image x="0" y="0" width="1000px" height="670px" :xlink:href="image"></image>
+      <g class="holds">
+        <Hold
+          v-for="hold in holdsFiltered"
+          v-bind:key="hold.id"
+          v-bind:id="hold.id"
+          v-bind:tag="hold.tag"
+          v-bind:attr="hold.attr"
+          v-bind:type="types[hold.id]"
+          v-on:click="e => $emit('action', hold.id, e)"
+        />
+      </g>
+    </svg>
+  </div>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
-import {Hold as HoldType} from '@/api/types';
-import Hold from '@/components/wall/Hold.vue';
+import { defineComponent } from "vue";
+import { Hold as HoldType } from "@/api/types";
+import Hold from "@/components/wall/Hold.vue";
 
-@Component({
-    components: {
-        Hold
+export default defineComponent({
+  name: "WallSegment",
+  emits: ["action"],
+  components: { Hold },
+  props: {
+    image: {
+      type: String,
+      required: true,
     },
-    model: {
-        event: 'action'
-    }
-})
-export default class WallSegment extends Vue {
-    @Prop() readonly image!: string;
-    @Prop() readonly holds!: HoldType[];
-    @Prop() readonly types!: { [holdId: number]: 0 | 1 | 2 };
-    @Prop() readonly refresh!: boolean;
-    @Prop() visible!: boolean;
-
-    get holdsFiltered(): HoldType[] {
-        if (this.refresh) true;
-        return this.holds;
-    }
-}
+    holds: {
+      type: Array as () => HoldType[],
+      required: true,
+    },
+    types: {
+      type: Object as () => { [holdId: number]: 0 | 1 | 2 },
+      required: true,
+    },
+    refresh: {
+      type: Boolean,
+      default: false,
+    },
+    visible: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  computed: {
+    holdsFiltered(): HoldType[] {
+      if (this.refresh) true;
+      return this.holds;
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
 svg {
-    width: 100%;
+  width: 100%;
 }
 .hidden {
-    display: none;
+  display: none;
 }
 </style>

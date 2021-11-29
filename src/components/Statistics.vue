@@ -1,7 +1,7 @@
 <!--
   -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
-  -- 
+  --
   -- This program is free software: you can redistribute it and/or modify
   -- it under the terms of the GNU General Public License as published by
   -- the Free Software Foundation, either version 3 of the License, or
@@ -18,36 +18,46 @@
   -->
 
 <template>
-    <div class="row">
-        <div class="col-12 mb-3" v-for="change in stats.changelog" :key="change.version">
-            <h5>DBS {{ change.version }} vom <em>{{ change.date }}</em></h5>
-            <p class="ml-3">{{ change.description }}</p>
-            <ul>
-                <li v-for="(detail, index) in change.changes" :key="index">{{ detail }}</li>
-            </ul>
-        </div>
+  <div class="row">
+    <div class="col-12 mb-3" v-for="change in stats.changelog" :key="change.version">
+      <h5>
+        DBS {{ change.version }} vom <em>{{ change.date }}</em>
+      </h5>
+      <p class="ml-3">{{ change.description }}</p>
+      <ul>
+        <li v-for="(detail, index) in change.changes" :key="index">{{ detail }}</li>
+      </ul>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
-import {Stats} from '@/api/types';
+import { defineComponent } from "vue";
+import { Stats } from "@/api/types";
 
-@Component
-export default class Statistics extends Vue {
-    @Prop() readonly stats!: Stats | null;
-    @Prop() readonly refresh!: boolean;
-
-    get statsComputed(): Stats {
-        if (this.refresh) true;
-        if (!this.stats) return {version: '', changelog: []};
-        return this.stats;
-    }
-}
+export default defineComponent({
+  name: "Statistics",
+  props: {
+    stats: Object as () => Stats,
+    refresh: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
+  computed: {
+    statsComputed(): Stats {
+      // eslint-disable-next-line
+      if (this.refresh) true;
+      if (!this.stats) return { version: "", changelog: [] };
+      return this.stats;
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
 li {
-    list-style: none;
+  list-style: none;
 }
 </style>

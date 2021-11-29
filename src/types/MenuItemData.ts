@@ -18,7 +18,7 @@
  */
 
 export class MenuItemData {
-    id!: string;
-    label!: string;
-    icon?: string;
+  id!: string;
+  label!: string;
+  icon?: string;
 }

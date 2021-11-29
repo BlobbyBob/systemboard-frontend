@@ -18,8 +18,8 @@
  */
 
 export enum ProgressStatus {
-    START = 'start',
-    PROGRESS = 'progress',
-    FINISH = 'finish',
-    DONE = 'done'
+  START = "start",
+  PROGRESS = "progress",
+  FINISH = "finish",
+  DONE = "done",
 }

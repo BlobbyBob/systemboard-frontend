@@ -1,7 +1,7 @@
 <!--
   --  systemboard
   -- Copyright (C) 2020 Ben Swierzy
-  -- 
+  --
   -- This program is free software: you can redistribute it and/or modify
   -- it under the terms of the GNU General Public License as published by
   -- the Free Software Foundation, either version 3 of the License, or
@@ -18,174 +18,203 @@
   -->
 
 <template>
-    <div class="row position-relative w-100 ml-0 mr-0">
-        <div class="pl-lg-2 pr-lg-2 wall-nav d-flex d-lg-none align-items-center leftArrow" :class="leftArrowClass" @click="prevSegment">
-            <span class="fas fa-3x fa-arrow-alt-circle-left"></span>
-        </div>
-        <div class="pl-lg-2 pr-lg-2 wall-nav d-flex d-lg-none align-items-center rightArrow" :class="rightArrowClass" @click="nextSegment">
-            <span class="fas fa-3x fa-arrow-alt-circle-right"></span>
-        </div>
-        <div class="wallWrapper w-100">
-            <div class="wall w-100 d-flex align-items-stretch">
-                <div class="pl-lg-2 pr-lg-2 wall-nav d-none d-lg-flex align-items-center leftArrow" :class="leftArrowClass" @click="prevSegment">
-                    <span class="fas fa-3x fa-arrow-alt-circle-left"></span>
-                </div>
-                <div class="wall-segments flex-grow-1">
-                    <div v-for="(holds, index) in data" :key="holds.filename">
-                        <keep-alive>
-                            <WallSegment :image="'/dev/' + holds.filename" :holds="holds.holds" :visible="index === currentIndex" :types="types" :refresh="refreshSegments"
-                                         @action="holdClickHandlerWrapper"/>
-                        </keep-alive>
-                    </div>
-                </div>
-                <div class="pl-lg-2 pr-lg-2 wall-nav d-none d-lg-flex align-items-center rightArrow" :class="rightArrowClass" @click="nextSegment">
-                    <span class="fas fa-3x fa-arrow-alt-circle-right"></span>
-                </div>
-            </div>
-        </div>
+  <div class="row position-relative w-100 ml-0 mr-0">
+    <div
+      class="pl-lg-2 pr-lg-2 wall-nav d-flex d-lg-none align-items-center leftArrow"
+      :class="leftArrowClass"
+      @click="prevSegment"
+    >
+      <span class="fas fa-3x fa-arrow-alt-circle-left"></span>
     </div>
+    <div
+      class="pl-lg-2 pr-lg-2 wall-nav d-flex d-lg-none align-items-center rightArrow"
+      :class="rightArrowClass"
+      @click="nextSegment"
+    >
+      <span class="fas fa-3x fa-arrow-alt-circle-right"></span>
+    </div>
+    <div class="wallWrapper w-100">
+      <div class="wall w-100 d-flex align-items-stretch">
+        <div
+          class="pl-lg-2 pr-lg-2 wall-nav d-none d-lg-flex align-items-center leftArrow"
+          :class="leftArrowClass"
+          @click="prevSegment"
+        >
+          <span class="fas fa-3x fa-arrow-alt-circle-left"></span>
+        </div>
+        <div class="wall-segments flex-grow-1">
+          <div v-for="(holds, index) in data" :key="holds.filename">
+            <keep-alive>
+              <WallSegment
+                :image="'/dev/' + holds.filename"
+                :holds="holds.holds"
+                :visible="index === currentIndex"
+                :types="types"
+                :refresh="refreshSegments"
+                @action="holdClickHandlerWrapper"
+              />
+            </keep-alive>
+          </div>
+        </div>
+        <div
+          class="pl-lg-2 pr-lg-2 wall-nav d-none d-lg-flex align-items-center rightArrow"
+          :class="rightArrowClass"
+          @click="nextSegment"
+        >
+          <span class="fas fa-3x fa-arrow-alt-circle-right"></span>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
-import WallSegment from './WallSegment.vue';
-import {Holds} from '@/api/types';
+import { defineComponent } from "vue";
+import WallSegment from "./WallSegment.vue";
+import { Holds } from "@/api/types";
 
-@Component({
-    components: {
-        WallSegment
-    }
-})
-export default class Wall extends Vue {
-    @Prop() readonly data!: Holds[];
-    @Prop() readonly types!: { [holdId: number]: 0 | 1 | 2 };
-    @Prop() readonly holdClickHandler!: (id: number, e: Event) => void;
-    @Prop() readonly refreshArrows = false;
-    private refreshSegments = false;
-
-    private internalCurrentIndex = 0;
-
-    holdClickHandlerWrapper(id: number, e: Event) {
-        this.holdClickHandler(id, e);
-        this.refresh();
-    }
-
-    public refresh(mainwall: number | undefined = undefined) {
-        if (mainwall !== undefined) {
-            this.internalCurrentIndex = mainwall;
-        }
-        this.$children.forEach(v => v.$forceUpdate());
-        this.refreshSegments = !this.refreshSegments;
-    }
-
-    get currentIndex() {
+export default defineComponent({
+  name: "Wall",
+  components: { WallSegment },
+  emits: ["click", "indexchange"],
+  props: {
+    data: {
+      type: Array as () => Holds[],
+      required: true,
+    },
+    types: {
+      type: Object as () => { [holdId: number]: 0 | 1 | 2 },
+      required: true,
+    },
+    refreshArrows: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  computed: {
+    currentIndex: {
+      get(): number {
         return this.internalCurrentIndex;
-    }
-
-    set currentIndex(value: number) {
+      },
+      set(value: number) {
         this.internalCurrentIndex = value;
-        this.$emit('indexchange', value);
-    }
-
-    get leftArrowClass() {
-        if (this.refreshArrows) true;
-        let blink = false;
-        for (let i = this.internalCurrentIndex - 1; i >= 0; i--) {
-            for (const hold of this.data[i].holds) {
-                if (this.types[hold.id] != 0) {
-                    blink = true;
-                    break;
-                }
-            }
-            if (blink) break;
+        this.$emit("indexchange", value);
+      },
+    },
+    leftArrowClass() {
+      if (this.refreshArrows) true;
+      let blink = false;
+      for (let i = this.internalCurrentIndex - 1; i >= 0; i--) {
+        for (const hold of this.data[i].holds) {
+          if (this.types[hold.id] != 0) {
+            blink = true;
+            break;
+          }
         }
-        return {
-            blink: blink,
-            'text-muted': this.internalCurrentIndex == 0
-        };
-    }
-
-    get rightArrowClass() {
-        if (this.refreshArrows) true;
-        let blink = false;
-        for (let i = this.internalCurrentIndex + 1; i < this.data.length; i++) {
-            for (const hold of this.data[i].holds) {
-                if (this.types[hold.id] != 0) {
-                    blink = true;
-                    break;
-                }
-            }
-            if (blink) break;
+        if (blink) break;
+      }
+      return {
+        blink: blink,
+        "text-muted": this.internalCurrentIndex == 0,
+      };
+    },
+    rightArrowClass() {
+      if (this.refreshArrows) true;
+      let blink = false;
+      for (let i = this.internalCurrentIndex + 1; i < this.data.length; i++) {
+        for (const hold of this.data[i].holds) {
+          if (this.types[hold.id] != 0) {
+            blink = true;
+            break;
+          }
         }
-        return {
-            blink: blink,
-            'text-muted': this.internalCurrentIndex == this.data.length - 1
-        };
-    }
-
+        if (blink) break;
+      }
+      return {
+        blink: blink,
+        "text-muted": this.internalCurrentIndex == this.data.length - 1,
+      };
+    },
+  },
+  data() {
+    return {
+      refreshSegments: false,
+      internalCurrentIndex: 0,
+    };
+  },
+  methods: {
+    holdClickHandlerWrapper(id: number, e: Event) {
+      this.$emit("click", id, e);
+      this.refresh();
+    },
+    refresh(mainwall: number | undefined = undefined) {
+      if (mainwall !== undefined) {
+        this.internalCurrentIndex = mainwall;
+      }
+      this.refreshSegments = !this.refreshSegments;
+    },
     nextSegment() {
-        if (this.currentIndex + 1 < this.data.length)
-            this.currentIndex++;
-    }
-
+      if (this.currentIndex + 1 < this.data.length) this.currentIndex++;
+    },
     prevSegment() {
-        if (this.currentIndex - 1 >= 0)
-            this.currentIndex--;
-    }
-}
+      if (this.currentIndex - 1 >= 0) this.currentIndex--;
+    },
+  }
+});
 </script>
 
 <style scoped lang="scss">
-@import 'src/style/custom';
+@import "src/style/custom";
 
 .wall {
-    min-height: 600px;
-    min-width: 1000px;
+  min-height: 600px;
+  min-width: 1000px;
 }
 
 .wallWrapper {
-    overflow-x: auto;
-    background-color: white;
+  overflow-x: auto;
+  background-color: white;
 }
 
 .wall-nav {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .wall-nav.text-muted {
-    cursor: not-allowed;
+  cursor: not-allowed;
 }
 
 .arrows {
-    min-height: 600px;
-    width: 100vw;
+  min-height: 600px;
+  width: 100vw;
 }
 
 @include media-breakpoint-down(md) {
-    .leftArrow, .rightArrow {
-        position: absolute;
-        top: 50%;
-        z-index: 100;
-    }
-    .leftArrow {
-        left: 10px;
-    }
-    .rightArrow {
-        right: 10px;
-    }
+  .leftArrow,
+  .rightArrow {
+    position: absolute;
+    top: 50%;
+    z-index: 100;
+  }
+  .leftArrow {
+    left: 10px;
+  }
+  .rightArrow {
+    right: 10px;
+  }
 }
 
 .blink {
-    animation: blink-animation 1.8s infinite ease-in-out;
+  animation: blink-animation 1.8s infinite ease-in-out;
 }
 
 @keyframes blink-animation {
-    0%, 100% {
-        color: inherit;
-    }
-    50% {
-        color: #F3652C;
-    }
+  0%,
+  100% {
+    color: inherit;
+  }
+  50% {
+    color: #f3652c;
+  }
 }
-
 </style>
