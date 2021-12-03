@@ -19,73 +19,80 @@
 
 <template>
   <div>
-    <b-navbar toggleable="lg" type="dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container">
-        <b-navbar-brand>
+        <a class="navbar-brand">
           <img src="/dev/favicon.png" alt="DBS" />
-        </b-navbar-brand>
+        </a>
 
         <div class="navbar-brand d-lg-none text-center">Digitales <br class="d-sm-none" />Bouldersystem</div>
 
-        <button
-          type="button"
-          class="navbar-toggler d-xl-none"
-          @click.stop.prevent="$root.$emit('bv::toggle::collapse', 'nav-collapse')"
-        >
+        <button type="button" class="navbar-toggler d-xl-none" @click.stop.prevent="toggleCollapse">
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <b-collapse id="nav-collapse" class="justify-content-around" v-model="secondaryValue" is-nav>
-          <b-navbar-nav v-for="(menuItemData, index) in menuData" :key="index">
-            <MenuItem
-              v-if="menuItemData.icon !== undefined"
-              :id="menuItemData.id"
-              :icon="menuItemData.icon"
-              @action="$emit('click', menuItemData.id)"
-            >
-              {{ menuItemData.label }}
-            </MenuItem>
-            <MenuItem v-else :id="menuItemData.id" @action="menuClickHandler">
-              {{ menuItemData.label }}
-            </MenuItem>
-          </b-navbar-nav>
-        </b-collapse>
+        <nav id="nav-collapse" class="navbar-collapse collapse">
+          <div class="container">
+            <ul class="navbar-nav justify-content-around">
+              <MenuItem
+                v-for="(menuItemData, index) in menuData"
+                :key="index"
+                :id="menuItemData.id"
+                :icon="menuItemData.icon"
+                @click="$emit('click', menuItemData.id)"
+              >
+                {{ menuItemData.label }}
+              </MenuItem>
+            </ul>
+          </div>
+        </nav>
       </div>
-    </b-navbar>
-    <SubMenu :show="showSubMenu" :sub-menu-data="subMenuData" :menu-click-handler="menuClickHandler" />
+    </nav>
+    <SubMenu :show="showSubMenu" :sub-menu-data="subMenuData" @click="(id) => $emit('click', id)" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, inject } from "vue";
 import SubMenu from "@/components/menu/SubMenu.vue";
 import MenuItem from "@/components/menu/MenuItem.vue";
 import { MenuItemData } from "@/types/MenuItemData";
+import { bControls } from "@/plugins/BootstrapControls";
 
 export default defineComponent({
-  name: "HelloWorld",
+  name: "Menu",
   components: {
     SubMenu,
-    MenuItem,
+    MenuItem
   },
   emits: ["input", "click"],
   props: {
     menuData: {
       type: Array as () => MenuItemData[],
-      required: true,
+      required: true
     },
     showSubMenu: {
       type: Boolean,
-      required: true,
+      required: true
     },
     subMenuData: {
       type: Array as () => MenuItemData[],
-      required: true,
-    },
+      required: true
+    }
+  },
+  setup() {
+    let bControls = {} as bControls;
+    const x: bControls | undefined = inject("bControls");
+    if (x !== undefined) {
+      bControls = x;
+    }
+    return {
+      bControls
+    };
   },
   data() {
     return {
-      internalCollapseVisible: false,
+      internalCollapseVisible: false
     };
   },
   computed: {
@@ -96,9 +103,14 @@ export default defineComponent({
       set(val: boolean) {
         this.internalCollapseVisible = val;
         this.$attrs.value = val ? "true" : "";
-      },
-    },
+      }
+    }
   },
+  methods: {
+    toggleCollapse() {
+      this.bControls.toggleCollapse("nav-collapse");
+    }
+  }
 });
 </script>
 

@@ -18,13 +18,13 @@
   -->
 
 <template>
-  <b-nav-item class="text-center">
+  <li class="nav-item text-center p-2">
     <a
       class="nav-link"
       @click.prevent="
         (e) => {
           if (id === 'other') e.stopPropagation();
-          $emit('action', id);
+          $emit('click', id);
         }
       "
       href="#"
@@ -33,7 +33,7 @@
       <br v-if="icon !== undefined" class="d-none d-lg-block" />
       <slot></slot>
     </a>
-  </b-nav-item>
+  </li>
 </template>
 
 <script lang="ts">
@@ -41,7 +41,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "MenuItem",
-  emits: ["action"],
+  emits: ["click"],
   props: {
     id: {
       type: String,

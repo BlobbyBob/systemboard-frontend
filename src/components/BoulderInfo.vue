@@ -43,7 +43,7 @@
     <div class="row align-items-center">
       <div class="col-6 property">Bewertung:</div>
       <div class="col-6 value">
-        <Stars count="5" :dynamic="false" :initial-value="rating" />
+        <Stars :count="5" :dynamic="false" :initial-value="rating" :refresh="true" />
       </div>
     </div>
     <div v-if="boulderOfTheDay" class="row align-items-center">
@@ -61,17 +61,19 @@
     <div v-if="!boulderOfTheDay" class="row align-items-center">
       <div class="col-6 property">Bewerten:</div>
       <div class="col-6 value">
-        <Stars count="5" :dynamic="true" :initial-value="0" v-model="ratingVote" />
+        <Stars :count="5" :dynamic="true" :initial-value="0" v-model="ratingVote" :refresh="true" />
       </div>
     </div>
     <div v-if="!boulderOfTheDay" class="row align-items-center">
       <div class="col-6 property">Schwierigkeit:</div>
       <div class="col-6 value">
-        <b-form-select v-model="gradeVote" :options="gradeOptions"></b-form-select>
+        <select v-model="gradeVote" class="form-select w-auto">
+          <option v-for="option of gradeOptions" :value="option.value" :key="option.value">{{ option.value }}</option>
+        </select>
       </div>
     </div>
     <div class="text-center">
-      <b-button v-if="deletable" variant="danger" @click="$emit('delete', id)">Boulder löschen</b-button>
+      <button v-if="deletable" class="btn btn-danger" @click="$emit('delete', id)">Boulder löschen</button>
     </div>
   </div>
 </template>

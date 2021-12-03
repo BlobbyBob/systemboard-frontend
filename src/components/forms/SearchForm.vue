@@ -21,34 +21,50 @@
   <div class="searchForm">
     <form @submit.prevent="submitWrapper">
       <label for="searchName">Name:</label>
-      <b-form-input id="searchName" v-model="name" type="text" />
+      <input class="form-control" id="searchName" v-model="name" type="text" />
       <br />
       <label for="searchCreator">Ersteller:</label>
-      <b-form-input id="searchCreator" v-model="creator" type="text" />
+      <input class="form-control" id="searchCreator" v-model="creator" type="text" />
       <br />
       <fieldset>
         <legend>Bewertung</legend>
-        <b-form-radio-group v-model="ratingSelection" name="rating">
-          <b-form-radio value="all">Alle</b-form-radio>
-          <b-form-radio value="limited">Eingeschränkt</b-form-radio>
-        </b-form-radio-group>
+        <div class="form-check form-check-inline">
+          <input type="radio" id="rating-all" class="form-check-input" name="rating" value="all"
+                 v-model="ratingSelection" />
+          <label class="form-check-label" for="rating-all">Alle</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input type="radio" id="rating-limited" class="form-check-input" name="rating" value="limited"
+                 v-model="ratingSelection" />
+          <label class="form-check-label" for="rating-limited">Eingeschränkt</label>
+        </div>
         <div v-if="ratingSelection === 'limited'" class="d-flex justify-content-center align-items-center">
-          <Stars count="5" initial-value="1" dynamic="true" v-model="minRating" />
+          <Stars :count="5" :initial-value="1" :dynamic="true" :refresh="false" v-model="minRating" />
           <span class="p-3">bis</span>
-          <Stars count="5" initial-value="5" dynamic="true" v-model="maxRating" />
+          <Stars :count="5" :initial-value="5" :dynamic="true" :refresh="false" v-model="maxRating" />
         </div>
       </fieldset>
       <br />
       <fieldset>
         <legend>Schwierigkeit</legend>
-        <b-form-radio-group v-model="gradeSelection" name="grade">
-          <b-form-radio value="all">Alle</b-form-radio>
-          <b-form-radio value="limited">Eingeschränkt</b-form-radio>
-        </b-form-radio-group>
+        <div class="form-check form-check-inline">
+          <input type="radio" id="grade-all" class="form-check-input" name="grade" value="all"
+                 v-model="gradeSelection" />
+          <label class="form-check-label" for="grade-all">Alle</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input type="radio" id="grade-limited" class="form-check-input" name="grade" value="limited"
+                 v-model="gradeSelection" />
+          <label class="form-check-label" for="grade-limited">Eingeschränkt</label>
+        </div>
         <div v-if="gradeSelection === 'limited'" class="d-flex justify-content-center align-items-center">
-          <b-form-select v-model="minGrade" :options="gradeOptions" />
+          <select v-model="minGrade" class="form-select">
+            <option v-for="option of gradeOptions" :value="option.value" :key="option.value">{{ option.value }}</option>
+          </select>
           <span class="p-3">bis</span>
-          <b-form-select v-model="maxGrade" :options="gradeOptions" />
+          <select v-model="maxGrade" class="form-select">
+            <option v-for="option of gradeOptions" :value="option.value" :key="option.value">{{ option.value }}</option>
+          </select>
         </div>
       </fieldset>
       <!--Todo: Ordering-->
@@ -66,6 +82,7 @@ import Stars from "@/components/Stars.vue";
 export default defineComponent({
   name: "SearchForm",
   components: { Stars },
+  emits: ["submit"],
   data() {
     return {
       name: "",
@@ -75,20 +92,20 @@ export default defineComponent({
       ratingSelection: "all",
       gradeSelection: "all",
       minGrade: 0,
-      maxGrade: 0,
+      maxGrade: 0
     };
   },
   computed: {
-    gradeOptions() {
+    gradeOptions(): { text: string, value: number }[] {
       const options = [];
       for (const grade of Grades) {
         options.push({
           text: grade,
-          value: gradeAtoi(grade),
+          value: gradeAtoi(grade)
         });
       }
       return options;
-    },
+    }
   },
   methods: {
     submitWrapper() {
@@ -104,8 +121,8 @@ export default defineComponent({
         data.maxRating = +this.maxRating;
       }
       this.$emit("submit", data);
-    },
-  },
+    }
+  }
 });
 </script>
 

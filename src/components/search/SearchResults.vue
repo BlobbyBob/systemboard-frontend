@@ -24,7 +24,7 @@
     </div>
     <div class="row">
       <div class="col-12 col-md-6 col-lg-4" v-for="(result, index) in searchResults" :key="index">
-        <SearchResult :data="result" @action="clickHandler" :refresh="refresh" />
+        <SearchResult :data="result" @click="(id) => $emit('click', id)" :refresh="refresh" />
       </div>
     </div>
   </div>

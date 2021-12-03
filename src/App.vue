@@ -25,7 +25,7 @@
       <div class="container loginContainer">
         <div class="row justify-content-center align-items-center">
           <div id="login-form" class="col-auto">
-            <Login :login-handler="loginHandler" :register-mode="registerMode" v-if="!isLoggedIn" />
+            <Login @login="loginHandler" :register-mode="registerMode" v-if="!isLoggedIn" />
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@
             label: 'Abmelden',
           },
         ]"
-        :menu-click-handler="menuHandler"
+        @click="menuHandler"
         :show-sub-menu="showSubMenu"
         v-if="isLoggedIn"
       />
@@ -105,14 +105,14 @@
           v-if="isLoggedIn"
           :data="wallData"
           :types="holdTypes"
-          :hold-click-handler="holdClickHandler"
+          @click="holdClickHandler"
           :refresh-arrows="refreshArrows"
           ref="wall"
         />
         <div class="mt-3"></div>
         <div class="row justify-content-center">
           <div class="col-12 col-md-8 col-lg-6 col-xl4">
-            <BoulderAddForm v-if="isSelectionMode" :submit-handler="addBoulder" :cancel-handler="cancelSelectionMode" />
+            <BoulderAddForm v-if="isSelectionMode" @submit="addBoulder" @cancel="cancelSelectionMode" />
           </div>
         </div>
         <BoulderInfo
@@ -133,11 +133,11 @@
           v-if="showSearchResults"
           :search-results-data="searchResults"
           :refresh="searchResultsRefresh"
-          :click-handler="loadBoulder"
+          @click="loadBoulder"
         />
       </div>
       <b-modal id="searchModal" title="Boulder Suchen" hide-footer>
-        <SearchForm :submit-handler="searchBoulder" />
+        <SearchForm @submit="searchBoulder" />
       </b-modal>
       <b-modal id="rankingModal" title="Rangliste" ok-only ok-title="Schließen">
         <Ranking :ranking-items="ranking" />
@@ -156,16 +156,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import Wall from "@//components/wall/Wall.vue";
-import Login from "@//components/Login.vue";
-import Menu from "@//components/menu/Menu.vue";
-import Ranking from "@//components/ranking/Ranking.vue";
-import BoulderInfo from "@//components/BoulderInfo.vue";
-import SearchResults from "@//components/search/SearchResults.vue";
-import BoulderAddForm from "@//components/forms/BoulderAddForm.vue";
-import SearchForm from "@//components/forms/SearchForm.vue";
-import { Boulder, BoulderNew, BoulderSearch, Holds, Ranking as RankingType, Stats } from "@//api/types";
+import { defineComponent, inject } from "vue";
+import Wall from "@/components/wall/Wall.vue";
+import Login from "@/components/Login.vue";
+import Menu from "@/components/menu/Menu.vue";
+import Ranking from "@/components/ranking/Ranking.vue";
+import BoulderInfo from "@/components/BoulderInfo.vue";
+import SearchResults from "@/components/search/SearchResults.vue";
+import BoulderAddForm from "@/components/forms/BoulderAddForm.vue";
+import SearchForm from "@/components/forms/SearchForm.vue";
+import Statistics from "@/components/Statistics.vue";
+import BModal from "@/components/bootstrap/BModal.vue";
+import { Boulder, BoulderNew, BoulderSearch, Holds, Ranking as RankingType, Stats } from "@/api/types";
 import {
   deleteBoulder,
   getBoulder,
@@ -178,17 +180,20 @@ import {
   logout,
   newBoulder,
   postRegistration,
-  searchBoulder,
-} from "@//api/interface";
-import { gradeItoa } from "@//types/grades";
+  searchBoulder
+} from "@/api/interface";
+import { gradeItoa } from "@/types/grades";
 import "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/free-solid-svg-icons";
-import { setApiVue, setAuthentication } from "@//api";
-import Statistics from "@//components/Statistics.vue";
+import { setApiVue, setAuthentication } from "@/api";
+import { bControls } from "@/plugins/BootstrapControls";
+import { useToast } from "vue-toastification";
+import { ProgressStatus } from "@/plugins/ProgressStatus";
 
 export default defineComponent({
   name: "App",
   components: {
+    BModal,
     Statistics,
     SearchForm,
     BoulderAddForm,
@@ -199,7 +204,32 @@ export default defineComponent({
     Login,
     Wall,
   },
+  setup() {
+    let bControls = {} as bControls;
+    const x: bControls | undefined = inject("bControls");
+    if (x !== undefined) {
+      bControls = x;
+    } else {
+      console.warn("Plugin bControls missing");
+    }
+
+    let progress = (() => true) as (status: ProgressStatus) => void;
+    const y: ((status: ProgressStatus) => void) | undefined = inject("progress");
+    if (y !== undefined) {
+      progress = y;
+    } else {
+      console.warn("Plugin progress missing");
+    }
+
+    const toast = useToast();
+    return {
+      bControls,
+      toast,
+      progress,
+    };
+  },
   beforeMount() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setApiVue(this as any);
     if (this.isLoggedIn) {
       this.loadWall();
@@ -228,7 +258,7 @@ export default defineComponent({
       mail: "",
       stats: null as Stats | null,
       statsRefresh: false,
-      registerMode: false,
+      registerMode: false
     };
   },
   methods: {
@@ -279,7 +309,7 @@ export default defineComponent({
         if (this.holdTypes[id] > 0) {
           data.holds.push({
             id: +id,
-            type: this.holdTypes[id],
+            type: this.holdTypes[id]
           });
         }
       }
@@ -290,7 +320,7 @@ export default defineComponent({
     },
 
     async searchBoulder(data: BoulderSearch) {
-      // this.$bvModal.hide("searchModal"); // todo
+      this.bControls.hideModal("searchModal");
       this.showSearchResults = true;
       this.searchResults = (await searchBoulder(data)) ?? [];
       document.querySelector(".boulderInfo")?.scrollIntoView({ behavior: "smooth" });
@@ -316,7 +346,7 @@ export default defineComponent({
             await postRegistration({
               name: name,
               email: email,
-              password: password,
+              password: password
             });
             this.registerMode = false;
           }
@@ -329,7 +359,7 @@ export default defineComponent({
 
     async showRanking() {
       this.ranking = (await getRanking()) ?? [];
-      // this.$bvModal.show("rankingModal"); // todo
+      this.bControls.showModal("rankingModal");
     },
 
     deleteBoulderHandler(id: number) {
@@ -339,12 +369,13 @@ export default defineComponent({
     },
 
     menuHandler(id: string) {
+      console.log("menu click on " + id);
       switch (id) {
         case "latest":
           this.searchBoulder({});
           break;
         case "search":
-          // this.$bvModal.show("searchModal"); // todo
+          this.bControls.showModal("searchModal");
           break;
         case "add":
           this.boulder = null;
@@ -357,7 +388,7 @@ export default defineComponent({
           break;
         case "notdoneyet":
           this.searchBoulder({
-            notDoneYet: true,
+            notDoneYet: true
           });
           break;
         case "ranking":
@@ -367,36 +398,36 @@ export default defineComponent({
           this.showSubMenu = !this.showSubMenu;
           break;
         case "report":
-          this.$emit("bv::toggle::collapse", "nav-collapse");
+          this.bControls.toggleCollapse("nav-collapse");
           this.showSubMenu = false;
           window.open(this.mail);
           break;
         case "faq":
-          this.$emit("bv::toggle::collapse", "nav-collapse");
+          this.bControls.toggleCollapse("nav-collapse");
           this.showSubMenu = false;
-          // this.$bvModal.show("faqModal"); // todo
+          this.bControls.showModal("faqModal");
           break;
         case "about":
-          this.$emit("bv::toggle::collapse", "nav-collapse");
+          this.bControls.toggleCollapse("nav-collapse");
           this.showSubMenu = false;
           getStats().then((stats) => {
             this.stats = stats ?? null;
             this.statsRefresh = !this.statsRefresh;
-            // this.$bvModal.show("statsModal"); // todo
+            this.bControls.showModal("statsModal");
           });
           break;
         case "impressum":
-          this.$emit("bv::toggle::collapse", "nav-collapse");
+          this.bControls.toggleCollapse("nav-collapse");
           this.showSubMenu = false;
-          window.open("impressum.html");
+          window.open("impressum.html"); // todo use router
           break;
         case "privacy":
-          this.$emit("bv::toggle::collapse", "nav-collapse");
+          this.bControls.toggleCollapse("nav-collapse");
           this.showSubMenu = false;
-          window.open("datenschutz.html");
+          window.open("datenschutz.html"); // todo use router
           break;
         case "logout":
-          this.$emit("bv::toggle::collapse", "nav-collapse");
+          this.bControls.toggleCollapse("nav-collapse");
           logout().then(() => {
             this.isLoggedIn = false;
           });
@@ -455,8 +486,8 @@ export default defineComponent({
 
     openExternal(url: string) {
       window.open(url, "_blank");
-    },
-  },
+    }
+  }
 });
 </script>
 

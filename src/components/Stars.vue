@@ -25,7 +25,7 @@
       :class="'star-' + star.id"
       @click="clickHandler(star.id)"
       @mouseenter="mouseenterHandler(star.id)"
-      @mouseleave="mouseleaveHandler()"
+      @mouseleave="mouseleaveHandler"
     >
       <i class="positive fas fa-star" v-show="star.selected"></i>
       <i class="negative far fa-star" v-show="!star.selected"></i>
@@ -56,6 +56,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ["input"],
   data() {
     return {
       internalValue: 0,
@@ -65,7 +66,6 @@ export default defineComponent({
   created() {
     this.internalValue = this.initialValue;
   },
-  emits: ["input"],
   computed: {
     starArray(): { id: number; selected: boolean }[] {
       if (this.updater()) true;

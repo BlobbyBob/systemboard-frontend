@@ -18,7 +18,7 @@
  */
 
 import { App } from "vue";
-import { ProgressStatus } from "@/ProgressStatus";
+import { ProgressStatus } from "@/plugins/ProgressStatus";
 
 const progress = function (status: ProgressStatus) {
   const progress = document.getElementById("progress");
@@ -28,9 +28,8 @@ const progress = function (status: ProgressStatus) {
   }
 };
 
-// eslint-disable-next-line
 export default {
-  install: (app: App) => {
+  install(app: App): void {
     app.provide("progress", progress);
   },
 };

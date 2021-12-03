@@ -18,15 +18,15 @@
   -->
 
 <template>
-  <b-navbar class="submenu navbar-secondary" :class="navClasses">
+  <nav class="navbar submenu navbar-secondary navbar-light navbar-expand" :class="navClasses">
     <div class="container">
-      <b-navbar-nav v-for="(data, index) in subMenuData" :key="index">
-        <MenuItem :id="data.id" @action="$emit('click', data.id)">
+      <ul v-for="(data, index) in subMenuData" :key="index" class="navbar-nav">
+        <MenuItem :id="data.id" @click="$emit('click', data.id)">
           {{ data.label }}
         </MenuItem>
-      </b-navbar-nav>
+      </ul>
     </div>
-  </b-navbar>
+  </nav>
 </template>
 
 <script lang="ts">

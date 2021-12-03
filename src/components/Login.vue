@@ -21,7 +21,7 @@
   <div class="text-center">
     <h3 class="loginHeading">Digitales<br />Bouldersystem</h3>
 
-    <form @submit.prevent="emitLogin" class="pt-lg-3 pb-lg-3 pl-lg-5 pr-lg-5">
+    <form @submit.prevent="emitLogin" class="pt-lg-3 pb-lg-3 ps-lg-5 pe-lg-5">
       <div class="text-left">
         <div v-if="registerMode" id="namefield">
           <label for="loginname">Name:</label>
@@ -39,14 +39,14 @@
         <label for="loginpassword">Passwort:</label>
         <input id="loginpassword" type="password" class="form-control" v-model="password" /><br />
       </div>
-      <div class="btn-group btn-block">
+      <div class="btn-group d-inline-flex w-100">
         <button id="login" type="submit" class="btn btn-primary" :disabled="registerMode">Anmelden</button>
         <button id="register" type="submit" class="btn btn-success">Registrieren</button>
         <button id="cancel" type="submit" class="btn btn-dark d-none d-md-block" v-if="registerMode">Abbrechen</button>
       </div>
       <br />
-      <button id="cancel" type="submit" class="btn btn-block btn-dark d-md-none" v-if="registerMode">Abbrechen</button>
-      <button id="guestlogin" type="submit" class="btn btn-block btn-secondary" :disabled="registerMode">
+      <button id="cancel" type="submit" class="btn w-100 btn-dark d-md-none" v-if="registerMode">Abbrechen</button>
+      <button id="guestlogin" type="submit" class="btn w-100 btn-secondary" :disabled="registerMode">
         Als Gast anmelden
       </button>
     </form>
@@ -66,22 +66,22 @@ export default defineComponent({
   props: {
     registerMode: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   emits: ["login"],
   data() {
     return {
       name: "",
       email: "",
-      password: "",
+      password: ""
     };
   },
   methods: {
     emitLogin(e: SubmitEvent): void {
       this.$emit("login", this.email, this.password, this.name, e.submitter.id);
-    },
-  },
+    }
+  }
 });
 </script>
 

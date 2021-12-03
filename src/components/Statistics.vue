@@ -19,7 +19,7 @@
 
 <template>
   <div class="row">
-    <div class="col-12 mb-3" v-for="change in stats.changelog" :key="change.version">
+    <div class="col-12 mb-3" v-for="change in statsComputed.changelog" :key="change.version">
       <h5>
         DBS {{ change.version }} vom <em>{{ change.date }}</em>
       </h5>

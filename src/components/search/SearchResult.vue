@@ -18,14 +18,14 @@
   -->
 
 <template>
-  <div @click="$emit('action', data.id)" class="m-2 searchResult">
+  <div @click="$emit('click', data.id)" class="m-2 searchResult">
     <div class="searchResultHead pl-2 pr-2">
       <span class="name">{{ data.name }}</span> <small>von {{ data.creator.name }}</small>
     </div>
     <hr />
     <div class="pl-2 pr-2">
       Schwierigkeit: {{ gItoa(data.grade) }}
-      <Stars :dynamic="false" count="5" :initial-value="data.rating" :refresh="refresh" />
+      <Stars :dynamic="false" :count="5" :initial-value="data.rating" :refresh="refresh" />
       {{ data.ascents }}x geklettert
     </div>
   </div>
@@ -40,7 +40,7 @@ import Stars from "@/components/Stars.vue";
 export default defineComponent({
   name: "SearchResult",
   components: { Stars },
-  emits: ["action"],
+  emits: ["click"],
   props: {
     data: {
       type: Object as () => Boulder,
