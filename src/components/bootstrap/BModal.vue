@@ -29,10 +29,29 @@
           <slot />
         </div>
         <div v-if="!hideFooter" class="modal-footer">
-          <button v-if="!okOnly" type="button" class="btn btn-secondary">
+          <button
+            v-if="!okOnly"
+            type="button"
+            class="btn"
+            :class="cancelClass"
+            @click="
+              bControls.hideModal(id);
+              $emit('cancel');
+            "
+          >
             {{ cancelTitle }}
           </button>
-          <button type="button" class="btn btn-primary" @click="bControls.hideModal(id)">{{ okTitle }}</button>
+          <button
+            type="button"
+            class="btn"
+            :class="okClass"
+            @click="
+              bControls.hideModal(id);
+              $emit('ok');
+            "
+          >
+            {{ okTitle }}
+          </button>
         </div>
       </div>
     </div>
@@ -45,6 +64,7 @@ import { bControls } from "@/plugins/BootstrapControls";
 
 export default defineComponent({
   name: "BModal",
+  emits: ["cancel", "ok"],
   props: {
     title: String,
     id: String,
@@ -72,6 +92,14 @@ export default defineComponent({
       type: String as () => "sm" | "md" | "lg" | "xl",
       default: "md",
     },
+    cancelVariant: {
+      type: String,
+      default: "secondary",
+    },
+    okVariant: {
+      type: String,
+      default: "primary",
+    },
   },
   setup() {
     let bControls = {} as bControls;
@@ -92,6 +120,18 @@ export default defineComponent({
         "modal-lg": this.size == "lg",
         "modal-xl": this.size == "xl",
       };
+    },
+    okClass() {
+      const variant = `btn-${this.okVariant}`;
+      const classes = {} as { [clazz: string]: boolean };
+      classes[variant] = true;
+      return classes;
+    },
+    cancelClass() {
+      const variant = `btn-${this.cancelVariant}`;
+      const classes = {} as { [clazz: string]: boolean };
+      classes[variant] = true;
+      return classes;
     },
   },
 });

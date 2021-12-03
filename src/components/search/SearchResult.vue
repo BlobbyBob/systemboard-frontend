@@ -19,11 +19,11 @@
 
 <template>
   <div @click="$emit('click', data.id)" class="m-2 searchResult">
-    <div class="searchResultHead pl-2 pr-2">
+    <div class="searchResultHead px-2">
       <span class="name">{{ data.name }}</span> <small>von {{ data.creator.name }}</small>
     </div>
     <hr />
-    <div class="pl-2 pr-2">
+    <div class="px-2">
       Schwierigkeit: {{ gItoa(data.grade) }}
       <Stars :dynamic="false" :count="5" :initial-value="data.rating" :refresh="refresh" />
       {{ data.ascents }}x geklettert
@@ -76,6 +76,10 @@ export default defineComponent({
 
 hr {
   margin: 0;
-  border-color: black;
+  border: 0;
+  border-top: 1px solid black;
+  background-color: black;
+  color: black;
+  opacity: 1;
 }
 </style>

@@ -68,7 +68,7 @@
       <div class="col-6 property">Schwierigkeit:</div>
       <div class="col-6 value">
         <select v-model="gradeVote" class="form-select w-auto">
-          <option v-for="option of gradeOptions" :value="option.value" :key="option.value">{{ option.value }}</option>
+          <option v-for="option of gradeOptions" :value="option.value" :key="option.value">{{ option.text }}</option>
         </select>
       </div>
     </div>

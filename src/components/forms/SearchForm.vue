@@ -83,11 +83,11 @@
         </div>
         <div v-if="gradeSelection === 'limited'" class="d-flex justify-content-center align-items-center">
           <select v-model="minGrade" class="form-select">
-            <option v-for="option of gradeOptions" :value="option.value" :key="option.value">{{ option.value }}</option>
+            <option v-for="option of gradeOptions" :value="option.value" :key="option.value">{{ option.text }}</option>
           </select>
           <span class="p-3">bis</span>
           <select v-model="maxGrade" class="form-select">
-            <option v-for="option of gradeOptions" :value="option.value" :key="option.value">{{ option.value }}</option>
+            <option v-for="option of gradeOptions" :value="option.value" :key="option.value">{{ option.text }}</option>
           </select>
         </div>
       </fieldset>

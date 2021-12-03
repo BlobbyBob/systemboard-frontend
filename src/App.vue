@@ -126,7 +126,7 @@
           :climbed="boulder.climbed"
           :boulder-of-the-day="isBoulderOfTheDay"
           :deletable="boulder.deletable"
-          @delete="deleteBoulderHandler"
+          @delete="askForDeletion"
         />
         <div class="mt-3"></div>
         <SearchResults
@@ -150,6 +150,17 @@
       </b-modal>
       <b-modal id="statsModal" :title="stats ? stats.version : ''" size="lg" ok-only ok-title="Schließen">
         <Statistics :stats="stats" :refresh="statsRefresh" />
+      </b-modal>
+      <b-modal
+        id="deleteModal"
+        title="Boulder löschen"
+        ok-variant="danger"
+        ok-title="Löschen"
+        cancel-title="Abbrechen"
+        @ok="reallyDeleteBoulder"
+        @cancel="boulderToDelete = undefined"
+      >
+        Möchtest du diesen Boulder wirklich löschen?
       </b-modal>
     </div>
   </div>
@@ -252,6 +263,7 @@ export default defineComponent({
       searchResultsRefresh: false,
       showSearchResults: false,
       boulder: null as Boulder | null,
+      boulderToDelete: undefined as number | undefined,
       ranking: [] as RankingType[],
       refreshArrows: false,
       showSubMenu: false,
@@ -362,14 +374,22 @@ export default defineComponent({
       this.bControls.showModal("rankingModal");
     },
 
-    deleteBoulderHandler(id: number) {
-      deleteBoulder(id).then(() => {
-        this.boulder = null;
-      });
+    askForDeletion(id: number) {
+      this.boulderToDelete = id;
+      this.bControls.showModal("deleteModal");
+    },
+
+    reallyDeleteBoulder() {
+      if (this.boulderToDelete) {
+        deleteBoulder(this.boulderToDelete).then(() => {
+          this.boulderToDelete = undefined;
+          this.showSearchResults = false;
+          this.boulder = null;
+        });
+      }
     },
 
     menuHandler(id: string) {
-      console.log("menu click on " + id);
       switch (id) {
         case "latest":
           this.searchBoulder({});
@@ -456,11 +476,6 @@ export default defineComponent({
 
     refreshSearchResults() {
       this.searchResultsRefresh = !this.searchResultsRefresh;
-    },
-
-    cancelHandler(e: Event) {
-      console.log("Cancel Handler executed");
-      console.log("Cancel event: ", e);
     },
 
     cancelSelectionMode() {
