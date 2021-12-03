@@ -63,22 +63,22 @@ export default defineComponent({
   name: "Menu",
   components: {
     SubMenu,
-    MenuItem
+    MenuItem,
   },
   emits: ["input", "click"],
   props: {
     menuData: {
       type: Array as () => MenuItemData[],
-      required: true
+      required: true,
     },
     showSubMenu: {
       type: Boolean,
-      required: true
+      required: true,
     },
     subMenuData: {
       type: Array as () => MenuItemData[],
-      required: true
-    }
+      required: true,
+    },
   },
   setup() {
     let bControls = {} as bControls;
@@ -87,12 +87,12 @@ export default defineComponent({
       bControls = x;
     }
     return {
-      bControls
+      bControls,
     };
   },
   data() {
     return {
-      internalCollapseVisible: false
+      internalCollapseVisible: false,
     };
   },
   computed: {
@@ -103,14 +103,14 @@ export default defineComponent({
       set(val: boolean) {
         this.internalCollapseVisible = val;
         this.$attrs.value = val ? "true" : "";
-      }
-    }
+      },
+    },
   },
   methods: {
     toggleCollapse() {
       this.bControls.toggleCollapse("nav-collapse");
-    }
-  }
+    },
+  },
 });
 </script>
 

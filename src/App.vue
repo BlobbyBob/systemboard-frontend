@@ -180,7 +180,7 @@ import {
   logout,
   newBoulder,
   postRegistration,
-  searchBoulder
+  searchBoulder,
 } from "@/api/interface";
 import { gradeItoa } from "@/types/grades";
 import "@fortawesome/fontawesome-svg-core";
@@ -258,7 +258,7 @@ export default defineComponent({
       mail: "",
       stats: null as Stats | null,
       statsRefresh: false,
-      registerMode: false
+      registerMode: false,
     };
   },
   methods: {
@@ -309,7 +309,7 @@ export default defineComponent({
         if (this.holdTypes[id] > 0) {
           data.holds.push({
             id: +id,
-            type: this.holdTypes[id]
+            type: this.holdTypes[id],
           });
         }
       }
@@ -346,7 +346,7 @@ export default defineComponent({
             await postRegistration({
               name: name,
               email: email,
-              password: password
+              password: password,
             });
             this.registerMode = false;
           }
@@ -388,7 +388,7 @@ export default defineComponent({
           break;
         case "notdoneyet":
           this.searchBoulder({
-            notDoneYet: true
+            notDoneYet: true,
           });
           break;
         case "ranking":
@@ -486,8 +486,8 @@ export default defineComponent({
 
     openExternal(url: string) {
       window.open(url, "_blank");
-    }
-  }
+    },
+  },
 });
 </script>
 

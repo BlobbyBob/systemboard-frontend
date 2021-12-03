@@ -29,7 +29,7 @@
           v-bind:tag="hold.tag"
           v-bind:attr="hold.attr"
           v-bind:type="types[hold.id]"
-          v-on:click="e => $emit('action', hold.id, e)"
+          v-on:click="(e) => $emit('action', hold.id, e)"
         />
       </g>
     </svg>

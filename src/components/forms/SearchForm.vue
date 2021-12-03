@@ -29,13 +29,25 @@
       <fieldset>
         <legend>Bewertung</legend>
         <div class="form-check form-check-inline">
-          <input type="radio" id="rating-all" class="form-check-input" name="rating" value="all"
-                 v-model="ratingSelection" />
+          <input
+            type="radio"
+            id="rating-all"
+            class="form-check-input"
+            name="rating"
+            value="all"
+            v-model="ratingSelection"
+          />
           <label class="form-check-label" for="rating-all">Alle</label>
         </div>
         <div class="form-check form-check-inline">
-          <input type="radio" id="rating-limited" class="form-check-input" name="rating" value="limited"
-                 v-model="ratingSelection" />
+          <input
+            type="radio"
+            id="rating-limited"
+            class="form-check-input"
+            name="rating"
+            value="limited"
+            v-model="ratingSelection"
+          />
           <label class="form-check-label" for="rating-limited">Eingeschränkt</label>
         </div>
         <div v-if="ratingSelection === 'limited'" class="d-flex justify-content-center align-items-center">
@@ -48,13 +60,25 @@
       <fieldset>
         <legend>Schwierigkeit</legend>
         <div class="form-check form-check-inline">
-          <input type="radio" id="grade-all" class="form-check-input" name="grade" value="all"
-                 v-model="gradeSelection" />
+          <input
+            type="radio"
+            id="grade-all"
+            class="form-check-input"
+            name="grade"
+            value="all"
+            v-model="gradeSelection"
+          />
           <label class="form-check-label" for="grade-all">Alle</label>
         </div>
         <div class="form-check form-check-inline">
-          <input type="radio" id="grade-limited" class="form-check-input" name="grade" value="limited"
-                 v-model="gradeSelection" />
+          <input
+            type="radio"
+            id="grade-limited"
+            class="form-check-input"
+            name="grade"
+            value="limited"
+            v-model="gradeSelection"
+          />
           <label class="form-check-label" for="grade-limited">Eingeschränkt</label>
         </div>
         <div v-if="gradeSelection === 'limited'" class="d-flex justify-content-center align-items-center">
@@ -92,20 +116,20 @@ export default defineComponent({
       ratingSelection: "all",
       gradeSelection: "all",
       minGrade: 0,
-      maxGrade: 0
+      maxGrade: 0,
     };
   },
   computed: {
-    gradeOptions(): { text: string, value: number }[] {
+    gradeOptions(): { text: string; value: number }[] {
       const options = [];
       for (const grade of Grades) {
         options.push({
           text: grade,
-          value: gradeAtoi(grade)
+          value: gradeAtoi(grade),
         });
       }
       return options;
-    }
+    },
   },
   methods: {
     submitWrapper() {
@@ -121,8 +145,8 @@ export default defineComponent({
         data.maxRating = +this.maxRating;
       }
       this.$emit("submit", data);
-    }
-  }
+    },
+  },
 });
 </script>
 

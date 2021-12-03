@@ -159,7 +159,7 @@ export default defineComponent({
     prevSegment() {
       if (this.currentIndex - 1 >= 0) this.currentIndex--;
     },
-  }
+  },
 });
 </script>
 

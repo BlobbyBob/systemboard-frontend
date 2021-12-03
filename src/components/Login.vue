@@ -66,22 +66,22 @@ export default defineComponent({
   props: {
     registerMode: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   emits: ["login"],
   data() {
     return {
       name: "",
       email: "",
-      password: ""
+      password: "",
     };
   },
   methods: {
     emitLogin(e: SubmitEvent): void {
       this.$emit("login", this.email, this.password, this.name, e.submitter.id);
-    }
-  }
+    },
+  },
 });
 </script>
 

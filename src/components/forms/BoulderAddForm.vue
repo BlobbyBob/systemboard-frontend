@@ -47,7 +47,7 @@
       </div>
       <div class="text-center">
         <button type="submit" class="btn btn-primary m-2">Hinzufügen</button>
-        <button type="button" class="btn btn-secondary m-2" @click="e => $emit('cancel', e)">Abbrechen</button>
+        <button type="button" class="btn btn-secondary m-2" @click="(e) => $emit('cancel', e)">Abbrechen</button>
       </div>
     </form>
   </div>
