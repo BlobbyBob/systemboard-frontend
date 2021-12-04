@@ -79,6 +79,13 @@ export interface BoulderSearch {
   minRating?: number;
   maxRating?: number;
   notDoneYet?: boolean;
+  page?: number;
+  items?: number;
+}
+
+export interface SearchResults {
+  pages: number;
+  results: Boulder[];
 }
 
 export interface Stats {

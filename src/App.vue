@@ -131,9 +131,12 @@
         <div class="mt-3"></div>
         <SearchResults
           v-if="showSearchResults"
-          :search-results-data="searchResults"
+          :search-results-data="searchResults.results"
           :refresh="searchResultsRefresh"
+          :pages="searchResults.pages"
+          :page="searchResultsPage"
           @click="loadBoulder"
+          @page="paginationHandler"
         />
       </div>
       <b-modal id="searchModal" title="Boulder Suchen" hide-footer>
@@ -178,7 +181,15 @@ import BoulderAddForm from "@/components/forms/BoulderAddForm.vue";
 import SearchForm from "@/components/forms/SearchForm.vue";
 import Statistics from "@/components/Statistics.vue";
 import BModal from "@/components/bootstrap/BModal.vue";
-import { Boulder, BoulderNew, BoulderSearch, Holds, Ranking as RankingType, Stats } from "@/api/types";
+import {
+  Boulder,
+  BoulderNew,
+  BoulderSearch,
+  Holds,
+  Ranking as RankingType,
+  SearchResults as SearchResultsType,
+  Stats,
+} from "@/api/types";
 import {
   deleteBoulder,
   getBoulder,
@@ -200,6 +211,7 @@ import { setApiVue, setAuthentication } from "@/api";
 import { bControls } from "@/plugins/BootstrapControls";
 import { useToast } from "vue-toastification";
 import { ProgressStatus } from "@/plugins/ProgressStatus";
+import { max, min } from "@popperjs/core/lib/utils/math";
 
 export default defineComponent({
   name: "App",
@@ -259,7 +271,9 @@ export default defineComponent({
       wallLoaded: false,
       wallData: [] as Holds[],
       holdTypes: {} as { [holdId: number]: 0 | 1 | 2 },
-      searchResults: [] as Boulder[],
+      searchResults: { results: [], pages: 0 } as SearchResultsType,
+      searchResultsPage: 1,
+      searchLastQuery: {} as BoulderSearch,
       searchResultsRefresh: false,
       showSearchResults: false,
       boulder: null as Boulder | null,
@@ -333,8 +347,10 @@ export default defineComponent({
 
     async searchBoulder(data: BoulderSearch) {
       this.bControls.hideModal("searchModal");
+      this.searchResultsPage = data.page ?? 1
       this.showSearchResults = true;
-      this.searchResults = (await searchBoulder(data)) ?? [];
+      this.searchLastQuery = data;
+      this.searchResults = (await searchBoulder(data)) ?? { pages: 0, results: [] };
       document.querySelector(".boulderInfo")?.scrollIntoView({ behavior: "smooth" });
     },
 
@@ -454,6 +470,19 @@ export default defineComponent({
           break;
         default:
           console.warn(`No menu handler for menu id ${id}`);
+      }
+    },
+
+    async paginationHandler(id: number) {
+      if (id) {
+        if (id == -1) {
+          this.searchLastQuery.page = min(this.searchResultsPage + 1, this.searchResults.pages);
+        } else if (id == -2) {
+          this.searchLastQuery.page = max(this.searchResultsPage - 1, 1);
+        } else {
+          this.searchLastQuery.page = id;
+        }
+        await this.searchBoulder(this.searchLastQuery);
       }
     },
 

@@ -26,6 +26,7 @@ import {
   Holds,
   Ranking,
   Registration,
+  SearchResults,
   Stats,
   Token,
   Vote,
@@ -76,7 +77,7 @@ export async function getBoulderOfTheDay(): Promise<Boulder | undefined> {
   return apiCall("GET", "/boulderoftheday");
 }
 
-export async function searchBoulder(data: BoulderSearch): Promise<Boulder[] | undefined> {
+export async function searchBoulder(data: BoulderSearch): Promise<SearchResults | undefined> {
   return apiCall("POST", "/search", undefined, data);
 }
 

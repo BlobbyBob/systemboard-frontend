@@ -47,16 +47,14 @@
         </div>
         <div class="wall-segments flex-grow-1">
           <div v-for="(holds, index) in data" :key="holds.filename">
-            <keep-alive>
-              <WallSegment
-                :image="'/dev/' + holds.filename"
-                :holds="holds.holds"
-                :visible="index === currentIndex"
-                :types="types"
-                :refresh="refreshSegments"
-                @action="holdClickHandlerWrapper"
-              />
-            </keep-alive>
+            <WallSegment
+              :image="'/dev/' + holds.filename"
+              :holds="holds.holds"
+              :visible="index === currentIndex"
+              :types="types"
+              :refresh="refreshSegments"
+              @action="holdClickHandlerWrapper"
+            />
           </div>
         </div>
         <div

@@ -27,6 +27,29 @@
         <SearchResult :data="result" @click="(id) => $emit('click', id)" :refresh="refresh" />
       </div>
     </div>
+    <nav class="row mt-3" v-if="pages > 1">
+      <ul class="pagination justify-content-center">
+        <li
+          v-for="pageItem of pageItems"
+          class="page-item"
+          :key="pageItem.id"
+          :class="{ disabled: pageItem.disabled && !pageItem.active, active: pageItem.active }"
+        >
+          <a
+            v-if="!pageItem.disabled"
+            class="page-link"
+            :class="{ 'fw-bold': pageItem.active }"
+            href="#"
+            @click.prevent="!pageItem.disabled && $emit('page', pageItem.id)"
+          >
+            {{ pageItem.label }}
+          </a>
+          <a v-else class="page-link" :class="{ 'fw-bold': pageItem.active }">
+            {{ pageItem.label }}
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </template>
 
@@ -38,7 +61,7 @@ import { Boulder } from "@/api/types";
 export default defineComponent({
   name: "SearchResults",
   components: { SearchResult },
-  emits: ["click"],
+  emits: ["click", "page"],
   props: {
     searchResultsData: {
       type: Array as () => Boulder[],
@@ -48,11 +71,125 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    page: {
+      type: Number,
+      default: 1,
+    },
+    pages: {
+      type: Number,
+      default: 1,
+    },
   },
   computed: {
     searchResults() {
       if (this.refresh) true;
       return this.searchResultsData;
+    },
+    pageItems(): { label: string; active: boolean; disabled: boolean; id: number }[] {
+      const items = [
+        {
+          label: "«",
+          disabled: this.page == 1,
+          active: false,
+          id: -2,
+        },
+      ];
+
+      if (this.pages <= 7) {
+        for (let i = 1; i <= this.pages; i++) {
+          items.push({
+            label: i.toString(),
+            disabled: this.page == i,
+            active: this.page == i,
+            id: i,
+          });
+        }
+      } else {
+        if (this.page <= 4) {
+          for (let i = 1; i <= this.page + 1; i++) {
+            items.push({
+              label: i.toString(),
+              disabled: this.page == i,
+              active: this.page == i,
+              id: i,
+            });
+          }
+          items.push({
+            label: "...",
+            disabled: true,
+            active: false,
+            id: 0,
+          });
+          items.push({
+            label: this.pages.toString(),
+            disabled: false,
+            active: false,
+            id: this.pages,
+          });
+        } else if (this.page >= this.pages - 3) {
+          items.push({
+            label: "1",
+            disabled: false,
+            active: false,
+            id: 1,
+          });
+          items.push({
+            label: "...",
+            disabled: true,
+            active: false,
+            id: 0,
+          });
+          for (let i = this.page - 1; i <= this.pages; i++) {
+            items.push({
+              label: i.toString(),
+              disabled: this.page == i,
+              active: this.page == i,
+              id: i,
+            });
+          }
+        } else {
+          items.push({
+            label: "1",
+            disabled: false,
+            active: false,
+            id: 1,
+          });
+          items.push({
+            label: "...",
+            disabled: true,
+            active: false,
+            id: 0,
+          });
+          for (let i = this.page - 1; i <= this.page + 1; i++) {
+            items.push({
+              label: i.toString(),
+              disabled: this.page == i,
+              active: this.page == i,
+              id: i,
+            });
+          }
+          items.push({
+            label: "...",
+            disabled: true,
+            active: false,
+            id: 0,
+          });
+          items.push({
+            label: this.pages.toString(),
+            disabled: false,
+            active: false,
+            id: this.pages,
+          });
+        }
+      }
+
+      items.push({
+        label: "»",
+        disabled: this.page == this.pages,
+        active: false,
+        id: -1,
+      });
+      return items;
     },
   },
 });
