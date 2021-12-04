@@ -17,109 +17,106 @@
  *
  */
 
-import {ProgressStatus} from '@/ProgressStatus';
-import App from '@/App.vue';
+/* eslint-disable @typescript-eslint/no-explicit-any  */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-const baseUrl = 'https://api.digitalbread.de';
+import { ProgressStatus } from "@//plugins/ProgressStatus";
+import App from "@/App.vue";
+
+const baseUrl = "http://api.systemboard.local";
 const sessionStorage = window.sessionStorage;
 
-let app: App;
+let app: typeof App;
 
 export interface ApiError {
-    successfulTransmission: boolean;
-    statusCode?: number;
-    statusText?: string;
+  successfulTransmission: boolean;
+  statusCode?: number;
+  statusText?: string;
 }
 
-export function setApiVue(v: App) {
-    app = v;
+export function setApiVue(v: typeof App): void {
+  app = v;
 }
 
-export function setAuthentication(authentication: string) {
-    sessionStorage.setItem('auth', authentication);
+export function setAuthentication(authentication: string): void {
+  sessionStorage.setItem("auth", authentication);
 }
 
-export function unsetAuthentication() {
-    sessionStorage.removeItem('auth');
+export function unsetAuthentication(): void {
+  sessionStorage.removeItem("auth");
 }
 
 function errorHandler(reason: ApiError) {
-    if (reason.successfulTransmission) {
-        if (reason.statusCode == 403) {
-            if (!app.isGuest) {
-                app.$toast.error("Du hast keine Berechtigung diese Aktion durchzuführen.");
-            } else {
-                app.$toast.info("Diese Funktion steht nur angemeldeten Nutzern zur Verfügung");
-            }
-        } else {
-            app.$toast.error(`Es ist ein Fehler aufgetreten.`);
-            console.error(`${reason.statusCode} ${reason.statusText}`);
-        }
+  if (reason.successfulTransmission) {
+    if (reason.statusCode == 403) {
+      if (!app.isGuest) {
+        app.toast.error("Du hast keine Berechtigung diese Aktion durchzuführen.");
+      } else {
+        app.toast.info("Diese Funktion steht nur angemeldeten Nutzern zur Verfügung");
+      }
     } else {
-        app.$toast.warning("Keine Internetverbindung");
+      app.toast.error(`Es ist ein Fehler aufgetreten.`);
+      console.error(`${reason.statusCode} ${reason.statusText}`);
     }
-    return undefined;
+  } else {
+    app.toast.warning("Keine Internetverbindung");
+  }
+  return undefined;
 }
 
-// eslint-disable-next-line
-export async function apiCall(method: string, endpoint: string, successMsg?: string, data?: any): Promise<any | undefined> {
-    // eslint-disable-next-line
-    return new Promise<any>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open(method, baseUrl + endpoint);
-        app.$progress(ProgressStatus.START);
-        const auth = sessionStorage.getItem('auth');
-        if (auth != null) {
-            xhr.setRequestHeader('Authorization', auth);
+export async function apiCall(
+  method: string,
+  endpoint: string,
+  successMsg?: string,
+  data?: any
+): Promise<any | undefined> {
+  return new Promise<any>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, baseUrl + endpoint);
+    app.progress(ProgressStatus.START);
+    const auth = sessionStorage.getItem("auth");
+    if (auth != null) {
+      xhr.setRequestHeader("Authorization", auth);
+    }
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
+        app.progress(ProgressStatus.PROGRESS);
+        const contentType = xhr.getResponseHeader("Content-Type");
+        if (contentType != null && contentType.indexOf("application/json") != -1) {
+          xhr.responseType = "json";
         }
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
-                app.$progress(ProgressStatus.PROGRESS);
-                const contentType = xhr.getResponseHeader('Content-Type');
-                if (contentType != null && contentType.indexOf('application/json') != -1) {
-                    xhr.responseType = 'json';
-                }
-            } else if (xhr.readyState === XMLHttpRequest.DONE) {
-                app.$progress(ProgressStatus.FINISH);
-                setTimeout(() => {
-                    app.$progress(ProgressStatus.DONE);
-                }, 200);
+      } else if (xhr.readyState === XMLHttpRequest.DONE) {
+        app.progress(ProgressStatus.FINISH);
+        setTimeout(() => {
+          app.progress(ProgressStatus.DONE);
+        }, 200);
 
-                if (xhr.status >= 200 && xhr.status < 400) {
-                    resolve(xhr.response);
-                    if (successMsg) {
-                        app.$toast.success(successMsg);
-                    }
-                } else {
-                    const error: ApiError = {
-                        successfulTransmission: true,
-                        statusCode: xhr.status,
-                        statusText: xhr.statusText
-                    };
-                    if (error.statusCode == 0) error.successfulTransmission = false;
-                    reject(error);
-                }
-            }
-        };
-        xhr.onerror = () => {
-            const error: ApiError = {
-                successfulTransmission: false
-            };
-            reject(error);
-        };
-        if (data != undefined) {
-            xhr.send(JSON.stringify(data));
+        if (xhr.status >= 200 && xhr.status < 400) {
+          resolve(xhr.response);
+          if (successMsg) {
+            app.toast.success(successMsg);
+          }
         } else {
-            xhr.send();
+          const error: ApiError = {
+            successfulTransmission: true,
+            statusCode: xhr.status,
+            statusText: xhr.statusText,
+          };
+          if (error.statusCode == 0) error.successfulTransmission = false;
+          reject(error);
         }
-    }).catch(errorHandler);
-}
-
-// eslint-disable-next-line
-export async function apiFakeCall(method: string, endpoint: string, successMsg?: string, data?: any, ret?: any): Promise<any | undefined> {
-    // eslint-disable-next-line
-    return new Promise<any>((resolve, reject) => {
-        console.log(method, endpoint, data);
-        resolve(ret);
-    }).catch(errorHandler);
+      }
+    };
+    xhr.onerror = () => {
+      const error: ApiError = {
+        successfulTransmission: false,
+      };
+      reject(error);
+    };
+    if (data != undefined) {
+      xhr.send(JSON.stringify(data));
+    } else {
+      xhr.send();
+    }
+  }).catch(errorHandler);
 }
