@@ -19,6 +19,9 @@
 
 <template>
   <div class="row position-relative w-100 ml-0 mr-0">
+    <div class="position-absolute w-100 h-100 d-inline-flex justify-content-center align-items-center z-1">
+      <p><span class="fas fa-5x fa-asterisk fa-spin opacity-50"></span></p>
+    </div>
     <div
       class="pl-lg-2 pr-lg-2 wall-nav d-flex d-lg-none align-items-center leftArrow"
       :class="leftArrowClass"
@@ -147,7 +150,7 @@ export default defineComponent({
       this.$emit("click", id, e);
       this.refresh();
     },
-    refresh(mainwall: number | undefined = undefined) {
+    refresh(mainwall?: number) {
       if (mainwall !== undefined) {
         this.internalCurrentIndex = mainwall;
       }
@@ -165,6 +168,10 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import "src/style/custom";
+
+.z-1 {
+  z-index: -1;
+}
 
 .wall {
   min-height: 600px;
