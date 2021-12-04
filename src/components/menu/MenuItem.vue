@@ -1,7 +1,7 @@
 <!--
   -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
-  -- 
+  --
   -- This program is free software: you can redistribute it and/or modify
   -- it under the terms of the GNU General Public License as published by
   -- the Free Software Foundation, either version 3 of the License, or
@@ -18,51 +18,64 @@
   -->
 
 <template>
-    <b-nav-item class="text-center">
-        <a class="nav-link" @click.prevent="(e) => {if (id === 'other') e.stopPropagation(); $emit('action', id)}" href="#">
-            <span v-if="icon !== undefined" :class="iconClass" class="mr-3 mr-lg-0"></span>
-            <br v-if="icon !== undefined" class="d-none d-lg-block">
-            <slot></slot>
-        </a>
-    </b-nav-item>
+  <li class="nav-item text-center p-2">
+    <a
+      class="nav-link"
+      @click.prevent="
+        (e) => {
+          if (id === 'other') e.stopPropagation();
+          $emit('click', id);
+        }
+      "
+      href="#"
+    >
+      <span v-if="icon !== undefined" :class="iconClass" class="mr-3 mr-lg-0"></span>
+      <br v-if="icon !== undefined" class="d-none d-lg-block" />
+      <slot></slot>
+    </a>
+  </li>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
+import { defineComponent } from "vue";
 
-@Component({
-    model: {
-        event: 'action'
-    }
-})
-export default class MenuItem extends Vue {
-    @Prop() readonly id!: string;
-    @Prop({default: undefined}) readonly icon?: string | undefined;
-
-    get iconClass() {
-        if (this.icon === undefined)
-            return {};
-        const classes: { [clazz: string]: boolean } = {};
-        classes['fas'] = true;
-        classes['fa-lg'] = true;
-        classes['fa-' + this.icon] = true;
-        return classes;
-    }
-}
+export default defineComponent({
+  name: "MenuItem",
+  emits: ["click"],
+  props: {
+    id: {
+      type: String,
+      required: true,
+    },
+    icon: String,
+  },
+  computed: {
+    iconClass() {
+      if (this.icon === undefined) return {};
+      const classes: { [clazz: string]: boolean } = {};
+      classes["fas"] = true;
+      classes["fa-lg"] = true;
+      classes["fa-" + this.icon] = true;
+      return classes;
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
-@import 'src/style/custom';
+@import "src/style/custom";
 
 li {
-    cursor: pointer;
+  cursor: pointer;
 
-    a, a:hover {
-        color: white !important;
-    }
-}
-li:hover {
-    background-color: $topbar-bg-hover;
+  a,
+  a:hover {
     color: white !important;
+  }
+}
+
+li:hover {
+  background-color: $topbar-bg-hover;
+  color: white !important;
 }
 </style>

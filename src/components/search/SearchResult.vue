@@ -1,7 +1,7 @@
 <!--
   -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
-  -- 
+  --
   -- This program is free software: you can redistribute it and/or modify
   -- it under the terms of the GNU General Public License as published by
   -- the Free Software Foundation, either version 3 of the License, or
@@ -18,58 +18,68 @@
   -->
 
 <template>
-    <div @click="$emit('action', data.id)" class="m-2 searchResult">
-        <div class="searchResultHead pl-2 pr-2">
-            <span class="name">{{ data.name }}</span> <small>von {{ data.creator.name }}</small>
-        </div>
-        <hr>
-        <div class="pl-2 pr-2">
-            Schwierigkeit: {{ gItoa(data.grade) }}
-            <Stars :dynamic="false" count="5" :initial-value="data.rating" :refresh="refresh"/>
-            {{ data.ascents }}x geklettert
-        </div>
+  <div @click="$emit('click', data.id)" class="m-2 searchResult">
+    <div class="searchResultHead px-2">
+      <span class="name">{{ data.name }}</span> <small>von {{ data.creator.name }}</small>
     </div>
+    <hr />
+    <div class="px-2">
+      Schwierigkeit: {{ gItoa(data.grade) }}
+      <Stars :dynamic="false" :count="5" :initial-value="data.rating" :refresh="refresh" />
+      {{ data.ascents }}x geklettert
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
-import {Boulder} from '@/api/types';
-import {gradeItoa} from '@/types/grades';
-import Stars from '@/components/Stars.vue';
+import { defineComponent } from "vue";
+import { Boulder } from "@/api/types";
+import { gradeItoa } from "@/types/grades";
+import Stars from "@/components/Stars.vue";
 
-@Component({
-    components: {Stars},
-    model: {
-        event: 'action'
-    }
-})
-export default class SearchResult extends Vue {
-    @Prop() readonly data!: Boulder;
-    @Prop() readonly refresh!: boolean;
-
+export default defineComponent({
+  name: "SearchResult",
+  components: { Stars },
+  emits: ["click"],
+  props: {
+    data: {
+      type: Object as () => Boulder,
+      required: true,
+    },
+    refresh: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  methods: {
     gItoa(grade: number): string {
-        return gradeItoa(grade);
-    }
-}
+      return gradeItoa(grade);
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
 .searchResult {
-    border: 1px solid black;
-    cursor: pointer;
-    padding: 0;
+  border: 1px solid black;
+  cursor: pointer;
+  padding: 0;
 }
 
 .searchResult:hover {
-    background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 .searchResultHead {
-    font-size: 1.3em;
+  font-size: 1.3em;
 }
 
 hr {
-    margin: 0;
-    border-color: black;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid black;
+  background-color: black;
+  color: black;
+  opacity: 1;
 }
 </style>

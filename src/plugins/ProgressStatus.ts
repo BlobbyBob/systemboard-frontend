@@ -17,10 +17,9 @@
  *
  */
 
-import {ProgressStatus} from './ProgressStatus';
-
-declare module 'vue/types/vue' {
-    interface Vue {
-        $progress: (status: ProgressStatus) => void;
-    }
+export enum ProgressStatus {
+  START = "start",
+  PROGRESS = "progress",
+  FINISH = "finish",
+  DONE = "done",
 }

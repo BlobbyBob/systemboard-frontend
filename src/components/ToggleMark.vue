@@ -1,7 +1,7 @@
 <!--
   -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
-  -- 
+  --
   -- This program is free software: you can redistribute it and/or modify
   -- it under the terms of the GNU General Public License as published by
   -- the Free Software Foundation, either version 3 of the License, or
@@ -18,88 +18,94 @@
   -->
 
 <template>
-    <div class="toggleMark" @click="clickHandler">
-        <span v-show="state" class="positive"><i class="far fa-check-square"></i></span>
-        <span v-show="!state" class="negative"><i class="far fa-square"></i></span>
-        <span class="checkAnimation" :class="animationClass">&#128170;</span>
-    </div>
+  <div class="toggleMark" @click="clickHandler">
+    <span v-show="state" class="positive"><i class="far fa-check-square"></i></span>
+    <span v-show="!state" class="negative"><i class="far fa-square"></i></span>
+    <span class="checkAnimation" :class="animationClass">&#128170;</span>
+  </div>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
+import { defineComponent } from "vue";
 
-@Component({
-    model: {
-        event: 'input'
-    }
-})
-export default class ToggleMark extends Vue {
-    @Prop({default: false}) readonly initialState!: boolean;
-
-    private state: boolean;
-    private animationActive: boolean;
-
-    constructor() {
-        super();
-        this.state = this.initialState;
-        this.animationActive = false;
-    }
-
-    get value() {
+export default defineComponent({
+  name: "ToggleMark",
+  emits: ["input"],
+  props: {
+    initialState: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      state: false,
+      animationActive: false,
+    };
+  },
+  created() {
+    this.state = this.initialState;
+  },
+  computed: {
+    value: {
+      get(): number {
         return this.state ? 1 : 0;
-    }
-
-    set value(val) {
-        this.state = !!val;
-        this.$emit('input', this.state);
-    }
-
+      },
+      set(value: number) {
+        this.state = !!value;
+        this.$emit("input", this.state);
+      },
+    },
+    animationClass() {
+      return {
+        active: this.animationActive,
+      };
+    },
+  },
+  methods: {
     clickHandler() {
-        this.state = !this.state;
-        this.$emit('input', this.state);
-        this.animationActive = this.state;
-    }
-
-    get animationClass() {
-        return {
-            active: this.animationActive
-        };
-    }
-}
+      this.state = !this.state;
+      this.$emit("input", this.state);
+      this.animationActive = this.state;
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">
 .toggleMark {
-    cursor: pointer;
-    font-size: 1.5em;
-    position: relative;
+  cursor: pointer;
+  font-size: 1.5em;
+  position: relative;
 
-    .checkAnimation {
-        position: absolute;
-        opacity: 0;
-        display: none;
-        user-select: none;
+  .checkAnimation {
+    position: absolute;
+    opacity: 0;
+    display: none;
+    user-select: none;
+  }
+
+  .checkAnimation.active {
+    animation: checkAnimation 3s linear;
+    display: block;
+  }
+
+  @keyframes checkAnimation {
+    0% {
+      opacity: 0;
+      top: 0;
+      left: 0;
+      font-size: 1em;
     }
-    .checkAnimation.active {
-        animation: checkAnimation 3s linear;
-        display: block;
+    20% {
+      opacity: 0.8;
     }
-    @keyframes checkAnimation {
-        0% {
-            opacity: 0;
-            top: 0;
-            left: 0;
-            font-size: 1em;
-        }
-        20% {
-            opacity: 0.8;
-        }
-        100% {
-            opacity: 0;
-            font-size: 2em;
-            left: 100px;
-            top: -50px;
-        }
+    100% {
+      opacity: 0;
+      font-size: 2em;
+      left: 100px;
+      top: -50px;
     }
+  }
 }
 </style>

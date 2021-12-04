@@ -17,18 +17,19 @@
  *
  */
 
-import _Vue from 'vue';
-import {ProgressStatus} from '@/ProgressStatus';
+import { App } from "vue";
+import { ProgressStatus } from "@/plugins/ProgressStatus";
 
 const progress = function (status: ProgressStatus) {
-    const progress = document.getElementById('progress');
-    if (progress) {
-        progress.classList.remove('start', 'progress', 'finish', 'done');
-        progress.classList.add(status);
-    }
+  const progress = document.getElementById("progress");
+  if (progress) {
+    progress.classList.remove("start", "progress", "finish", "done");
+    progress.classList.add(status);
+  }
 };
 
-// eslint-disable-next-line
-export function ProgressPlugin(Vue: typeof _Vue, options?: any) {
-    Vue.prototype.$progress = progress;
-}
+export default {
+  install(app: App): void {
+    app.provide("progress", progress);
+  },
+};

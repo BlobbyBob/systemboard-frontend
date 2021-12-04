@@ -1,7 +1,7 @@
 <!--
   -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
-  -- 
+  --
   -- This program is free software: you can redistribute it and/or modify
   -- it under the terms of the GNU General Public License as published by
   -- the Free Software Foundation, either version 3 of the License, or
@@ -18,25 +18,25 @@
   -->
 
 <template>
-    <div class="row">
-        <h1>Digitales Bouldersystem</h1>
-    </div>
+  <div class="row">
+    <h1>Digitales Bouldersystem</h1>
+  </div>
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator';
+import { defineComponent } from "vue";
 
-@Component
-export default class Header extends Vue {
-}
+export default defineComponent({
+  name: "Header",
+});
 </script>
 
 <style scoped lang="scss">
 h1 {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
 }
 </style>

@@ -1,7 +1,7 @@
 <!--
   -- systemboard
   -- Copyright (C) 2020 Ben Swierzy
-  -- 
+  --
   -- This program is free software: you can redistribute it and/or modify
   -- it under the terms of the GNU General Public License as published by
   -- the Free Software Foundation, either version 3 of the License, or
@@ -18,38 +18,44 @@
   -->
 
 <template>
-    <div class="searchResults container">
-        <div class="row">
-            <h3 class="col-12 text-center">Suchergebnisse</h3>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-6 col-lg-4" v-for="(result, index) in searchResults" :key="index" >
-                <SearchResult :data="result" @action="clickHandler" :refresh="refresh"/>
-            </div>
-        </div>
+  <div class="searchResults container">
+    <div class="row">
+      <h3 class="col-12 text-center">Suchergebnisse</h3>
     </div>
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-4" v-for="(result, index) in searchResults" :key="index">
+        <SearchResult :data="result" @click="(id) => $emit('click', id)" :refresh="refresh" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import {Component, Prop, Vue} from 'vue-property-decorator';
-import SearchResult from './SearchResult.vue';
-import {Boulder} from '@/api/types';
+import { defineComponent } from "vue";
+import SearchResult from "./SearchResult.vue";
+import { Boulder } from "@/api/types";
 
-@Component({
-    components: {SearchResult}
-})
-export default class SearchResults extends Vue {
-    @Prop() readonly searchResultsData!: Boulder[];
-    @Prop() readonly clickHandler!: (id: number) => void;
-    @Prop() readonly refresh!: boolean;
-
-    get searchResults() {
-        if (this.refresh) true;
-        return this.searchResultsData;
-    }
-}
+export default defineComponent({
+  name: "SearchResults",
+  components: { SearchResult },
+  emits: ["click"],
+  props: {
+    searchResultsData: {
+      type: Array as () => Boulder[],
+      required: true,
+    },
+    refresh: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  computed: {
+    searchResults() {
+      if (this.refresh) true;
+      return this.searchResultsData;
+    },
+  },
+});
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>
