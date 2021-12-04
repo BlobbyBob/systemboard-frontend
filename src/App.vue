@@ -347,7 +347,7 @@ export default defineComponent({
 
     async searchBoulder(data: BoulderSearch) {
       this.bControls.hideModal("searchModal");
-      this.searchResultsPage = data.page ?? 1
+      this.searchResultsPage = data.page ?? 1;
       this.showSearchResults = true;
       this.searchLastQuery = data;
       this.searchResults = (await searchBoulder(data)) ?? { pages: 0, results: [] };
