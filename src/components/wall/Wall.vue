@@ -165,7 +165,8 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import "src/style/custom";
+@import "~bootstrap/scss/bootstrap-utilities";
+@import "src/style/vars";
 
 .z-1 {
   z-index: -1;

@@ -23,7 +23,7 @@
 import { ProgressStatus } from "@//plugins/ProgressStatus";
 import App from "@/App.vue";
 
-const baseUrl = "http://api.systemboard.local";
+const baseUrl = process.env.VUE_APP_API_URL;
 const sessionStorage = window.sessionStorage;
 
 let app: typeof App;

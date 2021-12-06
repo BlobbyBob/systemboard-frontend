@@ -115,7 +115,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import "src/style/custom";
+@import "src/style/vars";
 
 nav {
   background-color: $topbar-bg;

@@ -86,7 +86,8 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import "src/style/custom";
+@import "~bootstrap/scss/bootstrap-utilities";
+@import "src/style/vars";
 
 .loginHeading {
   font-weight: 300;

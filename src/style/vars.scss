@@ -1,6 +1,6 @@
 /*
  *  systemboard
- *  Copyright (C) 2020 Ben Swierzy
+ *  Copyright (C) 2021 Ben Swierzy
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,12 +17,10 @@
  *
  */
 
-@import "~bootstrap/scss/bootstrap";
-@import "~vue-toastification/src/scss/index";
+$secondary: #4c7df5;
 
-$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
-@import "~@fortawesome/fontawesome-free/scss/fontawesome";
-@import "~@fortawesome/fontawesome-free/scss/solid";
-@import "~@fortawesome/fontawesome-free/scss/regular";
+$hold-color: green;
+$hold-color-special: red;
 
-@import "vars";
+$topbar-bg: black;
+$topbar-bg-hover: rgba(255, 255, 255, 0.2);
