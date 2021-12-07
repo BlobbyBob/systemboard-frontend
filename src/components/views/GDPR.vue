@@ -54,17 +54,18 @@
       <h4>2. Rechtsgrundlage für die Verarbeitung personenbezogener Daten</h4>
       <p>
         Soweit wir für Verarbeitungsvorgänge personenbezogener Daten eine Einwilligung der betroffenen Person einholen,
-        dient Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;a EU-Datenschutzgrundverordnung (DSGVO) als Rechtsgrundlage. Bei der Verarbeitung von
-        personenbezogenen Daten, die zur Erfüllung eines Vertrages, dessen Vertragspartei die betroffene Person ist,
-        erforderlich ist, dient Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO als Rechtsgrundlage. Dies gilt auch für
-        Verarbeitungsvorgänge, die zur Durchführung vorvertraglicher Maßnahmen erforderlich sind. Soweit eine
-        Verarbeitung personenbezogener Daten zur Erfüllung einer rechtlichen Verpflichtung erforderlich ist, der unser
-        Unternehmen unterliegt, dient Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;c DSGVO als Rechtsgrundlage. Für den Fall, dass lebenswichtige
-        Interessen der betroffenen Person oder einer anderen natürlichen Person eine Verarbeitung personenbezogener
-        Daten erforderlich machen, dient Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;d DSGVO als Rechtsgrundlage. Ist die Verarbeitung zur
-        Wahrung eines berechtigten Interesses unseres Unternehmens oder eines Dritten erforderlich und überwiegen die
-        Interessen, Grundrechte und Grundfreiheiten des Betroffenen das erstgenannte Interesse nicht, so dient Art.&nbsp;6
-        Abs.&nbsp;1 lit.&nbsp;f DSGVO als Rechtsgrundlage für die Verarbeitung.
+        dient Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;a EU-Datenschutzgrundverordnung (DSGVO) als Rechtsgrundlage. Bei der
+        Verarbeitung von personenbezogenen Daten, die zur Erfüllung eines Vertrages, dessen Vertragspartei die
+        betroffene Person ist, erforderlich ist, dient Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO als Rechtsgrundlage.
+        Dies gilt auch für Verarbeitungsvorgänge, die zur Durchführung vorvertraglicher Maßnahmen erforderlich sind.
+        Soweit eine Verarbeitung personenbezogener Daten zur Erfüllung einer rechtlichen Verpflichtung erforderlich ist,
+        der unser Unternehmen unterliegt, dient Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;c DSGVO als Rechtsgrundlage. Für den
+        Fall, dass lebenswichtige Interessen der betroffenen Person oder einer anderen natürlichen Person eine
+        Verarbeitung personenbezogener Daten erforderlich machen, dient Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;d DSGVO als
+        Rechtsgrundlage. Ist die Verarbeitung zur Wahrung eines berechtigten Interesses unseres Unternehmens oder eines
+        Dritten erforderlich und überwiegen die Interessen, Grundrechte und Grundfreiheiten des Betroffenen das
+        erstgenannte Interesse nicht, so dient Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO als Rechtsgrundlage für die
+        Verarbeitung.
       </p>
       <h4>3. Datenlöschung und Speicherdauer</h4>
       <p>

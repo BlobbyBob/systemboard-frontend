@@ -80,6 +80,10 @@
             label: 'Über DBS',
           },
           {
+            id: 'editor',
+            label: 'Editor',
+          },
+          {
             id: 'impressum',
             label: 'Impressum',
           },
@@ -249,7 +253,7 @@ export default defineComponent({
   },
   beforeMount() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setApiVue(this as any);
+    setApiVue(this);
     if (this.isLoggedIn) {
       this.loadWall();
     }
@@ -456,6 +460,10 @@ export default defineComponent({
           this.bControls.toggleCollapse("nav-collapse");
           this.showSubMenu = false;
           this.$router.push("/datenschutz");
+          break;
+        case "editor":
+          this.bControls.toggleCollapse("nav-collapse");
+          this.$router.push("/editor");
           break;
         case "logout":
           this.bControls.toggleCollapse("nav-collapse");

@@ -71,19 +71,19 @@ export default defineComponent({
     },
     rx(): string {
       this.lazyParse();
-      return this.parsedAttr.rx;
+      return this.parsedAttr.rx ?? "";
     },
     ry(): string {
       this.lazyParse();
-      return this.parsedAttr.ry;
+      return this.parsedAttr.ry ?? "";
     },
     cx(): string {
       this.lazyParse();
-      return this.parsedAttr.cx;
+      return this.parsedAttr.cx ?? "";
     },
     cy(): string {
       this.lazyParse();
-      return this.parsedAttr.cy;
+      return this.parsedAttr.cy ?? "";
     },
   },
   methods: {

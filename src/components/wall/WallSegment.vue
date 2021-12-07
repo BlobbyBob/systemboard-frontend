@@ -18,19 +18,21 @@
   -->
 
 <template>
-  <div class="wallSegment w-100" v-bind:class="{ hidden: !visible }">
+  <div class="wallSegment w-100" :class="{ hidden: !visible }">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 670">
       <image x="0" y="0" width="1000px" height="670px" :xlink:href="image"></image>
       <g class="holds">
         <Hold
           v-for="hold in holdsFiltered"
-          v-bind:key="hold.id"
-          v-bind:id="hold.id"
-          v-bind:tag="hold.tag"
-          v-bind:attr="hold.attr"
-          v-bind:type="types[hold.id]"
-          v-on:click="(e) => $emit('action', hold.id, e)"
+          :key="hold.id"
+          :id="hold.id"
+          :tag="hold.tag"
+          :attr="hold.attr"
+          :type="types[hold.id]"
+          @click="(e) => $emit('click', hold.id, e)"
         />
+
+        <slot name="dynamicHolds"></slot>
       </g>
     </svg>
   </div>
@@ -43,7 +45,7 @@ import Hold from "@/components/wall/Hold.vue";
 
 export default defineComponent({
   name: "WallSegment",
-  emits: ["action"],
+  emits: ["click"],
   components: { Hold },
   props: {
     image: {

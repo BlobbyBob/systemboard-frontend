@@ -23,6 +23,7 @@
       <p><span class="fas fa-5x fa-asterisk fa-spin opacity-50"></span></p>
     </div>
     <div
+      v-if="!editorMode"
       class="pl-lg-2 pr-lg-2 wall-nav d-flex d-lg-none align-items-center leftArrow"
       :class="leftArrowClass"
       @click="prevSegment"
@@ -30,6 +31,7 @@
       <span class="fas fa-3x fa-arrow-alt-circle-left"></span>
     </div>
     <div
+      v-if="!editorMode"
       class="pl-lg-2 pr-lg-2 wall-nav d-flex d-lg-none align-items-center rightArrow"
       :class="rightArrowClass"
       @click="nextSegment"
@@ -39,6 +41,7 @@
     <div class="wallWrapper w-100">
       <div class="wall w-100 d-flex align-items-stretch">
         <div
+          v-if="!editorMode"
           class="pl-lg-2 pr-lg-2 wall-nav d-none d-lg-flex align-items-center leftArrow"
           :class="leftArrowClass"
           @click="prevSegment"
@@ -53,11 +56,16 @@
               :visible="index === currentIndex"
               :types="types"
               :refresh="refreshSegments"
-              @action="holdClickHandlerWrapper"
-            />
+              @click="holdClickHandlerWrapper"
+            >
+              <template v-slot:dynamicHolds>
+                <slot name="dynamicHolds"></slot>
+              </template>
+            </WallSegment>
           </div>
         </div>
         <div
+          v-if="!editorMode"
           class="pl-lg-2 pr-lg-2 wall-nav d-none d-lg-flex align-items-center rightArrow"
           :class="rightArrowClass"
           @click="nextSegment"
@@ -77,7 +85,7 @@ import { Holds } from "@/api/types";
 export default defineComponent({
   name: "Wall",
   components: { WallSegment },
-  emits: ["click", "indexchange"],
+  emits: ["anyclick", "click", "indexchange"],
   props: {
     data: {
       type: Array as () => Holds[],
@@ -88,6 +96,10 @@ export default defineComponent({
       required: true,
     },
     refreshArrows: {
+      type: Boolean,
+      default: false,
+    },
+    editorMode: {
       type: Boolean,
       default: false,
     },

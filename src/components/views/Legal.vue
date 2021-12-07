@@ -82,9 +82,9 @@ export default defineComponent({
       pcode: process.env.VUE_APP_PERSONAL_PCODE ?? "",
       city: process.env.VUE_APP_PERSONAL_CITY ?? "",
       country: process.env.VUE_APP_PERSONAL_COUNTRY ?? "",
-      email: process.env.VUE_APP_PERSONAL_EMAIL ?? ""
+      email: process.env.VUE_APP_PERSONAL_EMAIL ?? "",
     };
-  }
+  },
 });
 </script>
 

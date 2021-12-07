@@ -21,12 +21,18 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 import { ProgressStatus } from "@//plugins/ProgressStatus";
-import App from "@/App.vue";
+import { useToast } from "vue-toastification";
 
 const baseUrl = process.env.VUE_APP_API_URL;
 const sessionStorage = window.sessionStorage;
 
-let app: typeof App;
+type PluginComponent<Toast> = {
+  toast: Toast;
+  isGuest: boolean;
+  progress: (status: ProgressStatus) => any;
+};
+
+type ProvidesPlugins = PluginComponent<ReturnType<typeof useToast>>;
 
 export interface ApiError {
   successfulTransmission: boolean;
@@ -34,7 +40,9 @@ export interface ApiError {
   statusText?: string;
 }
 
-export function setApiVue(v: typeof App): void {
+let app: ProvidesPlugins;
+
+export function setApiVue(v: ProvidesPlugins): void {
   app = v;
 }
 

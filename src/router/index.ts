@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Systemboard from "@/components/views/Systemboard.vue";
 import Legal from "@/components/views/Legal.vue";
 import GDPR from "@/components/views/GDPR.vue";
+import Editor from "@/components/views/Editor.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,6 +19,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/datenschutz",
     name: "Datenschutz",
     component: GDPR,
+  },
+  {
+    path: "/editor",
+    name: "Editor",
+    component: Editor,
   },
 ];
 
