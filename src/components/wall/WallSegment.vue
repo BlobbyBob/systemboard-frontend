@@ -20,7 +20,7 @@
 <template>
   <div class="wallSegment w-100" :class="{ hidden: !visible }">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 670">
-      <image x="0" y="0" width="1000px" height="670px" :xlink:href="image"></image>
+      <image x="0" y="0" width="1000px" height="670px" :xlink:href="image" @dragstart="false"></image>
       <g class="holds">
         <Hold
           v-for="hold in holdsFiltered"

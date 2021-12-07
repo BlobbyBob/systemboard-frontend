@@ -21,8 +21,9 @@
   <polygon
     v-if="tag === 'polygon'"
     :points="points"
-    v-bind:data-type="type"
-    v-on:click="(e) => $emit('click', e)"
+    :data-type="type"
+    :data-id="id"
+    @click="(e) => $emit('click', e)"
   ></polygon>
   <ellipse
     v-else-if="tag === 'ellipse'"
@@ -30,8 +31,9 @@
     :ry="ry"
     :cx="cx"
     :cy="cy"
-    v-bind:data-type="type"
-    v-on:click="(e) => $emit('click', e)"
+    :data-type="type"
+    :data-id="id"
+    @click="(e) => $emit('click', e)"
   ></ellipse>
 </template>
 
