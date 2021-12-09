@@ -280,20 +280,20 @@ export default defineComponent({
               let attr, info: InfoType;
               if (tag == "ellipse") {
                 info = {
-                  type: tag,
-                  cx: parseInt(el.attributes.getNamedItem("cx")?.value ?? "0"),
-                  cy: parseInt(el.attributes.getNamedItem("cy")?.value ?? "0"),
-                  rx: parseInt(el.attributes.getNamedItem("rx")?.value ?? "0"),
-                  ry: parseInt(el.attributes.getNamedItem("ry")?.value ?? "0"),
+                  type: "ellipse",
+                  cx: parseFloat(el.attributes.getNamedItem("cx")?.value ?? "0"),
+                  cy: parseFloat(el.attributes.getNamedItem("cy")?.value ?? "0"),
+                  rx: parseFloat(el.attributes.getNamedItem("rx")?.value ?? "0"),
+                  ry: parseFloat(el.attributes.getNamedItem("ry")?.value ?? "0"),
                 };
                 attr = `cx='${info.cx}' cy='${info.cy}' rx='${info.rx}' ry='${info.ry}'`;
               } else {
                 const points = [] as [number, number][];
                 const parts = el.attributes.getNamedItem("points")?.value.split(" ") ?? [];
                 for (const part of parts) {
-                  if (!part.indexOf(",")) continue;
+                  if (part.indexOf(",") < 0) continue;
                   const [x, y] = part.split(",");
-                  points.push([parseInt(x), parseInt(y)]);
+                  points.push([parseFloat(x), parseFloat(y)]);
                 }
                 info = {
                   type: tag,
@@ -379,7 +379,7 @@ export default defineComponent({
               .map((v) => {
                 v[0] += offsetX;
                 v[1] += offsetY;
-                v.join(",");
+                return v.join(",");
               })
               .join(" ")}'`;
           }
