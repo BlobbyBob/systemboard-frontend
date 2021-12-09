@@ -184,6 +184,13 @@ export default defineComponent({
           break;
         case "keys":
           this.enterPolygon();
+          if (this.mode == "polygon" && this.dynamicHold) {
+            this.saveHold();
+            this.dynamicHold = null;
+          }
+          break;
+        case "keyd":
+          this.enterMove();
           break;
         case "keyf":
           this.enterDelete();
@@ -234,33 +241,31 @@ export default defineComponent({
       return false;
     },
     onMouseDown(e: MouseEvent) {
+      if (this.mouseDownPosition) return;
+
       this.mouseDownPosition = calculateSvgPosition(e);
-      if (!this.mouseDownPosition && this.mode == "ellipse") {
-        if (this.mouseDownPosition) {
+      if (!this.mouseDownPosition) return;
+
+      if (this.mode == "ellipse") {
+        this.dynamicHold = {
+          id: -1,
+          tag: "ellipse",
+          attr: `cx='${this.mouseDownPosition[0]}' cy='${this.mouseDownPosition[1]}' rx='1' ry='1'`,
+          type: 1,
+        };
+      } else if (this.mode == "polygon") {
+        if (!this.dynamicHold) {
           this.dynamicHold = {
             id: -1,
-            tag: "ellipse",
-            attr: `cx='${this.mouseDownPosition[0]}' cy='${this.mouseDownPosition[1]}' rx='1' ry='1'`,
+            tag: this.mode,
+            attr: `points='${this.mouseDownPosition[0]},${this.mouseDownPosition[1]}'`,
             type: 1,
           };
+        } else {
+          this.dynamicHold.attr =
+            this.dynamicHold.attr.slice(0, -1) + ` ${this.mouseDownPosition[0]},${this.mouseDownPosition[1]}'`;
         }
-      }
-      if (this.mode == "polygon") {
-        if (this.mouseDownPosition) {
-          if (!this.dynamicHold) {
-            this.dynamicHold = {
-              id: -1,
-              tag: this.mode,
-              attr: `points='${this.mouseDownPosition[0]},${this.mouseDownPosition[1]}'`,
-              type: 1,
-            };
-          } else {
-            this.dynamicHold.attr =
-              this.dynamicHold.attr.slice(0, -1) + ` ${this.mouseDownPosition[0]},${this.mouseDownPosition[1]}'`;
-          }
-        }
-      }
-      if (this.mode == "delete" || this.mode == "move") {
+      } else if (this.mode == "delete" || this.mode == "move") {
         const el = e.target as SVGElement;
         const tag = el.tagName.toLowerCase();
         if (tag == "ellipse" || tag == "polygon") {
