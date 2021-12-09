@@ -26,13 +26,11 @@ import { useToast } from "vue-toastification";
 const baseUrl = process.env.VUE_APP_API_URL;
 const sessionStorage = window.sessionStorage;
 
-type PluginComponent<Toast> = {
-  toast: Toast;
+type ProvidesPlugins = {
+  toast: ReturnType<typeof useToast>;
   isGuest: boolean;
   progress: (status: ProgressStatus) => any;
 };
-
-type ProvidesPlugins = PluginComponent<ReturnType<typeof useToast>>;
 
 export interface ApiError {
   successfulTransmission: boolean;

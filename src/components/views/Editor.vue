@@ -84,7 +84,7 @@ import { useToast } from "vue-toastification";
 import { bControls } from "@/plugins/BootstrapControls";
 import { ProgressStatus } from "@/plugins/ProgressStatus";
 import { setApiVue } from "@/api";
-import { getWall } from "@/api/interface";
+import { getHolds, getWall } from "@/api/interface";
 import BModal from "@/components/bootstrap/BModal.vue";
 import Hold from "@/components/wall/Hold.vue";
 import Wall from "@/components/wall/Wall.vue";
@@ -159,6 +159,7 @@ export default defineComponent({
       refreshWall: false,
       mouseDownPosition: null as [number, number] | null,
       selectedHold: null as number | null,
+      wallId: undefined as number | undefined,
     };
   },
   beforeMount() {
@@ -167,6 +168,7 @@ export default defineComponent({
   mounted() {
     document.body.addEventListener("keydown", this.onKeyDown);
     getWall().then((w) => {
+      this.wallId = w?.id;
       this.segments = w?.wallSegments.map((v) => v.image) ?? [];
     });
   },
@@ -432,11 +434,28 @@ export default defineComponent({
       }
     },
     selectWallSegment() {
+      if (!this.wallId) {
+        this.toast.error("Die Wand kann nicht geladen werden.");
+        return;
+      }
+
       const select = document.querySelector<HTMLSelectElement>("#wallSelectionModal select");
       this.segment = select?.value ?? null;
-      if (this.segment) {
-        this.holds = [{ filename: this.segment, holds: [] }];
-      }
+      getHolds(this.wallId).then((h) => {
+        if (this.segment) {
+          if (h) {
+            this.holds = h?.filter((h) => h.filename == this.segment);
+          } else {
+            this.holds = [{ filename: this.segment, holds: [] }];
+            this.toast.warning("Achtung: Griffe konnten nicht geladen werden.");
+          }
+          for (const holds of this.holds) {
+            for (const hold of holds.holds) {
+              this.holdTypes[hold.id] = 1;
+            }
+          }
+        }
+      });
     },
     saveHold() {
       // todo api call and await id
