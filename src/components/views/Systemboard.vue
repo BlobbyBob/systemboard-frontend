@@ -82,6 +82,7 @@
           {
             id: 'editor',
             label: 'Editor',
+            hidden: !isPrivileged,
           },
           {
             id: 'impressum',
@@ -265,6 +266,7 @@ export default defineComponent({
     return {
       isLoggedIn: window.sessionStorage.getItem("auth") != null && window.sessionStorage.getItem("auth") != "Login",
       isGuest: window.sessionStorage.getItem("auth")?.toLowerCase() == "guest",
+      isPrivileged: window.sessionStorage.getItem("privileged")?.toLowerCase() == "1",
       isSelectionMode: false,
       isBoulderOfTheDay: false,
       wall: undefined as typeof Wall | undefined,
@@ -359,11 +361,12 @@ export default defineComponent({
         case "login":
           if (await loginPassword(email, password)) {
             this.isLoggedIn = true;
+            this.isPrivileged = window.sessionStorage.getItem("privileged")?.toLowerCase() == "1";
             await this.loadWall();
           }
           break;
         case "guestlogin":
-          setAuthentication("guest");
+          setAuthentication("guest", false);
           this.isLoggedIn = true;
           await this.loadWall();
           break;
@@ -469,6 +472,7 @@ export default defineComponent({
           this.bControls.toggleCollapse("nav-collapse");
           logout().then(() => {
             this.isLoggedIn = false;
+            this.isPrivileged = false;
           });
           break;
         default:

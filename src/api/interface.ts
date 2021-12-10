@@ -37,14 +37,14 @@ export async function loginPassword(email: string, password: string): Promise<bo
   const qs = new URLSearchParams({
     auth: password,
   });
-  setAuthentication("Login");
+  setAuthentication("Login", false);
   // todo change apiCall to POST (also in the backend)
   const apiToken: Token | undefined = await apiCall(
     "GET",
     "/login/password/" + encodeURIComponent(email) + "?" + qs.toString()
   );
   if (!apiToken) return false;
-  setAuthentication("Bearer " + apiToken.token);
+  setAuthentication("Bearer " + apiToken.token, apiToken.privileged);
   return true;
 }
 
@@ -58,6 +58,7 @@ export async function logout(): Promise<void> {
     } else {
       unsetAuthentication();
     }
+    resolve();
   });
 }
 

@@ -35,7 +35,7 @@
           <div class="container">
             <ul class="navbar-nav justify-content-around">
               <MenuItem
-                v-for="(menuItemData, index) in menuData"
+                v-for="(menuItemData, index) in computedMenuData"
                 :key="index"
                 :id="menuItemData.id"
                 :icon="menuItemData.icon"
@@ -48,7 +48,7 @@
         </nav>
       </div>
     </nav>
-    <SubMenu :show="showSubMenu" :sub-menu-data="subMenuData" @click="(id) => $emit('click', id)" />
+    <SubMenu :show="showSubMenu" :sub-menu-data="computedSubmenuData" @click="(id) => $emit('click', id)" />
   </div>
 </template>
 
@@ -79,6 +79,11 @@ export default defineComponent({
       type: Array as () => MenuItemData[],
       required: true,
     },
+    refresh: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   setup() {
     let bControls = {} as bControls;
@@ -104,6 +109,14 @@ export default defineComponent({
         this.internalCollapseVisible = val;
         this.$attrs.value = val ? "true" : "";
       },
+    },
+    computedMenuData() {
+      if (this.refresh) true;
+      return this.menuData.filter((v) => !v.hidden);
+    },
+    computedSubmenuData() {
+      if (this.refresh) true;
+      return this.subMenuData.filter((v) => !v.hidden);
     },
   },
   methods: {

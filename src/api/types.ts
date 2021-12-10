@@ -19,6 +19,7 @@
 
 export interface Token {
   token: string;
+  privileged: boolean;
 }
 
 export interface Wall {

@@ -44,12 +44,14 @@ export function setApiVue(v: ProvidesPlugins): void {
   app = v;
 }
 
-export function setAuthentication(authentication: string): void {
+export function setAuthentication(authentication: string, privileged: boolean): void {
   sessionStorage.setItem("auth", authentication);
+  sessionStorage.setItem("privileged", `${privileged ? 0 : 1}`);
 }
 
 export function unsetAuthentication(): void {
   sessionStorage.removeItem("auth");
+  sessionStorage.removeItem("privileged");
 }
 
 function errorHandler(reason: ApiError) {

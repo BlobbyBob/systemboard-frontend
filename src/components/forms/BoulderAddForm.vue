@@ -24,25 +24,27 @@
       <div class="row align-items-center mb-3">
         <div class="col-12 col-md-3">Name</div>
         <div class="col-12 col-md-9">
-          <b-form-input type="text" maxlength="50" v-model="name" required />
+          <input class="form-control" type="text" maxlength="50" v-model="name" required />
         </div>
       </div>
       <div class="row align-items-center mb-3">
         <div class="col-12 col-md-3">Beschreibung</div>
         <div class="col-12 col-md-9">
-          <b-form-textarea v-model="description" placeholder="optional" />
+          <textarea v-model="description" class="form-control" placeholder="optional"></textarea>
         </div>
       </div>
       <div class="row align-items-center mb-3">
         <div class="col-12 col-md-3">Schwierigkeit</div>
         <div class="col-12 col-md-9">
-          <b-form-select v-model="grade" id="addGrade" :options="gradeOptions" required />
+          <select v-model="grade" class="form-select" required>
+            <option v-for="option of gradeOptions" :value="option.value" :key="option.value">{{ option.text }}</option>
+          </select>
         </div>
       </div>
       <div class="row align-items-center mb-3">
         <div class="col-12 col-md-3">Bewertung</div>
         <div class="col-12 col-md-9 text-center h4">
-          <Stars :dynamic="true" count="5" initial-value="1" v-model="rating" />
+          <Stars :dynamic="true" :count="5" :initial-value="1" v-model="rating" :refresh="false" />
         </div>
       </div>
       <div class="text-center">
