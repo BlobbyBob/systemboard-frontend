@@ -23,6 +23,7 @@ import {
   BoulderNew,
   BoulderSearch,
   Climbed,
+  EditorHold,
   Holds,
   Ranking,
   Registration,
@@ -112,4 +113,20 @@ export async function putBoulderOfTheDay(climbed: Climbed): Promise<void | undef
 
 export async function putVote(id: number, vote: Vote): Promise<void | undefined> {
   return apiCall("PUT", "/boulder/" + encodeURIComponent(id) + "/vote", "Gespeichert", vote);
+}
+
+export async function getHold(id: number): Promise<void | undefined> {
+  return apiCall("GET", "/editor/hold/" + encodeURIComponent(id));
+}
+
+export async function postHold(hold: EditorHold & { wallSegment: number }): Promise<void | undefined> {
+  return apiCall("POST", "/editor/hold", undefined, hold);
+}
+
+export async function putHold(id: number, hold: EditorHold): Promise<void | undefined> {
+  return apiCall("PUT", "/editor/hold/" + encodeURIComponent(id), undefined, hold);
+}
+
+export async function deleteHold(id: number): Promise<void | undefined> {
+  return apiCall("DELETE", "/editor/hold/" + encodeURIComponent(id));
 }

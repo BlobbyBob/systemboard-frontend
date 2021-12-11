@@ -120,3 +120,8 @@ export interface Vote {
   rating?: number;
   grade?: number;
 }
+
+export interface EditorHold {
+  tag: string;
+  attr: string;
+}
