@@ -84,11 +84,11 @@ import { useToast } from "vue-toastification";
 import { bControls } from "@/plugins/BootstrapControls";
 import { ProgressStatus } from "@/plugins/ProgressStatus";
 import { setApiVue } from "@/api";
-import { getHolds, getWall } from "@/api/interface";
+import { deleteHold, getHolds, getWall, postHold, putHold } from "@/api/interface";
 import BModal from "@/components/bootstrap/BModal.vue";
 import Hold from "@/components/wall/Hold.vue";
 import Wall from "@/components/wall/Wall.vue";
-import { Holds } from "@/api/types";
+import { EditorHold, Holds } from "@/api/types";
 
 function calculateSvgPosition(e: MouseEvent): [number, number] | null {
   const svg = document.querySelector<SVGElement>("#editor .wallSegment svg");
@@ -152,6 +152,7 @@ export default defineComponent({
         attr: string;
         type: 0 | 1 | 2;
         info?: InfoType;
+        wallSegment?: string;
       } | null,
       isGuest: window.sessionStorage.getItem("auth")?.toLowerCase() == "guest",
       holds: [] as Holds[],
@@ -197,10 +198,13 @@ export default defineComponent({
         case "keyf":
           this.enterDelete();
           if (this.selectedHold) {
-            // todo api call
-            this.holds[0].holds = this.holds[0].holds.filter((hold) => hold.id != this.selectedHold);
-            delete this.holdTypes[this.selectedHold];
-            this.selectedHold = null;
+            const id = this.selectedHold;
+            deleteHold(id).then(() => {
+              this.selectedHold = null;
+              this.holds[0].holds = this.holds[0].holds.filter((hold) => hold.id != id);
+              delete this.holdTypes[id];
+              this.refreshWall = !this.refreshWall;
+            });
           }
           break;
         case "escape":
@@ -213,7 +217,6 @@ export default defineComponent({
           }
           break;
       }
-      console.log("keydown", e.code);
     },
     onNavClick(e: MouseEvent) {
       const id = (e.target as HTMLElement).attributes.getNamedItem("data-id")?.value;
@@ -391,9 +394,10 @@ export default defineComponent({
             break;
           }
         }
-        // todo api call
-        this.dynamicHold = null;
-        this.selectedHold = null;
+        putHold(this.selectedHold, this.dynamicHold).then(() => {
+          this.dynamicHold = null;
+          this.selectedHold = null;
+        });
       }
       this.mouseDownPosition = null;
     },
@@ -458,14 +462,19 @@ export default defineComponent({
       });
     },
     saveHold() {
-      // todo api call and await id
-      if (this.dynamicHold) {
-        const id = (Math.random() * 1000) | 0;
-        this.holdTypes[id] = 1;
-        this.holds[0].holds.push({
-          id: id,
-          tag: this.dynamicHold.tag,
-          attr: this.dynamicHold.attr,
+      if (this.dynamicHold && this.segment) {
+        this.dynamicHold.wallSegment = this.segment;
+        // todo why is this type assertion necessary? this.segment is already definitely a string...
+        postHold(this.dynamicHold as EditorHold & { wallSegment: string }).then((resp) => {
+          if (resp) {
+            this.dynamicHold = null;
+            this.holdTypes[resp.id] = 1;
+            this.holds[0].holds.push({
+              id: resp.id,
+              tag: resp.tag,
+              attr: resp.attr,
+            });
+          }
         });
       }
     },

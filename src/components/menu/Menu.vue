@@ -112,11 +112,11 @@ export default defineComponent({
     },
     computedMenuData() {
       if (this.refresh) true;
-      return this.menuData.filter((v) => !v.hidden);
+      return this.menuData;
     },
     computedSubmenuData() {
       if (this.refresh) true;
-      return this.subMenuData.filter((v) => !v.hidden);
+      return this.subMenuData;
     },
   },
   methods: {

@@ -82,7 +82,6 @@
           {
             id: 'editor',
             label: 'Editor',
-            hidden: !isPrivileged,
           },
           {
             id: 'impressum',

@@ -24,6 +24,7 @@ import {
   BoulderSearch,
   Climbed,
   EditorHold,
+  Hold,
   Holds,
   Ranking,
   Registration,
@@ -119,7 +120,7 @@ export async function getHold(id: number): Promise<void | undefined> {
   return apiCall("GET", "/editor/hold/" + encodeURIComponent(id));
 }
 
-export async function postHold(hold: EditorHold & { wallSegment: number }): Promise<void | undefined> {
+export async function postHold(hold: EditorHold & { wallSegment: string }): Promise<Hold | undefined> {
   return apiCall("POST", "/editor/hold", undefined, hold);
 }
 
